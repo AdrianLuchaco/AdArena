@@ -1,0 +1,18 @@
+# Dependabot: GitHub revisa cada semana si hay versiones nuevas (sobre todo de seguridad) de las
+# librerías y te propone el cambio como pull request. Tú decides si lo aceptas.
+version: 2
+updates:
+  - package-ecosystem: maven
+    directory: /backend
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+  - package-ecosystem: npm
+    directory: /frontend
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly

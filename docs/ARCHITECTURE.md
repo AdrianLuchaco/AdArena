@@ -1,4 +1,8 @@
-# Publifi — Arquitectura (Fase 1)
+# AdArena — Arquitectura
+
+> Última actualización: fase 12 (2026-09-28): lista para subirla gratis a la nube (Supabase, Render, Vercel, Brevo; guía en `docs/DESPLIEGUE.md`). Fase 11 (2026-09-28): la web entera en **inglés**, rutas nuevas, navegación centrada en la Arena, diseño nuevo de "la pista" (la clasificación como una carrera por calles) y arreglo del modo "ventana aparte" del visor. (Fase 10: visor de webs, presentación animada del ganador y premio de 500. Fase 9: **Arena Points**, sin dinero real.) El detalle de cada fase está en `docs/fases/` y la auditoría de seguridad en `docs/AUDITORIA-SEGURIDAD.md`.
+>
+> (Hasta la fase 3 el proyecto se llamaba *Publifi*.)
 
 > Documento vivo. Si una decisión cambia, se actualiza aquí primero.
 
@@ -6,49 +10,69 @@
 
 ```
                         ┌──────────────────────────┐
-  Navegador ───HTTPS───▶│  Frontend (Vercel)       │  publifi.com
-  (móvil/escritorio)    │  Next.js + TS + Tailwind │
-        │               └──────────────────────────┘
-        │  REST (JSON, Bearer JWT)  +  WebSocket STOMP
-        ▼
+  Navegador ───HTTPS───▶│  Frontend (Vercel)       │  adarena.vercel.app
+  (móvil/escritorio)    │  Next.js + TS + Tailwind │  (reenvía /api/* al backend: proxy.ts)
+        │               └────────────┬─────────────┘
+        │  WebSocket STOMP           │ REST (JSON, Bearer JWT) + IP real + PROXY_SECRET
+        ▼                            ▼
 ┌──────────────────────────────────────────────┐        ┌──────────────┐
-│ Backend (Railway)            api.publifi.com │──SMTP─▶│ Resend       │
-│ Java 21 + Spring Boot 3.5                    │        └──────────────┘
-│  · API REST + Swagger       · WebSocket STOMP│        ┌──────────────┐
-│  · Spring Security + JWT    · @Scheduled +   │◀─webh.─│ Stripe       │
-│  · Rate limiting (Bucket4j)   ShedLock       │──API──▶│ (Checkout)   │
-└──────────────────────┬───────────────────────┘        └──────────────┘
+│ Backend (Render, Fráncfort)  *.onrender.com  │─HTTPS─▶│ Brevo (API)  │
+│ Java 21 + Spring Boot 4.1                    │        └──────────────┘
+│  · API REST + Swagger       · WebSocket STOMP│
+│  · Spring Security + JWT    · @Scheduled +   │   Sin pagos: todo funciona con
+│  · Rate limiting (Bucket4j)   (cierre diario)│   Arena Points (no son dinero)
+└──────────────────────┬───────────────────────┘
                        │ JDBC (Flyway gestiona el esquema)
                        ▼
               ┌──────────────────┐
-              │ PostgreSQL 17    │  (Railway, gestionado)
+              │ PostgreSQL       │  (Supabase, Fráncfort; session pooler)
               └──────────────────┘
+
+  Lector de webs (backend) ──HTTPS──▶ webs públicas de los proyectos (solo IP públicas, protección SSRF)
+  Visor (navegador) ──iframe aislado──▶ la web del proyecto (o su propia ventana si no se deja)
+  Google AdSense ◀── en /promote y, pequeño, bajo las clasificaciones (opcional)
 ```
 
-**Regla de oro:** toda la lógica de dinero, pujas y cierres vive en el backend. El frontend
-solo muestra datos y envía intenciones ("quiero pujar 5 €"). El servidor valida y decide.
+**Regla de oro:** toda la lógica de puntos, pujas, recompensas y cierres vive en el backend. El frontend
+solo muestra datos y envía intenciones ("quiero pujar 500 puntos", "llevo 10 s viendo este proyecto").
+El servidor valida y decide.
 
 ## 2. Decisiones tomadas
 
 | Tema | Decisión | Motivo |
 |---|---|---|
 | Moderación | Solo se modera al ganador. La ventana es **fija**: hasta que apruebas, se ve el contenido base | Tu elección |
-| Ganador rechazado | Se le devuelve el **100 %** al saldo y pasa el siguiente clasificado | Tu elección; lo más seguro legalmente |
-| Retirar saldo | **No**: el saldo solo sirve para pujar | Tu elección (ver riesgos en §11) |
+| Moneda | **Arena Points**: no se compran, no se venden, no se retiran ni se transfieren. 1 céntimo antiguo = 1 punto | Tu elección (fase 9): sin dinero real |
+| Cómo se consiguen | 200 al registrarse, viendo proyectos (10 cada 10 s + 40 de bonus a los 60 s, máx. 100/día por proyecto) y con Créditos extra (20 por tarea, máx. 10/día) | Tu elección (fase 9) |
+| Créditos extra | Se gana por **visitar** enlaces, nunca por seguir o dar like | Tu elección: las redes prohíben el engagement incentivado |
+| Promociones de usuarios | Gratis, se publican **al momento**; 3 denuncias las ocultan; el admin puede ocultarlas con motivo | Tu elección |
+| Anuncios (AdSense) | En `/promote` (6 huecos) y uno pequeño bajo la clasificación de la portada y de la Arena. **Nunca** donde se ganan puntos (Gana puntos, Créditos extra, visor). Sin "Auto ads" | Tu elección (fase 10) y normas de AdSense: no se puede compensar por ver anuncios |
+| Ganar puntos mirando webs | El visor muestra **la web del proyecto** (iframe aislado) o, si no se deja, la abre en su ventana; cuenta mientras la miras | Tu elección (fase 10): que cuente el tiempo en la web de verdad |
+| Premio al ganador | **+500** puntos cuando su anuncio se aprueba y sale en portada | Tu elección (fase 10): que pueda volver a pujar |
+| Presentación del ganador | Se monta con lo leído del HTML de su web (sin capturas de pantalla) y se **congela al aprobar** | Sencillo de alojar y se publica exactamente lo revisado |
+| Portada sin iframe (regla 10) | La web del ganador nunca se incrusta en la portada: su presentación se dibuja con sus datos | Regla 10 original |
+| Ganador rechazado | Se le devuelven el **100 %** de sus puntos y pasa el siguiente clasificado | Tu elección |
 | Usuarios | Cualquier persona (B2C) | Tu elección (ver riesgos en §11) |
 | Empate | Gana quien alcanzó **antes** ese total | Estándar y verificable |
 | Arrastre | Se acumula: si pierdes otra vez, conservas el 50 % del nuevo total | Aplicación literal de la regla 7 |
-| Redondeo del arrastre | Hacia abajo al céntimo (1,01 € → arrastra 0,50 €, pierde 0,51 €) | Nunca aparece dinero de la nada |
+| Redondeo del arrastre | Hacia abajo al punto (101 pts → arrastra 50, pierde 51) | Nunca aparecen puntos de la nada |
 | Incremento mínimo | Importe mínimo de **cada aportación adicional**; no hace falta superar al líder | Regla 2 (pujas acumulativas) |
 | Cambios de configuración | Se aplican desde la **siguiente** subasta | Nadie cambia las reglas a mitad de partido |
-| Dinero | Enteros en **céntimos** (`long` / `bigint`), solo EUR | Sin errores de redondeo de `double` |
+| Puntos | Enteros (`long` / `bigint`) | Sin errores de redondeo |
 | URL del anunciante | Solo `https://` | Seguridad de tus visitantes |
 | Imágenes | Re-codificadas por el servidor (PNG/JPEG, máx. 2 MB) y guardadas en PostgreSQL | Un servicio menos; se puede migrar a R2/S3 más adelante |
 | Tiempo real | **WebSocket + STOMP** | Ver §7 |
-| Hosting backend + BD | **Railway** (app + PostgreSQL gestionado) | Lo más sencillo: todo en un panel, despliegue desde Git, precio bajo |
-| Hosting frontend | **Vercel** | Creadores de Next.js |
-| Emails | SMTP de **Resend** | Buen plan gratuito, fácil de configurar |
-| Spring Boot | **3.5.x** (la última de la rama 3, como pediste) | La rama 4 ya existe; migrar más adelante es sencillo |
+| Hosting backend | **Render** (plan gratuito, Docker, Fráncfort) + UptimeRobot para que no se duerma | Tu elección (fase 12): todo gratis. Railway ya no tiene plan gratuito |
+| Base de datos | **Supabase** (PostgreSQL gratuito, siempre encendido; session pooler por IPv4) | El backend consulta cada pocos segundos: los planes por horas (Neon) no darían |
+| Hosting frontend | **Vercel** (Hobby, gratis; solo uso no comercial: con AdSense hará falta Pro u otro alojamiento) | Creadores de Next.js |
+| Emails | **Brevo** por su API HTTPS (300/día gratis, sin dominio). SMTP sigue disponible | Render gratuito bloquea los puertos SMTP |
+| Spring Boot | **4.1.x** (migrado en la fase 3; la rama 3.5 se quedó sin soporte gratuito el 30/06/2026) | Parches de seguridad y soporte vigentes |
+| Datos de ejemplo | Solo en local (perfil `dev`): 4 anunciantes, un anuncio ganador, una subasta con pujas y 3 promociones, con los puntos pasando por el ledger | Ver la web "viva" desde el primer arranque |
+| Puertos en local | Web `3000`, API `8081`, PostgreSQL `5432`. Todo se arranca con `./dev.sh` | En tu ordenador el 8080 lo usa otro proyecto |
+| Pagos | **Ninguno** desde la fase 9 (las recargas por transferencia se eliminaron) | Tu elección |
+| Nombre y vocabulario | **AdArena**. En la web no se dice "subasta": se dice **la Arena** | Tu elección (fase 4) |
+| Emails | Bandeja de salida (outbox) + SMTP configurable. Sin SMTP, se escriben en el log | Nunca se pierde un email ni se envía el de algo que se deshizo |
+| "Te han superado" por email | Como mucho uno por cada puja del superado | Sin spam en las guerras de pujas |
 
 ## 3. Reglas de negocio formalizadas
 
@@ -60,10 +84,10 @@ solo muestra datos y envía intenciones ("quiero pujar 5 €"). El servidor vali
   24 h normalmente, 23 h o 25 h los días de cambio de hora.
 
 ### 3.2 Pujar
-Para pujar hace falta: sesión iniciada, perfil de anuncio completo, subasta abierta y saldo libre suficiente.
-- Primera aportación del día: ≥ `min_bid` (1 €).
-- Aportaciones siguientes: ≥ `min_increment` (1 €).
-- El importe pasa de *saldo libre* a *saldo reservado* en la misma transacción que registra la puja.
+Para pujar hace falta: sesión iniciada, perfil de anuncio completo, subasta abierta y puntos disponibles suficientes.
+- Primera aportación del día: ≥ `min_bid` (100 pts).
+- Aportaciones siguientes: ≥ `min_increment` (100 pts).
+- Los puntos pasan de *disponibles* a *en pujas* en la misma transacción que registra la puja.
 - Cada puja lleva un `Idempotency-Key`: un doble clic no puja dos veces.
 
 ### 3.3 Anti-sniping
@@ -76,48 +100,55 @@ Cuando `now ≥ ends_at`:
 2. Ranking: `total DESC`, y a igualdad, `last_bid_seq ASC`.
 3. **Si nadie pujó:** resultado `NO_BIDS` y la portada muestra "Hoy nadie ha pujado".
 4. **Ganador (1.º):** su participación queda `WON` y se guarda una copia de su anuncio. Se crea un
-   `ad_slot` `PENDING_REVIEW`. Su dinero **sigue reservado** hasta la moderación.
+   `ad_slot` `PENDING_REVIEW`. Sus puntos **siguen retenidos** hasta la moderación.
 5. **Perdedores:** `arrastre = floor(total × 50 %)` y `perdido = total − arrastre`.
-   - El importe perdido pasa de *reservado* a *ingresos de la plataforma*.
+   - Los puntos perdidos pasan de *en pujas* a `POINTS_SPENT` (gastados).
    - El arrastre sigue reservado y se convierte en su puja inicial en B, sin que tenga que hacer nada.
 6. Se abre la subasta B con las reglas vigentes en ese momento.
 
 Todo ocurre en **una sola transacción**: o se aplica entero o no se aplica nada.
 
 ### 3.5 Moderación
-- **Aprobar:** el importe retenido pasa a ingresos y el anuncio se emite durante lo que quede de la ventana.
-- **Rechazar:** se devuelve el 100 % al saldo libre del usuario. El siguiente clasificado pasa a ser
-  candidato: su arrastre se retira de la subasta B, porque su dinero vuelve a estar retenido como
+- **Aprobar:** los puntos retenidos se gastan (`POINTS_SPENT`) y el anuncio se emite durante lo que quede de la ventana.
+- **Rechazar:** se devuelven el 100 % de los puntos al usuario. El siguiente clasificado pasa a ser
+  candidato: su arrastre se retira de la subasta B, porque sus puntos vuelven a estar retenidos como
   candidato, y se crea un nuevo `ad_slot` pendiente.
 - **Nadie modera antes de que acabe la ventana:** el slot pasa a `EXPIRED` y se devuelve el 100 %.
 
-### 3.6 Ejemplo completo con dinero
+### 3.6 Ejemplo completo con puntos
 
-Ana recarga 50 € y puja 10 € + 6 € = **16 €**. Luis recarga 20 € y puja **12 €**.
+Ana tiene 5.000 pts y puja 1.000 + 600 = **1.600**. Luis tiene 2.000 pts y puja **1.200**.
 
-| Momento | Ana libre | Ana reservado | Luis libre | Luis reservado | Tus ingresos |
+| Momento | Ana disponible | Ana en pujas | Luis disponible | Luis en pujas | Gastados |
 |---|---:|---:|---:|---:|---:|
-| Tras recargas | 50 | 0 | 20 | 0 | 0 |
-| Tras pujas | 34 | 16 | 8 | 12 | 0 |
-| Cierre (Ana 1.ª, Luis pierde 50 %) | 34 | 16 | 8 | 6 *(arrastre al día siguiente)* | 6 |
-| **Caso A:** apruebas a Ana | 34 | 0 | 8 | 6 | **22** |
-| **Caso B:** rechazas a Ana → Luis candidato | 50 | 0 | 8 | 6 *(retenido como candidato)* | 6 |
-| Caso B, apruebas a Luis | 50 | 0 | 8 | 0 | **12** |
+| Antes de pujar | 5.000 | 0 | 2.000 | 0 | 0 |
+| Tras pujas | 3.400 | 1.600 | 800 | 1.200 | 0 |
+| Cierre (Ana 1.ª, Luis pierde 50 %) | 3.400 | 1.600 | 800 | 600 *(arrastre al día siguiente)* | 600 |
+| **Caso A:** apruebas a Ana | 3.400 | 0 | 800 | 600 | **2.200** |
+| **Caso B:** rechazas a Ana → Luis candidato | 5.000 | 0 | 800 | 600 *(retenido como candidato)* | 600 |
+| Caso B, apruebas a Luis | 5.000 | 0 | 800 | 0 | **1.200** |
 
-En todo momento: `Σ saldos de usuarios + tus ingresos = total recargado`.
+En todo momento: `Σ puntos de los usuarios + gastados = repartidos`.
 
-## 4. El dinero: libro de movimientos (ledger) de partida doble
+## 4. Los puntos: libro de movimientos (ledger) de partida doble
 
 Cada movimiento es una `ledger_transaction` con apuntes (`ledger_entries`) que **suman cero**.
+Cuentas del sistema: `POINTS_ISSUED` (de donde salen todos los puntos que se reparten) y
+`POINTS_SPENT` (donde acaban los gastados). Cada usuario tiene `USER_AVAILABLE` y `USER_RESERVED`.
 
 | Transacción | Movimiento | Clave de idempotencia |
 |---|---|---|
-| `TOP_UP` | STRIPE_CLEARING → USER_AVAILABLE | `topup:<checkout_session>` |
+| `SIGNUP_BONUS` | POINTS_ISSUED → USER_AVAILABLE | `signup:<user_id>` |
+| `VIEW_REWARD` | POINTS_ISSUED → USER_AVAILABLE | `view:<project_view_id>:<nº de tick>` |
+| `TASK_REWARD` | POINTS_ISSUED → USER_AVAILABLE | `task:<completion_id>` |
+| `TEST_GRANT` | POINTS_ISSUED → USER_AVAILABLE (solo en local y en tests) | `demo:points:…` |
 | `BID_RESERVE` | USER_AVAILABLE → USER_RESERVED | `bid:<bid_id>` |
-| `BID_FORFEIT` | USER_RESERVED → PLATFORM_REVENUE | `forfeit:<participation_id>` |
-| `BID_WIN_CHARGE` | USER_RESERVED → PLATFORM_REVENUE | `win:<ad_slot_id>` |
-| `WINNER_REFUND` | USER_RESERVED (+ PLATFORM_REVENUE) → USER_AVAILABLE | `refund:<ad_slot_id>` |
+| `BID_FORFEIT` | USER_RESERVED → POINTS_SPENT | `forfeit:<participation_id>` |
+| `BID_WIN_CHARGE` | USER_RESERVED → POINTS_SPENT | `win:<ad_slot_id>` |
+| `WINNER_REFUND` | USER_RESERVED (+ POINTS_SPENT) → USER_AVAILABLE | `refund:<ad_slot_id>` |
+| `WINNER_BONUS` | POINTS_ISSUED → USER_AVAILABLE (500 al ganador) | `winner-bonus:<ad_slot_id>` |
 | `ADMIN_ADJUSTMENT` | Corrección manual auditada | `adjust:<uuid>` |
+| `TOP_UP` | Histórico (recargas en euros hasta la fase 8) | — |
 
 **Redes de seguridad en PostgreSQL** (funcionan aunque el código Java tenga un bug):
 1. Un trigger diferido rechaza el `COMMIT` si una transacción no suma cero.
@@ -125,6 +156,41 @@ Cada movimiento es una `ledger_transaction` con apuntes (`ledger_entries`) que *
 3. Un `CHECK` impide que una cuenta de usuario quede en negativo.
 4. Un `UNIQUE (idempotency_key)` impide que la misma operación se contabilice dos veces.
 5. La vista `ledger_account_mismatches` debe estar siempre vacía. La vigilan los tests y el panel de administración.
+
+### 4.1 Cómo se ganan los puntos (y el antitrampas)
+
+**Mirando la web de un proyecto** (`/watch/[id]`, visor a pantalla completa): la web del
+proyecto se ve dentro de AdArena (iframe con `sandbox`) si lo permite (`frame-ancestors` /
+`X-Frame-Options`); si no, se abre en su propia ventana. El navegador cuenta el tiempo que la miras
+(`useActiveTimer`: dentro de AdArena, pestaña visible + foco + actividad; en ventana aparte, desde que
+la abres y mientras estás **fuera de AdArena**, hasta que vuelves o pulsas "I'm done". Ya no se mira
+`ventana.closed`: YouTube, X o Instagram envían `Cross-Origin-Opener-Policy` y el navegador corta el
+enlace con la ventana, que parece cerrada al instante; fase 11) y pide tramos de 10 s. El servidor (`ViewRewardService`) decide:
+- hay que haber abierto el visor antes (`POST /start` apunta la hora del servidor);
+- **un solo reloj de atención por persona** (`AttentionClock`): los tramos pagados nunca superan el
+  tiempo real desde el último premio del usuario (de cualquier proyecto o tarea), con 0,4 s de margen;
+- se pueden pedir varios tramos a la vez (al volver de otra ventana), pero nunca más de los que caben;
+- los premios de un usuario se procesan de uno en uno (se bloquean sus cuentas de puntos);
+- como mucho 100 pts al día por empresa (`project_views`, único por visitante, empresa y día);
+- tu propio proyecto no cuenta (también con un `CHECK` en la base de datos).
+
+**Bonus links** (antes «Créditos extra»; `/watch/link/[id]`, el mismo visor): se cobra tras mirar el enlace 10 s; el servidor
+exige 10 s desde que se abrió y desde el último premio del usuario, una vez por tarea y día, hasta 10 al día.
+
+**Promociones** (`/promote`): cualquier usuario publica gratis hasta 5 enlaces `https`, que
+salen como tareas para los demás. 3 denuncias de usuarios distintos las ocultan hasta que el admin decide.
+
+**Premio al ganador:** 500 puntos (`WINNER_BONUS`) al aprobarse su anuncio.
+
+### 4.2 Las webs de los proyectos (`site/`)
+
+`SitePreviewUpdater` lee la web (HTML + imágenes) de anuncios y promociones en segundo plano: al
+guardarlos, cada 15 min las que están en uso y tienen más de 20 h, y a petición (mínimo 2 min entre
+lecturas). Solo se conecta a **IP públicas** (`PublicDnsResolver`: protección SSRF), solo https en el
+puerto 443 (también en cada redirección), con límites de tiempo y tamaño. Las imágenes se vuelven a
+codificar y se guardan en AdArena. Las redes sociales no se leen (no se dejan). Con lo leído se decide
+el modo del visor (`SiteInfo`) y se monta la presentación del ganador (`Showcase`), que se congela en
+`ad_slots.showcase` al aprobarlo.
 
 ## 5. Modelo de datos
 
@@ -143,8 +209,12 @@ erDiagram
     users ||--o{ ledger_accounts : "AVAILABLE / RESERVED"
     ledger_transactions ||--|{ ledger_entries : "apuntes (suman 0)"
     ledger_accounts ||--o{ ledger_entries : "movimientos"
-    users ||--o{ top_ups : "recargas"
-    top_ups |o--o| ledger_transactions : "abono"
+    users ||--o{ project_views : "ve proyectos"
+    users ||--o{ social_tasks : "promociona"
+    social_tasks ||--o{ social_task_completions : "visitas"
+    social_tasks ||--o{ social_task_reports : "denuncias"
+    users ||--o{ site_previews : "webs leídas"
+    site_previews }o--o| images : "logo y fotos"
     users ||--o{ notifications : "recibe"
     users ||--o{ admin_audit_log : "admin actúa"
 ```
@@ -160,14 +230,18 @@ erDiagram
 | `auction_participations` | **Total** de un usuario en una subasta: ranking, bloqueo y copia del anuncio al cierre |
 | `bids` | Historial de cada aportación (`BID`, `CARRY_OVER`, `CARRY_REVERSAL`) |
 | `ad_slots` | Candidatos a la ventana de emisión + moderación |
-| `ledger_*` | Monedero y contabilidad |
-| `top_ups`, `stripe_events` | Recargas y webhooks idempotentes |
+| `ledger_*` | Puntos y su contabilidad |
+| `project_views` | Lo que cada usuario ha visto de cada empresa cada día (ticks, puntos, bonus, último tick) |
+| `site_previews` | Lo leído de cada web (una fila por dirección): si se puede mostrar dentro, nombre, titular, color, logo, fotos y frases |
+| `social_tasks`, `social_task_completions`, `social_task_reports` | Promociones (Créditos extra), quién las ha hecho cada día y denuncias |
 | `notifications`, `email_outbox` | Avisos in-app y emails con reintentos |
+| `password_reset_tokens` | Enlaces de "he olvidado mi contraseña" (solo su hash; 60 min; un uso) |
 | `admin_audit_log` | Rastro de cada acción de administración |
-| `shedlock` | Candado de tareas programadas entre instancias |
+| `shedlock` | Reservada. No hace falta: cada tarea bloquea sus filas y es segura aunque se ejecute dos veces a la vez |
 
-Migraciones: `backend/src/main/resources/db/migration/V1…V8`. **Una migración ya aplicada
-nunca se edita**: cualquier cambio va en una nueva `V9__…sql`.
+Migraciones: `backend/src/main/resources/db/migration/V1…V11` (V10: Arena Points, ganar puntos y
+promociones; borra `top_ups` y `payment_events`. V11: `site_previews`, `ad_slots.showcase` y `WINNER_BONUS`).
+**Una migración ya aplicada nunca se edita**: cualquier cambio va en una nueva `V12__…sql`.
 
 ## 6. Concurrencia
 
@@ -175,18 +249,21 @@ nunca se edita**: cualquier cambio va en una nueva `V9__…sql`.
   (ordenadas por id). Mismo orden siempre = sin interbloqueos (*deadlocks*).
 - **Puja:** `SELECT … FOR UPDATE` sobre la subasta. Todas las pujas de una subasta se ejecutan una
   detrás de otra. Con el volumen previsto (decenas o cientos de pujas al día) el coste es despreciable,
-  y el ranking, el saldo y el anti-sniping siempre son coherentes.
-- **Cierre:** la tarea se ejecuta cada ~10 s y busca subastas con `ends_at ≤ now`. ShedLock evita
-  que corra en dos instancias a la vez. Además, el bloqueo de la fila y la comprobación del estado
-  `OPEN` hacen que ejecutarla dos veces no duplique nada.
+  y el ranking, los puntos y el anti-sniping siempre son coherentes.
+- **Cierre:** la tarea se ejecuta cada 5 s y cierra la ronda si `ends_at ≤ now`. El bloqueo de la fila y la
+  comprobación del estado `OPEN` hacen que ejecutarla dos veces (o en dos instancias) no duplique nada.
+- **Orden de bloqueo global:** fila de negocio (hueco de anuncio, visita o tarea) → ronda → participaciones →
+  cuentas de TODOS los usuarios implicados, a la vez y por id → cuentas del sistema (`POINTS_ISSUED`, después `POINTS_SPENT`).
+- **Recompensas:** primero las cuentas del usuario (así sus ticks y tareas van de uno en uno), después la fila
+  de la visita o la tarea, y por último `POINTS_ISSUED`.
 - `@Version` (bloqueo optimista) en el resto de entidades editables, como perfiles o configuración.
 
 ## 7. Tiempo real: WebSocket + STOMP (y por qué no SSE)
 
 Aquí SSE bastaría técnicamente, porque el servidor solo empuja datos: las pujas van por REST.
 Elijo **STOMP** porque Spring trae de serie:
-- temas públicos: `/topic/auction` con el ranking, `ends_at` y la hora del servidor;
-- colas privadas por usuario: `/user/queue/notifications`, para el aviso "te han superado";
+- temas públicos: `/topic/arena` con la portada entera: ranking, `endsAt` y la hora del servidor;
+- colas privadas por usuario: `/user/queue/notifications`, para todos los avisos ("te han superado", "has ganado"…);
 - autenticación del JWT en el `CONNECT` (`EventSource`, la API de SSE, no puede enviar la cabecera `Authorization`).
 
 El **contador** no se emite cada segundo. El servidor envía `endsAt` y `serverTime`, y el navegador
@@ -199,16 +276,22 @@ Para escalar a varias instancias se añadiría un broker externo (RabbitMQ) o `L
 
 - **Access token (JWT, 15 min):** se guarda en memoria en el navegador (nunca en `localStorage`,
   para reducir el riesgo si hay un fallo XSS) y se envía como `Authorization: Bearer …`.
-- **Refresh token (30 días):** en una cookie `HttpOnly; Secure; SameSite=Lax; Path=/api/auth`
-  emitida por `api.publifi.com`. JavaScript no puede leerla. Se rota en cada uso.
-- **Dominios en producción:** `publifi.com` (Vercel) y `api.publifi.com` (Railway). Son el *mismo
-  sitio*, así que el navegador envía la cookie. Con `*.vercel.app` + `*.railway.app` Safari la
-  bloquearía como cookie de terceros. Por eso **hace falta un dominio propio** (fase 10).
-- **CORS:** el backend solo acepta el origen `FRONTEND_URL`, con `allowCredentials=true` y las
+- **Refresh token (30 días):** en una cookie `HttpOnly; Secure; SameSite=Lax; Path=/api/auth`.
+  JavaScript no puede leerla. Se rota en cada uso.
+- **En la nube (fase 12), sin dominio propio:** la web está en `*.vercel.app` y el backend en
+  `*.onrender.com`, que son sitios distintos: el navegador bloquearía la cookie. Por eso la web
+  **reenvía `/api/*` al backend** (`frontend/src/proxy.ts`, `NEXT_PUBLIC_API_URL=/`): para el navegador
+  la API está en la misma dirección que la web y la cookie es propia de la web. El WebSocket va directo
+  al backend (`NEXT_PUBLIC_WS_URL`): no usa cookies, se autentica con el token en la cabecera STOMP.
+  Al reenviar, la web añade la IP real del visitante y una clave compartida (`PROXY_SECRET`); el
+  backend solo cree esa IP si la clave coincide (límites por persona, no por Vercel).
+- **Con dominio propio (más adelante):** `adarena.com` (web) y `api.adarena.com` (backend) son el mismo
+  sitio; el reenvío puede seguir igual.
+- **CORS:** el backend solo acepta los orígenes de `FRONTEND_ORIGINS`, con `allowCredentials=true` y las
   cabeceras `Authorization`, `Content-Type` e `Idempotency-Key`.
-- **CSRF:** las rutas con Bearer no son vulnerables. Las dos rutas que usan la cookie (`/refresh` y
-  `/logout`) se protegen con `SameSite` y comprobando la cabecera `Origin`.
-- **En local:** `localhost:3000` y `localhost:8080` cuentan como el mismo sitio y todo funciona sin trucos.
+- **CSRF:** las rutas con Bearer no son vulnerables. Las rutas que usan la cookie (`/api/auth/**`) se
+  protegen con `SameSite=Lax` y comprobando la cabecera `Origin` (`OriginCheckFilter`).
+- **En local:** `localhost:3000` y `localhost:8081` cuentan como el mismo sitio y todo funciona sin trucos.
 
 ## 9. Estructura del backend
 
@@ -218,27 +301,28 @@ Organizado **por módulo de negocio** y, dentro de cada módulo, **por capas**:
 backend/
 ├── pom.xml
 └── src/
-    ├── main/java/com/publifi/
-    │   ├── PublifiApplication.java
-    │   ├── common/        BaseEntity, errores globales, utilidades (dinero, reloj)
-    │   ├── security/      JWT, filtros, SecurityConfig, rate limiting       (fase 2)
-    │   ├── user/          domain · repository · service · controller · dto  (fase 2)
-    │   ├── image/         subida y saneado de imágenes                      (fase 3)
-    │   ├── adprofile/     perfil de anuncio                                 (fase 3)
-    │   ├── settings/      configuración global                              (fase 4/8)
-    │   ├── auction/       pujas, ranking, anti-sniping, WebSocket, cierre   (fases 4 y 6)
-    │   ├── adslot/        anuncio vigente y moderación                      (fases 3 y 8)
-    │   ├── wallet/        ledger y saldos                                   (fase 5)
-    │   ├── payment/       Stripe Checkout + webhooks                        (fase 5)
-    │   ├── notification/  notificaciones + emails (outbox)                  (fase 7)
-    │   └── admin/         panel, estadísticas, auditoría                    (fase 8)
+    ├── main/java/com/adarena/
+    │   ├── AdArenaApplication.java
+    │   ├── common/        errores, config, textos/URLs/puntos, "/" → web, jobs/ (tareas automáticas)
+    │   ├── security/      JWT, SecurityConfig, rate limiting, origen y tamaño de las peticiones
+    │   ├── user/          cuentas, sesiones, recuperar contraseña
+    │   ├── image/         subida y saneado de imágenes
+    │   ├── adprofile/     perfil de anuncio
+    │   ├── settings/      configuración de la Arena (editable por el admin)
+    │   ├── auction/       pujas, ranking, anti-sniping, apertura y CIERRE diario
+    │   ├── adslot/        huecos ganadores y moderación (aprobar, rechazar, caducar)
+    │   ├── home/          portada e historial (API pública)
+    │   ├── realtime/      WebSocket STOMP
+    │   ├── wallet/        ledger y puntos
+    │   ├── earn/          ganar puntos (ver webs), Créditos extra, promociones y el reloj de atención
+    │   ├── site/          leer las webs de los proyectos (SSRF-safe), visor y presentación del ganador
+    │   ├── notification/  avisos, emails (outbox + SMTP)
+    │   ├── admin/         panel, resumen, auditoría y herramientas de desarrollo
+    │   └── demo/          datos de ejemplo, SOLO en local (perfil dev)
     ├── main/resources/
-    │   ├── application.yml
-    │   └── db/migration/V1…V8__*.sql
-    └── test/java/com/publifi/
-        ├── TestcontainersConfiguration.java   PostgreSQL real en Docker
-        ├── schema/                            migraciones + mapeo de entidades
-        └── auction/domain/                    reglas de dominio (tests unitarios)
+    │   ├── application.yml, application-dev.yml
+    │   └── db/migration/V1…V11__*.sql
+    └── test/java/com/adarena/     257 tests (PostgreSQL real con Testcontainers)
 ```
 
 Dentro de cada módulo:
@@ -256,55 +340,83 @@ evitamos cargas perezosas sorpresa y el acoplamiento entre módulos.
 
 ## 10. Estructura del frontend
 
-Generado con `create-next-app` (Next.js 16, App Router, TypeScript, Tailwind 4). Plan de carpetas:
+Next.js 16 (App Router), TypeScript y Tailwind 4:
 
 ```
 frontend/src/
-├── app/
-│   ├── layout.tsx               cabecera, pie, proveedor de sesión
-│   ├── page.tsx                 PORTADA: anuncio vigente + desplegable (tiempo + ranking)
-│   ├── subasta/page.tsx         contador grande, ranking, pujar / incrementar
-│   ├── historial/page.tsx       ganadores anteriores
-│   ├── entrar/page.tsx          login
-│   ├── registro/page.tsx
-│   ├── panel/                   perfil de anuncio, saldo, pujas, notificaciones
-│   ├── admin/                   moderación, configuración, estadísticas
-│   └── legal/                   términos, privacidad
-├── components/                  ui/, auction/, ad/, layout/
-├── lib/
-│   ├── api.ts                   cliente fetch con renovación automática del token
-│   ├── auth.tsx                 contexto de sesión
-│   ├── realtime.ts              cliente STOMP (@stomp/stompjs)
-│   └── format.ts                céntimos → "16,00 €", fechas en Europe/Madrid
-└── proxy.ts                     redirecciones previas (en Next 16 "middleware" se llama "proxy")
+├── app/                         RUTAS (cada carpeta con page.tsx es una página)
+│   ├── layout.tsx               tipografías, cabecera, pie, sesión y Arena en directo
+│   ├── page.tsx                 PORTADA: ganador de hoy + marcador de la Arena + top 5 + "How to win" (3 pasos)
+│   ├── arena/                   la Arena: marcador, clasificación en directo y tarjeta para pujar
+│   ├── earn/, earn/links/       Earn points (webs de hoy) y Bonus links
+│   ├── watch/[id]/              visor de la web de un proyecto (gana puntos mirándola)
+│   ├── watch/link/[id]/         visor de un Bonus link
+│   ├── how-it-works/            la guía completa (solo enlazada desde el pie y desde cada sección)
+│   ├── promote/                 promociona tu enlace gratis (la página con más anuncios de AdSense)
+│   ├── ads.txt/                 generado desde NEXT_PUBLIC_ADSENSE_CLIENT
+│   ├── winners/                 días anteriores
+│   ├── login/, signup/, forgot-password/, reset-password/
+│   ├── account/                 My ad · My points · My bids · Notifications (+ Log out)
+│   ├── admin/                   Overview · Moderation · Promotions · Settings · Audit log
+│   ├── legal/terms, privacy
+│   │   (las rutas antiguas en español redirigen con 308: next.config.ts → redirects)
+│   └── not-found.tsx, icon.svg
+├── components/
+│   ├── arena/                   ArenaScoreboard (el marcador, compartido portada/Arena), Leaderboard (una sola
+│   │                            lista: fila amarilla del 1.º + resto), ProjectDialog, BidPanel, Countdown (fichas)
+│   ├── ad/WinnerShowcase.tsx    la presentación animada del ganador (5 escenas, su color de marca)
+│   ├── ad/AdView.tsx            el anuncio clásico (si su web no se pudo leer) y vistas previas
+│   ├── viewer/                  SiteViewer (barra de puntos + la web en iframe o en su ventana), SiteAvatar
+│   ├── earn/                    ProjectViewer, TaskViewer, EarnShell (tu marcador + 2 pestañas), EarnProjectsView, TasksView
+│   ├── promote/, ads/           PromoteView y los bloques de AdSense
+│   ├── home/HomeClient.tsx      la portada (franja amarilla "Bid now" + marcador + top 5 + 3 pasos)
+│   ├── history/, panel/, admin/, auth/, layout/ (cabecera con el marcador en directo), ui/, fx/
+│   └── Logo.tsx, icons.tsx
+└── lib/
+    ├── api.ts                   cliente de la API (sesión en memoria y renovación automática)
+    ├── auth-context.tsx         quién ha iniciado sesión
+    ├── arena-context.tsx        datos en directo, avisos emergentes, avisos sin leer y tus puntos
+    ├── useActiveTimer.ts        tiempo mirando la web (dentro de AdArena o en su ventana)
+    ├── adsense.ts               configuración de AdSense
+    ├── realtime.ts              cliente STOMP
+    └── format.ts, types.ts, config.ts, navigation.ts, hooks.ts, cn.ts
 ```
+
+Seguridad de la web: CSP, `X-Frame-Options: DENY`, `nosniff`, `Referrer-Policy`, `Permissions-Policy`
+y HSTS en producción (`next.config.ts`). La CSP admite iframes `https:` (el visor, con `sandbox`). Con
+AdSense configurado, admite además `https:` en scripts, imágenes y conexiones (Google no admite listas de dominios).
 
 ## 11. Riesgos que debes revisar con un profesional antes de lanzar
 
-1. **Ley del juego:** perder parte de lo pujado sin ganar se parece a las *subastas de céntimo*.
-   Consulta con un abogado si Publifi podría considerarse juego (Ley 13/2011) o si la cláusula del
-   50 % sería abusiva.
-2. **Consumidores (B2C) + saldo no retirable:** en España, retener indefinidamente saldo prepagado
-   de consumidores tiene riesgo legal. Revisa también el derecho de desistimiento de 14 días.
-3. **Stripe:** su lista de negocios restringidos incluye las subastas con coste por puja
-   ("bidding fee auctions"). **Antes de lanzar, describe el modelo a Stripe y pide confirmación
-   por escrito**, o te pueden cerrar la cuenta con fondos retenidos.
-4. **Fiscalidad:** IVA (21 %) sobre los servicios de publicidad y cuándo se reconoce el ingreso.
-   Consúltalo con tu gestor.
-
-El código dejará todo configurable (porcentaje de arrastre, retiradas, etc.) para adaptarte a lo que te digan.
+1. ~~Ley del juego con dinero~~ → muy reducido en la fase 9: los puntos no se compran ni se cambian
+   por dinero. **Si algún día se venden puntos**, el riesgo vuelve (subastas de céntimo, Ley 13/2011):
+   consúltalo antes con un abogado.
+2. **Términos y privacidad:** reescritos para los puntos, el antitrampas y AdSense. Que los revise un abogado.
+3. **AdSense:** Google revisa la web antes de aprobarla y puede suspender la cuenta si detecta tráfico
+   incentivado en páginas con anuncios. Por eso nunca hay anuncios donde se ganan puntos y no se usan
+   los anuncios automáticos. En Europa hace falta su CMP (Privacidad y mensajes). Además, las visitas que
+   AdArena manda a las webs de los proyectos son incentivadas: si esas webs tienen AdSense, es su
+   responsabilidad (se avisa en los términos).
+4. **Normas de las redes sociales:** YouTube, X, Instagram o TikTok prohíben pagar por likes o
+   seguidores. AdArena solo premia visitar; no cambies eso.
+5. **Fiscalidad:** los ingresos de AdSense son actividad económica (alta, IVA, IRPF). Consúltalo con tu gestor.
+6. ~~Spring Boot 3.5 sin soporte~~ → resuelto: migrado a Spring Boot 4.1 en la fase 3.
 
 ## 12. Hoja de ruta
 
 | Fase | Contenido | Estado |
 |---|---|---|
 | 1 | Arquitectura, modelo de datos, migraciones, estructura | ✅ |
-| 2 | Configuración del backend, Docker Compose, autenticación JWT | ⏳ |
-| 3 | Perfil de anuncio, imágenes, portada | |
-| 4 | Pujas, ranking en tiempo real, contador, anti-sniping | |
-| 5 | Monedero + Stripe (webhooks) | |
-| 6 | Cierre diario, arrastre, día vacío | |
-| 7 | Emails y "te han superado" | |
-| 8 | Panel de administración y moderación | |
-| 9 | Legal, pulido de diseño, batería completa de tests | |
-| 10 | Despliegue y checklist de lanzamiento | |
+| 2 | Configuración del backend, Docker Compose, autenticación JWT | ✅ |
+| 3 | Perfil de anuncio, imágenes, portada (+ migración a Spring Boot 4) | ✅ |
+| 4 | Pujas, ranking en tiempo real, contador, anti-sniping (+ nombre AdArena) | ✅ |
+| 5 | Monedero + recargas por transferencia bancaria (sustituidas por los puntos en la fase 9) | ✅ |
+| 6 | Cierre diario, arrastre, día vacío | ✅ |
+| 7 | Avisos, emails y recuperar la contraseña | ✅ |
+| 8 | Panel de administración y moderación (+ rediseño del ganador y la clasificación) | ✅ |
+| — | Auditoría de seguridad (`docs/AUDITORIA-SEGURIDAD.md`) | ✅ |
+| 9 | **Arena Points** (sin dinero), ganar puntos viendo proyectos, Créditos extra, promociones y AdSense | ✅ |
+| 10 | Visor de webs para ganar puntos, presentación animada del ganador, premio de 500, rediseño y guía | ✅ |
+| 11 | Web en inglés, navegación centrada en la Arena, diseño nuevo y arreglo del modo "ventana aparte" | ✅ |
+| 12 | Preparado para la nube gratis: Supabase + Render + Vercel + Brevo + UptimeRobot; guía `docs/DESPLIEGUE.md`; sin herramientas de desarrollo | ✅ (falta que lo subas tú) |
+| 13 | Legal (con tu abogado, términos en inglés), dominio propio y AdSense, verificación de email | |

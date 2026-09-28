@@ -9,7 +9,7 @@
 --   USER_AVAILABLE    saldo libre del usuario (puede pujar con él)       >= 0
 --   USER_RESERVED     saldo comprometido en pujas o como ganador         >= 0
 --   PLATFORM_REVENUE  ingresos de la plataforma (tuyos)
---   STRIPE_CLEARING   contrapartida del dinero que entra desde Stripe (queda en negativo)
+--   PAYMENTS_CLEARING contrapartida del dinero que entra de fuera (transferencias, pasarelas); queda en negativo
 --
 -- Invariante global: SUM(balance_cents) de todas las cuentas = 0.
 
@@ -22,7 +22,7 @@ CREATE TABLE ledger_accounts (
     version        bigint        NOT NULL DEFAULT 0,
 
     CONSTRAINT ck_ledger_accounts_type
-        CHECK (type IN ('USER_AVAILABLE', 'USER_RESERVED', 'PLATFORM_REVENUE', 'STRIPE_CLEARING')),
+        CHECK (type IN ('USER_AVAILABLE', 'USER_RESERVED', 'PLATFORM_REVENUE', 'PAYMENTS_CLEARING')),
     -- Las cuentas USER_* pertenecen a un usuario; las de sistema, a nadie.
     CONSTRAINT ck_ledger_accounts_owner
         CHECK ((type IN ('USER_AVAILABLE', 'USER_RESERVED')) = (user_id IS NOT NULL)),
@@ -36,10 +36,10 @@ CREATE UNIQUE INDEX ux_ledger_accounts_system_type ON ledger_accounts (type)    
 
 INSERT INTO ledger_accounts (id, user_id, type, balance_cents)
 VALUES (gen_random_uuid(), NULL, 'PLATFORM_REVENUE', 0),
-       (gen_random_uuid(), NULL, 'STRIPE_CLEARING', 0);
+       (gen_random_uuid(), NULL, 'PAYMENTS_CLEARING', 0);
 
 -- Tipos de transacción:
---   TOP_UP          recarga con Stripe            STRIPE_CLEARING -> USER_AVAILABLE
+--   TOP_UP          recarga confirmada            PAYMENTS_CLEARING -> USER_AVAILABLE
 --   BID_RESERVE     puja                          USER_AVAILABLE  -> USER_RESERVED
 --   BID_WIN_CHARGE  ganador aprobado              USER_RESERVED   -> PLATFORM_REVENUE
 --   BID_FORFEIT     parte perdida al no ganar     USER_RESERVED   -> PLATFORM_REVENUE
@@ -49,7 +49,7 @@ CREATE TABLE ledger_transactions (
     id               uuid          PRIMARY KEY,
     type             varchar(30)   NOT NULL,
     -- Hace idempotente cualquier operación de dinero: repetirla choca con este UNIQUE.
-    -- Ej.: 'topup:<stripe_session_id>', 'forfeit:<participation_id>'
+    -- Ej.: 'topup:<top_up_id>', 'forfeit:<participation_id>'
     idempotency_key  varchar(150)  NOT NULL,
     reference_type   varchar(40),
     reference_id     uuid,

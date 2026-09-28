@@ -1,0 +1,50 @@
+# =====================================================================
+# Entorno de desarrollo local de AdArena.
+#
+#   docker compose up -d                 → solo PostgreSQL (el backend lo arrancas con Maven)
+#   docker compose --profile full up -d  → PostgreSQL + backend en Docker
+#   docker compose down                  → parar (los datos se conservan)
+#   docker compose down -v               → parar y BORRAR la base de datos local
+# =====================================================================
+name: adarena
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: adarena
+      POSTGRES_USER: adarena
+      POSTGRES_PASSWORD: adarena
+      TZ: UTC
+    ports:
+      # Solo accesible desde TU ordenador (127.0.0.1): nadie de tu misma wifi puede conectarse.
+      # Puerto configurable: POSTGRES_PORT=5433 docker compose up -d
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U adarena -d adarena"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  backend:
+    profiles: ["full"]
+    build: ./backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      DB_URL: jdbc:postgresql://postgres:5432/adarena
+      DB_USERNAME: adarena
+      DB_PASSWORD: adarena
+      FRONTEND_ORIGINS: http://localhost:3000
+    ports:
+      # Solo desde tu ordenador. Puerto configurable: BACKEND_PORT=9090 docker compose --profile full up -d
+      - "127.0.0.1:${BACKEND_PORT:-8081}:8081"
+
+volumes:
+  postgres-data:
