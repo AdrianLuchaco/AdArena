@@ -1,18 +1,37 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { LegalPage } from "@/components/legal/LegalPage";
+import { CONTACT_EMAIL, LEGAL_UPDATED } from "@/lib/legal";
 
 export const metadata: Metadata = { title: "Terms and conditions" };
 
 export default function TermsPage() {
   return (
-    <LegalPage title="Terms and conditions" updated="27 September 2026 (version 2026-09-27-en)">
+    <LegalPage title="Terms and conditions" updated={`${LEGAL_UPDATED} (version 2026-09-28-en)`}>
       <p>
         On AdArena, projects compete every day by bidding <strong>Arena Points</strong> to take over the website’s
         homepage for 24 hours (the “Arena”). By creating an account you accept these terms. Please read them carefully,
         especially the section on <strong>what happens to your points if you don’t win</strong>.
       </p>
+      <p>
+        AdArena is run from Spain. You can contact us at <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>. How we
+        handle your data is explained in the <Link href="/legal/privacy">Privacy policy</Link>.
+      </p>
 
-      <h2>1. What Arena Points are</h2>
+      <h2>1. Your account</h2>
+      <ul>
+        <li>You must be at least 14 years old to create an account.</li>
+        <li>
+          One account per person. Give real information and keep your password to yourself: you are responsible for what
+          is done from your account.
+        </li>
+        <li>
+          You can stop using AdArena whenever you want and ask us to delete your account by writing to us from its
+          email.
+        </li>
+      </ul>
+
+      <h2>2. What Arena Points are</h2>
       <ul>
         <li>
           They are points for taking part in AdArena. <strong>They are not money</strong> and have no monetary value:
@@ -29,15 +48,18 @@ export default function TermsPage() {
         </li>
       </ul>
 
-      <h2>2. How the Arena works</h2>
+      <h2>3. How the Arena works</h2>
       <ul>
         <li>There is a bidding round every day that closes at 00:00 (Madrid time).</li>
         <li>You can bid several times: your bids for the day add up.</li>
-        <li>If someone bids in the last 2 minutes, the close is pushed back 2 minutes (up to a maximum number of extensions).</li>
+        <li>
+          If someone bids in the last 2 minutes, the close is pushed back 2 minutes (up to a maximum number of
+          extensions).
+        </li>
         <li>Whoever has the highest total at the close wins. On a tie, whoever reached that total first wins.</li>
       </ul>
 
-      <h2>3. What happens to your points</h2>
+      <h2>4. What happens to your points</h2>
       <ul>
         <li>
           <strong>If you win:</strong> you spend all the points in your bid and your ad takes over the homepage the
@@ -52,18 +74,18 @@ export default function TermsPage() {
           takes the spot.
         </li>
         <li>
-          <strong>If we don’t review your winning ad in time</strong> (before its day on the homepage ends), you get 100%
-          of your points back.
+          <strong>If we don’t review your winning ad in time</strong> (before its day on the homepage ends), you get
+          100% of your points back.
         </li>
       </ul>
 
-      <h2>4. Earning points fairly</h2>
+      <h2>5. Earning points fairly</h2>
       <ul>
         <li>
           <strong>Watching websites:</strong> you earn points while you watch a project’s website, inside AdArena or, if
-          that website doesn’t allow being shown inside others, in its own window. Inside AdArena, the count stops if you
-          switch tabs, go to another app or stop using it. With a separate window, points count while you’re away from
-          AdArena on that website, and stop when you come back to AdArena or say you’re done.
+          that website doesn’t allow being shown inside others, in its own window. Inside AdArena, the count stops if
+          you switch tabs, go to another app or stop using it. With a separate window, points count while you’re away
+          from AdArena on that website, and stop when you come back to AdArena or say you’re done.
         </li>
         <li>
           <strong>Bonus links:</strong> you earn points by watching links other users promote. We will never ask you for
@@ -81,7 +103,7 @@ export default function TermsPage() {
         <li>No points are ever earned for seeing or clicking ads.</li>
       </ul>
 
-      <h2>5. Promoting your links</h2>
+      <h2>6. Promoting your links</h2>
       <ul>
         <li>
           You can post links to your website or your profiles (YouTube, X, Instagram…) for free so they appear in other
@@ -98,14 +120,14 @@ export default function TermsPage() {
         </li>
       </ul>
 
-      <h2>6. What is shown publicly</h2>
+      <h2>7. What is shown publicly</h2>
       <p>
         While you compete, your ad (name, image, description and website) and your current bid total are shown on the
         homepage and in the Arena. When the day ends, they stay in the winners’ history as they were at the close. Your
         promotions are shown to logged-in users.
       </p>
 
-      <h2>7. Prohibited content</h2>
+      <h2>8. Prohibited content</h2>
       <p>We will not publish ads or promotions that include, among other things:</p>
       <ul>
         <li>Illegal, misleading or fraudulent content, or content that infringes third-party rights.</li>
@@ -114,8 +136,10 @@ export default function TermsPage() {
         <li>Links to websites with malware, phishing or impersonation.</li>
       </ul>
 
-      <h2>8. Your ad and your website</h2>
-      <p>You are responsible for the content of your ad and your website. You can edit it until the day’s round closes.</p>
+      <h2>9. Your ad and your website</h2>
+      <p>
+        You are responsible for the content of your ad and your website. You can edit it until the day’s round closes.
+      </p>
       <ul>
         <li>
           By saving your ad or posting a promotion, you authorise us to read the public page you link to (its title,
@@ -137,12 +161,48 @@ export default function TermsPage() {
         </li>
       </ul>
 
-      <h2>9. Advertising</h2>
+      <h2>10. Advertising</h2>
       <p>
         AdArena may be funded by ads served by our advertising partner, Ezoic, and the advertisers it works with. They
         appear on the homepage, on Promote and, small, under the Arena standings. Never on pages where you earn points:
         points never depend on seeing or clicking ads. Those ads are chosen by our partner; we don’t review them one by
         one and they are not part of the Arena.
+      </p>
+
+      <h2>11. Suspending or closing accounts</h2>
+      <p>
+        If you break these terms (for example, by cheating to earn points or publishing prohibited content), we may
+        remove the content, cancel the points involved, exclude you from the Arena or suspend or close your account.
+        When possible, we will tell you why by email, and you can reply to explain your side.
+      </p>
+
+      <h2>12. Availability and liability</h2>
+      <ul>
+        <li>
+          AdArena is a free service offered “as is”. We work to keep it running, but there may be interruptions,
+          maintenance or errors. If a technical problem affects a day’s Arena, we may extend, repeat or cancel that
+          round and, if so, return the points bid.
+        </li>
+        <li>We don’t guarantee any number of visits or results for your ad or your promotions.</li>
+        <li>
+          We are not responsible for the content of other users’ ads, promotions or websites, nor for ads shown by our
+          advertising partner. If you see something that breaks these terms, report it or write to us.
+        </li>
+        <li>Nothing in these terms limits the rights that consumer protection law gives you.</li>
+      </ul>
+
+      <h2>13. Changes to these terms</h2>
+      <p>
+        We may update these terms to improve AdArena or to comply with the law. If the changes are important, we will
+        tell you in advance by email or on the website. If you keep using AdArena after they come into force, you accept
+        the new version; if you don’t agree, you can close your account.
+      </p>
+
+      <h2>14. Applicable law</h2>
+      <p>
+        These terms are governed by Spanish law. If there is a dispute, we will first try to solve it by talking to you.
+        If that isn’t possible, the courts that correspond by law will decide; if you are a consumer, that is the courts
+        of your place of residence.
       </p>
     </LegalPage>
   );

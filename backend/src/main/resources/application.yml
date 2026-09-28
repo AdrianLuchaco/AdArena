@@ -93,7 +93,7 @@ app:
 
   legal:
     # Versión vigente de los Términos. Se guarda en cada usuario al registrarse.
-    terms-version: "2026-09-27-en"
+    terms-version: "2026-09-28-en"
 
   # Si se definen, al arrancar se crea este administrador (solo si no existe ya).
   admin:
