@@ -1,0 +1,32 @@
+# Perfil "test": lo activa @IntegrationTest. La base de datos la pone Testcontainers.
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+
+app:
+  jwt:
+    secret: dGVzdC1vbmx5LXB1YmxpZmktc2VjcmV0LXVzZWQtYnktanVuaXQtdGVzdHMtMjAyNg==
+  refresh-cookie:
+    # Como en producción, para poder comprobar que la cookie lleva "Secure"
+    secure: true
+    # Sin margen: cualquier reutilización de un refresh token cuenta como robo
+    reuse-grace: 0s
+  jobs:
+    # Los tests deciden ellos mismos cuándo se abre o se cierra una ronda y cuándo salen los emails
+    enabled: false
+  previews:
+    # Los tests nunca salen a internet: la lectura de webs se prueba con un lector falso
+    enabled: false
+  admin:
+    email: admin@adarena.test
+    password: AdminPassword123!
+    display-name: Admin Test
+
+logging:
+  level:
+    org.testcontainers: WARN
+    tc: WARN
+    com.github.dockerjava: WARN

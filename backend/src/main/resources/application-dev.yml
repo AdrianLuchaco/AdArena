@@ -1,0 +1,32 @@
+# =====================================================================
+# Perfil "dev": SOLO para tu ordenador. Actívalo con SPRING_PROFILES_ACTIVE=dev
+# (docker-compose y el comando de arranque local ya lo hacen).
+# =====================================================================
+
+server:
+  # En tu ordenador el backend usa el 8081 (el 8080 lo ocupa otro proyecto tuyo).
+  port: ${PORT:8081}
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+
+app:
+  jwt:
+    # Secreto de desarrollo. NUNCA lo uses en producción.
+    secret: ZGV2LW9ubHktcHVibGlmaS1zZWNyZXQtTk9ULWZvci1wcm9kdWN0aW9uLTIwMjY=
+  refresh-cookie:
+    # http://localhost no es HTTPS: el navegador descartaría una cookie "Secure".
+    secure: false
+  admin:
+    email: ${ADMIN_EMAIL:admin@adarena.local}
+    password: ${ADMIN_PASSWORD:AdminAdArena2026!}
+  # Rellena la base de datos vacía con anunciantes y pujas de ejemplo (ver DemoDataSeeder)
+  demo-data:
+    enabled: ${DEMO_DATA:true}
+
+logging:
+  level:
+    com.adarena: DEBUG

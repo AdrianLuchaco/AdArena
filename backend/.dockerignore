@@ -1,0 +1,8 @@
+# Lo que Docker NO debe copiar al construir la imagen (más rápido y sin secretos)
+target/
+.idea/
+.vscode/
+*.iml
+.DS_Store
+.env
+.env.*

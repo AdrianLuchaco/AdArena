@@ -22,3 +22,10 @@ frontend/out/
 frontend/next-env.d.ts
 frontend/*.tsbuildinfo
 frontend/.vercel
+
+# --- Herramientas locales (capturas de pruebas, ajustes personales de Claude Code) ---
+.playwright-mcp/
+.claude/settings.local.json
+
+# --- Notas locales de herramientas (no se suben) ---
+.remember/

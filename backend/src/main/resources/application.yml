@@ -1,13 +1,28 @@
+# =====================================================================
+# Configuración base de AdArena (válida para producción).
+# Todo lo sensible o que cambia entre entornos llega por variables de entorno.
+# El perfil "dev" (application-dev.yml) añade valores cómodos para trabajar en local.
+# =====================================================================
+
+server:
+  # Railway/Render inyectan PORT; en local se usa 8080.
+  port: ${PORT:8080}
+  # Detrás del proxy de la plataforma: usar X-Forwarded-For / X-Forwarded-Proto
+  # para conocer la IP real del cliente (rate limiting) y saber si la petición era HTTPS.
+  forward-headers-strategy: native
+  # Al apagar, termina las peticiones en curso antes de salir.
+  shutdown: graceful
+
 spring:
   application:
-    name: publifi
+    name: adarena
 
-  # Valores por defecto para desarrollo local (docker-compose, fase 2).
-  # En producción se sobrescriben con variables de entorno.
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5432/publifi}
-    username: ${DB_USERNAME:publifi}
-    password: ${DB_PASSWORD:publifi}
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/adarena}
+    username: ${DB_USERNAME:adarena}
+    password: ${DB_PASSWORD:adarena}
+    hikari:
+      maximum-pool-size: ${DB_POOL_SIZE:10}
 
   jpa:
     # Nunca dejamos la sesión de BD abierta durante el renderizado de la respuesta.
@@ -15,11 +30,178 @@ spring:
     hibernate:
       # Flyway es el dueño del esquema; Hibernate solo comprueba que las entidades encajan.
       ddl-auto: validate
-    properties:
-      hibernate:
-        jdbc:
-          time_zone: UTC
+    # Ojo: NO usar hibernate.jdbc.time_zone. Los instantes (Instant ↔ timestamptz) ya se guardan
+    # en UTC sin él, y con él Hibernate desplazaría la "hora de cierre" (LocalTime ↔ time).
 
   flyway:
     enabled: true
     locations: classpath:db/migration
+
+  mvc:
+    # Errores en formato estándar RFC 9457 (application/problem+json)
+    problemdetails:
+      enabled: true
+
+  servlet:
+    multipart:
+      # Tamaño máximo de una imagen subida (luego se reduce a menos de 2 MB)
+      max-file-size: 5MB
+      max-request-size: 6MB
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
+      probes:
+        enabled: true
+
+# Swagger desactivado por defecto (producción). En dev se activa.
+springdoc:
+  api-docs:
+    enabled: ${SPRINGDOC_ENABLED:false}
+  swagger-ui:
+    enabled: ${SPRINGDOC_ENABLED:false}
+    path: /swagger-ui.html
+
+app:
+  # Orígenes (URLs del frontend) autorizados por CORS. Varios separados por comas.
+  frontend-origins: ${FRONTEND_ORIGINS:http://localhost:3000}
+  # Dirección pública de la web para los enlaces de los emails (vacío = el primer origen de arriba)
+  public-url: ${PUBLIC_URL:}
+
+  jwt:
+    # OBLIGATORIO en producción: 32+ bytes aleatorios en Base64 (openssl rand -base64 48).
+    # Sin valor por defecto a propósito: si falta, la aplicación no arranca.
+    secret: ${JWT_SECRET}
+    issuer: adarena
+    access-token-ttl: 15m
+    refresh-token-ttl: 30d
+
+  refresh-cookie:
+    name: adarena_refresh
+    # true en producción (solo HTTPS). En local por HTTP se pone a false en el perfil dev.
+    secure: ${REFRESH_COOKIE_SECURE:true}
+    same-site: Lax
+    # Vacío = la cookie pertenece solo al dominio de la API (api.adarena.com). Recomendado.
+    domain: ${REFRESH_COOKIE_DOMAIN:}
+    # Margen para dos pestañas que renuevan la sesión a la vez (ver RefreshTokenService).
+    reuse-grace: 10s
+
+  legal:
+    # Versión vigente de los Términos. Se guarda en cada usuario al registrarse.
+    terms-version: "2026-09-27-en"
+
+  # Si se definen, al arrancar se crea este administrador (solo si no existe ya).
+  admin:
+    email: ${ADMIN_EMAIL:}
+    password: ${ADMIN_PASSWORD:}
+    display-name: ${ADMIN_NAME:Admin}
+
+  # Tareas automáticas: cierre diario a medianoche, apertura de la ronda siguiente, caducidad de
+  # anuncios sin moderar y envío de emails.
+  jobs:
+    enabled: ${JOBS_ENABLED:true}
+
+  # Emails. Recomendado en la nube: BREVO_API_KEY (Brevo, gratis, 300 al día, por HTTPS).
+  # Alternativa: SMTP (SMTP_HOST, SMTP_PORT, SMTP_USERNAME, SMTP_PASSWORD, SMTP_SSL).
+  # Sin ninguna de las dos, los emails NO se envían: solo se escriben en el log.
+  # MAIL_FROM: el remitente, que debe estar verificado en tu proveedor ("AdArena <tu@email.com>").
+  mail:
+    from: ${MAIL_FROM:AdArena <avisos@adarena.local>}
+    host: ${SMTP_HOST:}
+    port: ${SMTP_PORT:465}
+    username: ${SMTP_USERNAME:}
+    password: ${SMTP_PASSWORD:}
+    ssl: ${SMTP_SSL:true}
+    brevo-api-key: ${BREVO_API_KEY:}
+
+  # Arena Points: cómo se ganan (sin dinero real)
+  rewards:
+    # Puntos de bienvenida al crear la cuenta (una sola vez; después solo se ganan participando)
+    signup-bonus: ${SIGNUP_BONUS_POINTS:200}
+    # Regalo al ganador cuando su anuncio sale en portada, para que pueda volver a pujar
+    winner-bonus: ${WINNER_BONUS_POINTS:500}
+    # Ver proyectos de la Arena: 10 puntos cada 10 s; a los 60 s, 40 más (100 en total).
+    # Como mucho 100 puntos al día por proyecto.
+    views:
+      tick-seconds: 10
+      tick-points: 10
+      bonus-after-seconds: 60
+      bonus-points: 40
+      daily-cap-per-project: 100
+    # Créditos extra: visitar los enlaces que promocionan los usuarios
+    tasks:
+      reward-points: ${TASK_REWARD_POINTS:20}
+      min-seconds: 10
+      max-per-day: ${TASKS_PER_DAY:10}
+      max-active-per-user: 5
+      reports-to-hide: 3
+
+  # Lectura de la web de cada proyecto: para la presentación animada del ganador y para saber si
+  # se puede ver dentro de AdArena. Solo se leen webs públicas https (nunca direcciones internas).
+  previews:
+    enabled: ${SITE_PREVIEWS_ENABLED:true}
+    max-age: 20h
+    refresh-cooldown: 2m
+    user-agent: "Mozilla/5.0 (compatible; AdArenaBot/1.0; +https://adarena.com/como-funciona)"
+
+  rate-limit:
+    enabled: ${RATE_LIMIT_ENABLED:true}
+    # La misma clave que PROXY_SECRET en la web (Vercel): así el límite se aplica a la IP real del
+    # visitante y no a la de Vercel. Genera una con: openssl rand -hex 32
+    proxy-secret: ${PROXY_SECRET:}
+    # Se aplican TODAS las reglas cuyo método y prefijo coincidan, por IP.
+    rules:
+      - name: login
+        method: POST
+        path-prefix: /api/auth/login
+        capacity: 10
+        period: 1m
+      - name: register
+        method: POST
+        path-prefix: /api/auth/register
+        capacity: 5
+        period: 1h
+      - name: refresh
+        method: POST
+        path-prefix: /api/auth/refresh
+        capacity: 30
+        period: 1m
+      # Pujas: de sobra para una persona, pero frena a un robot
+      - name: bids
+        method: POST
+        path-prefix: /api/arena/bids
+        capacity: 60
+        period: 1m
+      # "He olvidado mi contraseña": frena el envío masivo de emails
+      - name: password-reset
+        method: POST
+        path-prefix: /api/auth/password/
+        capacity: 5
+        period: 1h
+      # Publicar promociones: de sobra para una persona, frena el spam
+      - name: promotions
+        method: POST
+        path-prefix: /api/promotions
+        capacity: 30
+        period: 1h
+      - name: image-upload
+        method: POST
+        path-prefix: /api/images
+        capacity: 30
+        period: 1h
+      # Rutas públicas de lectura (portada, imágenes): límite más generoso y aparte
+      - name: public
+        method: GET
+        path-prefix: /api/public/
+        capacity: 600
+        period: 1m
+      - name: api
+        path-prefix: /api/
+        exclude-path-prefixes: /api/public/
+        capacity: 300
+        period: 1m
