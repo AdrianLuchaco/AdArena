@@ -9,8 +9,8 @@ const isDev = process.env.NODE_ENV === "development";
 const apiUrl = (process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8081").replace(/\/$/, "");
 const wsUrl = (process.env.NEXT_PUBLIC_WS_URL ?? `${apiUrl.replace(/^http/, "ws")}/ws`).replace(/\/ws$/, "");
 
-/** Google AdSense activado (la misma comprobación que lib/adsense.ts). */
-const adsEnabled = /^ca-pub-\d{10,20}$/.test(process.env.NEXT_PUBLIC_ADSENSE_CLIENT ?? "");
+/** Anuncios de Ezoic activados (la misma comprobación que lib/ads.ts). */
+const adsEnabled = process.env.NEXT_PUBLIC_EZOIC_ENABLED === "true";
 
 /**
  * Content Security Policy: lista blanca de lo que la web puede cargar. Si alguien consiguiera
@@ -20,16 +20,17 @@ const adsEnabled = /^ca-pub-\d{10,20}$/.test(process.env.NEXT_PUBLIC_ADSENSE_CLI
  *    La alternativa (nonces) obliga a renderizar cada página en el servidor en cada visita.
  *  - 'unsafe-eval' solo en local: React lo usa para mostrar errores más claros al programar.
  *
- * Con AdSense activado, la política se abre a cualquier web HTTPS en scripts, imágenes, iframes y
- * conexiones. Es lo que pide Google: los anuncios se sirven desde dominios que cambian con el tiempo
- * y Google no admite listas de dominios (support.google.com/adsense/answer/16283098). Se aplica a
- * todas las páginas porque la web navega sin recargar: si solo se abriera en /promocionar, entrar
- * desde la portada dejaría los anuncios bloqueados. El script de AdSense solo se carga en /promocionar.
+ * Con los anuncios de Ezoic activados, la política se abre a cualquier web HTTPS en scripts, imágenes,
+ * iframes y conexiones: Ezoic (y los anunciantes que venden a través de él) sirven los anuncios desde
+ * muchos dominios que cambian con el tiempo, así que no se puede hacer una lista. Se aplica a todas las
+ * páginas porque la web navega sin recargar. Los huecos de anuncios solo están en la portada, la Arena
+ * y Promote (nunca donde se ganan puntos).
  */
 const external = adsEnabled ? " https:" : "";
 const csp = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}${external}`,
+  // 'unsafe-eval': en local lo usa React para sus mensajes de error; con Ezoic, su script de estadísticas
+  `script-src 'self' 'unsafe-inline'${isDev || adsEnabled ? " 'unsafe-eval'" : ""}${external}`,
   "style-src 'self' 'unsafe-inline'",
   `img-src 'self' data: blob: ${apiUrl}${external}`,
   "font-src 'self'",

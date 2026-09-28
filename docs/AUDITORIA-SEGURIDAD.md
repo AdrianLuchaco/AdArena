@@ -277,3 +277,13 @@ necesario para el visor; el aislamiento lo da el atributo `sandbox`.
 | Emails desde un Gmail vía Brevo pueden ir a spam y son más fáciles de suplantar | Dominio propio con SPF/DKIM en Brevo (DESPLIEGUE §12) |
 | Plan gratuito: si Render tiene un problema, no hay segunda copia | UptimeRobot te avisa por email; las copias semanales con `pg_dump` protegen los datos |
 
+### 9.4 Anuncios de Ezoic (segunda ronda de la fase 12)
+
+| Punto | Detalle |
+|---|---|
+| Por defecto, apagado | Sin `NEXT_PUBLIC_EZOIC_ENABLED=true` no se carga nada de Ezoic y la CSP no cambia |
+| Con Ezoic activado, la CSP se abre | `https:` en scripts, imágenes, iframes y conexiones, y `unsafe-eval` (su script de estadísticas lo necesita). Es inevitable con redes de anuncios; los datos de sesión siguen protegidos (cookie `HttpOnly`, token solo en memoria) |
+| Consentimiento (RGPD) | El aviso de cookies de Ezoic (Gatekeeper, IAB TCF) se carga antes que sus anuncios |
+| Nada de anuncios donde se ganan puntos | Huecos solo en portada, Arena y Promote; formatos automáticos desactivados desde el código (y, según la guía, también en su panel). Comprobado: 0 huecos y 0 elementos fijos de Ezoic en Earn points |
+| Dependencia nueva | `@ezoic/react-sdk` 1.1.0 (oficial, MIT), versión fija; `npm audit`: 0 vulnerabilidades |
+

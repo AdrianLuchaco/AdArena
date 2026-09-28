@@ -9,7 +9,8 @@ import { apiUrl } from "@/lib/config";
 import { cn } from "@/lib/cn";
 import { formatDateTime, formatPoints, prettyUrl } from "@/lib/format";
 import type { Promotion, PromotionsOverview, PromotionStatus, SocialPlatform } from "@/lib/types";
-import { AdSenseScript, AdSenseUnit } from "../ads/AdSenseUnit";
+import { ADS_ENABLED } from "@/lib/ads";
+import { AdUnit } from "../ads/AdUnit";
 import { ModeChip } from "../earn/EarnProjectsView";
 import { platformColor, PlatformBadge, platformSurface } from "../earn/PlatformBadge";
 import { Alert } from "../ui/Alert";
@@ -55,7 +56,7 @@ function platformOf(url: string): SocialPlatform {
 
 /**
  * Promote: publica gratis tus enlaces (YouTube, X, Instagram, tu web…) para que salgan en los
- * bonus links de la comunidad. Es la página con más anuncios de AdSense: aquí nadie gana
+ * bonus links de la comunidad. Es la página con más anuncios (Ezoic): aquí nadie gana
  * puntos, así se cumplen las normas de Google (nunca se paga por ver anuncios).
  */
 export function PromoteView() {
@@ -84,19 +85,18 @@ export function PromoteView() {
             </Link>
           </header>
 
-          <AdSenseUnit slot="banner" />
+          <AdUnit placement="promoteTop" />
 
           {status === "loading" ? <PageSpinner /> : status === "anonymous" ? <HowItWorks /> : <MyPromotions />}
         </div>
 
         <aside className="hidden lg:block" aria-label="Advertising">
           <div className="sticky top-24 space-y-6">
-            <AdSenseUnit slot="sidebar" />
-            <AdSenseUnit slot="infeed" />
+            <AdUnit placement="promoteSidebar" />
+            <AdUnit placement="promoteSidebarLower" />
           </div>
         </aside>
       </div>
-      <AdSenseScript />
     </div>
   );
 }
@@ -118,7 +118,7 @@ function HowItWorks() {
           </li>
         ))}
       </ol>
-      <AdSenseUnit slot="infeed" className="lg:hidden" />
+      <AdUnit placement="promoteGuest" className="lg:hidden" />
       <div className="flex flex-wrap gap-3">
         <ButtonLink href="/signup?next=/promote" size="lg">
           Sign up free
@@ -169,7 +169,7 @@ function MyPromotions() {
     <div className="space-y-8">
       <PromotionForm full={live >= overview.maxActive} maxActive={overview.maxActive} rewardPoints={overview.rewardPoints} onCreated={load} />
 
-      <AdSenseUnit slot="banner" />
+      <AdUnit placement="promoteAfterForm" />
 
       <section className="space-y-3">
         <div className="flex flex-wrap items-end justify-between gap-2">
@@ -196,10 +196,10 @@ function MyPromotions() {
                     }
                   }}
                 />
-                {/* Un anuncio entre la lista cada tres promociones */}
-                {index % 3 === 1 && (
+                {/* Un anuncio entre la lista, tras la segunda promoción (cada hueco de Ezoic, una vez por página) */}
+                {ADS_ENABLED && index === 1 && (
                   <li>
-                    <AdSenseUnit slot="infeed" />
+                    <AdUnit placement="promoteInList" />
                   </li>
                 )}
               </Fragment>
@@ -208,7 +208,7 @@ function MyPromotions() {
         )}
       </section>
 
-      <AdSenseUnit slot="banner" />
+      <AdUnit placement="promoteBottom" />
     </div>
   );
 }

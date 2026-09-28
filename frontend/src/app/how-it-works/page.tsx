@@ -354,7 +354,7 @@ function Faq() {
     ["Why did the count stop?", "Because you stopped watching the website: you switched tabs, went a while without touching anything, came back to AdArena from its window or pressed I’m done. Go back to it and the count carries on."],
     ["Why do some websites open in a separate window?", "Each website decides whether it can be shown inside others. The ones that can’t (like YouTube or Instagram) open separately, and points count while you’re on them."],
     ["Can I use several accounts?", "No. It’s forbidden and points earned that way are cancelled. Points can’t be moved between accounts either."],
-    ["Are there ads on AdArena?", "Yes, Google ads on Promote and small ones under the standings. Never on pages where you earn points: points never depend on seeing or clicking ads."],
+    ["Are there ads on AdArena?", "There may be ads on the homepage, on Promote and small ones under the standings, served by our partner Ezoic. Never on pages where you earn points: points never depend on seeing or clicking ads."],
     ["My presentation doesn’t look right. What can I do?", "In Account you can ask us to read your website again. If it can’t be read, your classic ad is shown instead (image, name and description)."],
   ];
   return (

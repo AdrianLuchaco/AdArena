@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { useArena } from "@/lib/arena-context";
-import { AdSenseScript, AdSenseUnit } from "../ads/AdSenseUnit";
+import { AdUnit } from "../ads/AdUnit";
 import { BookIcon } from "../icons";
 import { Alert } from "../ui/Alert";
 import { Button } from "../ui/Button";
@@ -72,8 +72,7 @@ export function ArenaClient() {
             <BookIcon className="size-4" /> Arena rules: bids, ties and the 50% rule
           </Link>
           {/* Un anuncio pequeño, debajo de la clasificación y lejos del botón de pujar */}
-          <AdSenseUnit slot="banner" className="mt-8" />
-          <AdSenseScript />
+          <AdUnit placement="arenaBanner" className="mt-8" />
         </section>
 
         {/* En el móvil, la tarjeta para pujar va primero; en escritorio, a la derecha */}

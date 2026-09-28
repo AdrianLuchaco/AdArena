@@ -139,9 +139,10 @@ export default function TermsPage() {
 
       <h2>9. Advertising</h2>
       <p>
-        AdArena is funded by Google AdSense ads, which appear on Promote and, small, under the Arena standings. Never on
-        pages where you earn points: points never depend on seeing or clicking ads. Those ads are chosen by Google; we
-        don’t review them one by one and they are not part of the Arena.
+        AdArena may be funded by ads served by our advertising partner, Ezoic, and the advertisers it works with. They
+        appear on the homepage, on Promote and, small, under the Arena standings. Never on pages where you earn points:
+        points never depend on seeing or clicking ads. Those ads are chosen by our partner; we don’t review them one by
+        one and they are not part of the Arena.
       </p>
     </LegalPage>
   );

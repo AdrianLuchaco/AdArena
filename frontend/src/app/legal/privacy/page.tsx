@@ -36,10 +36,10 @@ export default function PrivacyPage() {
 
       <h2>Cookies</h2>
       <p>
-        We use one essential technical cookie to keep you logged in. On Promote and under the Arena standings we show
-        Google AdSense ads: Google may use cookies to show and measure them, and will ask for your consent first with its
-        own notice. You can change your choice in that notice or in your Google account’s ad settings. Pages where you
-        earn points have no ads.
+        We use one essential technical cookie to keep you logged in. When ads are shown (on the homepage, on Promote and
+        under the Arena standings), our advertising partner Ezoic and the advertisers it works with may use cookies to
+        show and measure them. Before that, a consent notice asks for your choice, and you can change it at any time
+        from that notice. Pages where you earn points have no ads.
       </p>
       <p>
         When you watch another project’s website inside AdArena, that website belongs to its owner and may use its own

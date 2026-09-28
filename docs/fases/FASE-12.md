@@ -20,6 +20,7 @@
 11. [Tests y verificación](#11-tests-y-verificación)
 12. [Lo que tienes que hacer tú](#12-lo-que-tienes-que-hacer-tú)
 13. [Límites conocidos](#13-límites-conocidos)
+14. [Segunda ronda: tus ficheros de claves, dominio, email con dominio y Ezoic](#14-segunda-ronda-tus-ficheros-de-claves-dominio-email-con-dominio-y-ezoic)
 
 ---
 
@@ -201,3 +202,43 @@ Logs de Render/Vercel con el error. **Nunca** contraseñas ni claves.
   `pg_dump` (DESPLIEGUE §10).
 - La subida de imágenes admite hasta 5 MB; no he podido comprobar si el reenvío de Vercel acepta
   cuerpos tan grandes. Si una imagen grande da error en la nube, avísame y bajo el límite.
+
+## 14. Segunda ronda: tus ficheros de claves, dominio, email con dominio y Ezoic
+
+### 14.1 Los ficheros `.env.render` y `.env.vercel`
+Dos ficheros en la carpeta del proyecto, fuera de git (`.gitignore`) y solo legibles por tu usuario del
+Mac. Llevan todas las variables con `RELLENAR` donde toca y el `PROXY_SECRET` ya generado (igual en los
+dos; se generó dentro de los ficheros sin mostrarse). La guía (`docs/DESPLIEGUE.md` §1) tiene una tabla
+con cada variable: qué es, dónde se encuentra y en qué paso. `.env.vercel` se pega entero en Vercel.
+No hace falta tocar código: el backend y la web leen todo de variables de entorno.
+
+### 14.2 Dominio y email con dominio
+- **Dominio en Cloudflare** (precio de coste: un `.com` ≈ 10 $/año, renovación igual; privacidad y DNS
+  gratis). Se conecta a Vercel con 2 registros DNS en modo *DNS only*. Después, en Render:
+  `FRONTEND_ORIGINS=https://tudominio.com,https://www.tudominio.com` y `PUBLIC_URL=https://tudominio.com`.
+- **Email con dominio, gratis:** Brevo con el dominio verificado (DKIM/DMARC) envía los emails de la web
+  desde `avisos@tudominio.com`; Cloudflare Email Routing reenvía `hola@tudominio.com` a tu Gmail; y Gmail
+  puede responder como `hola@tudominio.com` usando el SMTP de Brevo. Un solo registro SPF para los dos.
+- Sin cambios de código: el reenvío de `/api/*` funciona igual con dominio.
+
+### 14.3 Anuncios: Ezoic en lugar de Google AdSense
+- **Quitado** todo lo de AdSense (`lib/adsense.ts`, `AdSenseUnit.tsx`, variables `NEXT_PUBLIC_ADSENSE_*`).
+- **Nuevo** con el SDK oficial de Ezoic (`@ezoic/react-sdk` 1.1.0, licencia MIT, 0 vulnerabilidades):
+  - `lib/ads.ts`: se activa con `NEXT_PUBLIC_EZOIC_ENABLED=true` y define los 9 huecos (101–109).
+  - `components/ads/AdsProvider.tsx`: carga una vez el aviso de cookies de Ezoic (Gatekeeper, obligatorio
+    en Europa), su script y sus estadísticas; **desactiva sus formatos automáticos** (anuncio fijo,
+    pantalla completa, laterales, vídeo) para que nunca salgan donde se ganan puntos.
+  - `components/ads/AdUnit.tsx`: cada hueco (portada 101, Arena 102, Promote 103–109). En la lista de
+    promociones, un solo hueco (Ezoic no permite repetir un número en la misma página).
+  - `/ads.txt`: redirige al gestor de ads.txt de Ezoic con tu dominio (`srv.adstxtmanager.com/19390/…`).
+  - CSP: con Ezoic activado, `https:` en scripts/imágenes/conexiones y `unsafe-eval` (lo usa su script de
+    estadísticas; sin él daba error). Sin Ezoic, la política sigue igual de estricta.
+  - Términos, privacidad y la guía "How it works" hablan ahora de Ezoic.
+- **Probado** en una copia de la web en modo producción con Ezoic activado: se cargan sus scripts, sale
+  el aviso de cookies, aparecen los huecos en Promote (103–106 sin sesión), **ninguno** en Earn points
+  tras navegar allí, y `/ads.txt` redirige. Los anuncios de verdad solo los sirve Ezoic en tu dominio
+  aprobado: eso no se puede probar en local.
+- **Importante:** Ezoic pide **250.000 usuarios/mes** a las webs nuevas desde febrero de 2026; para las
+  más pequeñas tiene el programa **Incubator** (unas 20 webs al mes). Y el plan gratuito de Vercel **no
+  permite anuncios**: al activarlos habrá que pagar Vercel Pro o mover la web (DESPLIEGUE §12).
+

@@ -17,7 +17,7 @@ La web está **en inglés** (desde la fase 11); el código, los comentarios y la
 - **Moderación:** el anuncio ganador sale en portada cuando lo apruebas. Si lo rechazas, recupera el 100 % de sus puntos y pasa el siguiente.
 - **Presentación animada del ganador:** su web se lee sola (logo, color, titular, frases y fotos) y la portada se convierte en una "película" de 5 escenas con su color de marca.
 - **Gana puntos mirando webs:** 200 al registrarte y, en un visor a pantalla completa, 10 cada 10 s mirando la web de cada proyecto (dentro de AdArena o en su ventana), bonus a los 60 s y hasta 100 al día por proyecto, con antitrampas. También con los **Bonus links** (mirar enlaces que promocionan otros usuarios). Quien gana la Arena recibe 500.
-- **Promote:** cualquiera publica gratis sus redes o su web para que aparezcan en los Bonus links. Anuncios de **Google AdSense** (opcionales) aquí y, pequeños, bajo las clasificaciones; nunca donde se ganan puntos.
+- **Promote:** cualquiera publica gratis sus redes o su web para que aparezcan en los Bonus links. Anuncios de **Ezoic** (opcionales, se activan con una variable) aquí, en la portada y bajo las clasificaciones; nunca donde se ganan puntos.
 - **Guía «How it works»** con todo explicado paso a paso.
 - **Avisos** en la web, al instante y por email ("te han superado", "has ganado"…).
 - **Panel de administración:** resumen de los puntos, moderación de anuncios y de promociones, ajustes y registro de acciones.
@@ -80,7 +80,7 @@ La base de datos local solo escucha en tu ordenador (`127.0.0.1`), no en tu red.
 
 ## Subirlo a internet (gratis)
 
-La guía paso a paso está en **[docs/DESPLIEGUE.md](docs/DESPLIEGUE.md)**: GitHub, base de datos (Supabase), backend (Render), web (Vercel), emails (Brevo) y aviso si se cae (UptimeRobot). Todo con planes gratuitos.
+La guía paso a paso está en **[docs/DESPLIEGUE.md](docs/DESPLIEGUE.md)**: GitHub, base de datos (Supabase), backend (Render), web (Vercel), emails (Brevo) y aviso si se cae (UptimeRobot). Todo con planes gratuitos, más un dominio en Cloudflare (≈ 10 $/año) y email con tu dominio (gratis).
 
 
 Las variables de entorno del backend están explicadas en [`.env.example`](.env.example), y las de la web en [`frontend/.env.example`](frontend/.env.example). El despliegue paso a paso está en [docs/DESPLIEGUE.md](docs/DESPLIEGUE.md). Para activar los anuncios, mira [FASE-09 §15](docs/fases/FASE-09.md#15-lo-que-tienes-que-hacer-tú).

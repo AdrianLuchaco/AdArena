@@ -30,7 +30,7 @@
 
   Lector de webs (backend) ──HTTPS──▶ webs públicas de los proyectos (solo IP públicas, protección SSRF)
   Visor (navegador) ──iframe aislado──▶ la web del proyecto (o su propia ventana si no se deja)
-  Google AdSense ◀── en /promote y, pequeño, bajo las clasificaciones (opcional)
+  Ezoic (anuncios) ◀── en la portada, /arena y /promote (opcional: NEXT_PUBLIC_EZOIC_ENABLED)
 ```
 
 **Regla de oro:** toda la lógica de puntos, pujas, recompensas y cierres vive en el backend. El frontend
@@ -46,7 +46,7 @@ El servidor valida y decide.
 | Cómo se consiguen | 200 al registrarse, viendo proyectos (10 cada 10 s + 40 de bonus a los 60 s, máx. 100/día por proyecto) y con Créditos extra (20 por tarea, máx. 10/día) | Tu elección (fase 9) |
 | Créditos extra | Se gana por **visitar** enlaces, nunca por seguir o dar like | Tu elección: las redes prohíben el engagement incentivado |
 | Promociones de usuarios | Gratis, se publican **al momento**; 3 denuncias las ocultan; el admin puede ocultarlas con motivo | Tu elección |
-| Anuncios (AdSense) | En `/promote` (6 huecos) y uno pequeño bajo la clasificación de la portada y de la Arena. **Nunca** donde se ganan puntos (Gana puntos, Créditos extra, visor). Sin "Auto ads" | Tu elección (fase 10) y normas de AdSense: no se puede compensar por ver anuncios |
+| Anuncios (**Ezoic**, no AdSense) | Huecos fijos 101–109: portada, Arena y Promote. **Nunca** donde se ganan puntos (Earn points, Bonus links, visor). Formatos automáticos de Ezoic desactivados (anchor, interstitial, laterales, vídeo) | Tu elección (fase 12). Ezoic vende también anuncios de Google: no se puede compensar por ver anuncios |
 | Ganar puntos mirando webs | El visor muestra **la web del proyecto** (iframe aislado) o, si no se deja, la abre en su ventana; cuenta mientras la miras | Tu elección (fase 10): que cuente el tiempo en la web de verdad |
 | Premio al ganador | **+500** puntos cuando su anuncio se aprueba y sale en portada | Tu elección (fase 10): que pueda volver a pujar |
 | Presentación del ganador | Se monta con lo leído del HTML de su web (sin capturas de pantalla) y se **congela al aprobar** | Sencillo de alojar y se publica exactamente lo revisado |
@@ -64,7 +64,8 @@ El servidor valida y decide.
 | Tiempo real | **WebSocket + STOMP** | Ver §7 |
 | Hosting backend | **Render** (plan gratuito, Docker, Fráncfort) + UptimeRobot para que no se duerma | Tu elección (fase 12): todo gratis. Railway ya no tiene plan gratuito |
 | Base de datos | **Supabase** (PostgreSQL gratuito, siempre encendido; session pooler por IPv4) | El backend consulta cada pocos segundos: los planes por horas (Neon) no darían |
-| Hosting frontend | **Vercel** (Hobby, gratis; solo uso no comercial: con AdSense hará falta Pro u otro alojamiento) | Creadores de Next.js |
+| Hosting frontend | **Vercel** (Hobby, gratis; solo uso no comercial: con anuncios hará falta Pro u otro alojamiento) | Creadores de Next.js |
+| Dominio y DNS | **Cloudflare** (precio de coste, ≈10 $/año el .com) + Email Routing (recibir en tu Gmail) + Brevo con dominio verificado (enviar) | Lo más barato sin sorpresas al renovar; el email con dominio es gratis |
 | Emails | **Brevo** por su API HTTPS (300/día gratis, sin dominio). SMTP sigue disponible | Render gratuito bloquea los puertos SMTP |
 | Spring Boot | **4.1.x** (migrado en la fase 3; la rama 3.5 se quedó sin soporte gratuito el 30/06/2026) | Parches de seguridad y soporte vigentes |
 | Datos de ejemplo | Solo en local (perfil `dev`): 4 anunciantes, un anuncio ganador, una subasta con pujas y 3 promociones, con los puntos pasando por el ledger | Ver la web "viva" desde el primer arranque |
@@ -352,7 +353,7 @@ frontend/src/
 │   ├── watch/[id]/              visor de la web de un proyecto (gana puntos mirándola)
 │   ├── watch/link/[id]/         visor de un Bonus link
 │   ├── how-it-works/            la guía completa (solo enlazada desde el pie y desde cada sección)
-│   ├── promote/                 promociona tu enlace gratis (la página con más anuncios de AdSense)
+│   ├── promote/                 promociona tu enlace gratis (la página con más anuncios)
 │   ├── ads.txt/                 generado desde NEXT_PUBLIC_ADSENSE_CLIENT
 │   ├── winners/                 días anteriores
 │   ├── login/, signup/, forgot-password/, reset-password/
@@ -368,7 +369,7 @@ frontend/src/
 │   ├── ad/AdView.tsx            el anuncio clásico (si su web no se pudo leer) y vistas previas
 │   ├── viewer/                  SiteViewer (barra de puntos + la web en iframe o en su ventana), SiteAvatar
 │   ├── earn/                    ProjectViewer, TaskViewer, EarnShell (tu marcador + 2 pestañas), EarnProjectsView, TasksView
-│   ├── promote/, ads/           PromoteView y los bloques de AdSense
+│   ├── promote/, ads/           PromoteView; AdsProvider y AdUnit (Ezoic, SDK oficial @ezoic/react-sdk)
 │   ├── home/HomeClient.tsx      la portada (franja amarilla "Bid now" + marcador + top 5 + 3 pasos)
 │   ├── history/, panel/, admin/, auth/, layout/ (cabecera con el marcador en directo), ui/, fx/
 │   └── Logo.tsx, icons.tsx
@@ -377,29 +378,30 @@ frontend/src/
     ├── auth-context.tsx         quién ha iniciado sesión
     ├── arena-context.tsx        datos en directo, avisos emergentes, avisos sin leer y tus puntos
     ├── useActiveTimer.ts        tiempo mirando la web (dentro de AdArena o en su ventana)
-    ├── adsense.ts               configuración de AdSense
+    ├── ads.ts                   anuncios de Ezoic: activación y números de los huecos (101–109)
     ├── realtime.ts              cliente STOMP
     └── format.ts, types.ts, config.ts, navigation.ts, hooks.ts, cn.ts
 ```
 
 Seguridad de la web: CSP, `X-Frame-Options: DENY`, `nosniff`, `Referrer-Policy`, `Permissions-Policy`
 y HSTS en producción (`next.config.ts`). La CSP admite iframes `https:` (el visor, con `sandbox`). Con
-AdSense configurado, admite además `https:` en scripts, imágenes y conexiones (Google no admite listas de dominios).
+Ezoic activado, admite además `https:` en scripts, imágenes y conexiones y `unsafe-eval` (lo usa su script de estadísticas).
 
 ## 11. Riesgos que debes revisar con un profesional antes de lanzar
 
 1. ~~Ley del juego con dinero~~ → muy reducido en la fase 9: los puntos no se compran ni se cambian
    por dinero. **Si algún día se venden puntos**, el riesgo vuelve (subastas de céntimo, Ley 13/2011):
    consúltalo antes con un abogado.
-2. **Términos y privacidad:** reescritos para los puntos, el antitrampas y AdSense. Que los revise un abogado.
-3. **AdSense:** Google revisa la web antes de aprobarla y puede suspender la cuenta si detecta tráfico
-   incentivado en páginas con anuncios. Por eso nunca hay anuncios donde se ganan puntos y no se usan
-   los anuncios automáticos. En Europa hace falta su CMP (Privacidad y mensajes). Además, las visitas que
+2. **Términos y privacidad:** reescritos para los puntos, el antitrampas y los anuncios (Ezoic). Que los revise un abogado.
+3. **Anuncios (Ezoic):** Ezoic (y Google, que vende a través de él) revisa la web y puede cerrar la cuenta si
+   detecta tráfico incentivado en páginas con anuncios. Por eso nunca hay anuncios donde se ganan puntos
+   y se desactivan sus formatos automáticos. El aviso de cookies (CMP) lo pone Ezoic. Ezoic pide 250.000
+   usuarios/mes a las webs nuevas (o su programa Incubator). Además, las visitas que
    AdArena manda a las webs de los proyectos son incentivadas: si esas webs tienen AdSense, es su
    responsabilidad (se avisa en los términos).
 4. **Normas de las redes sociales:** YouTube, X, Instagram o TikTok prohíben pagar por likes o
    seguidores. AdArena solo premia visitar; no cambies eso.
-5. **Fiscalidad:** los ingresos de AdSense son actividad económica (alta, IVA, IRPF). Consúltalo con tu gestor.
+5. **Fiscalidad:** los ingresos por anuncios son actividad económica (alta, IVA, IRPF). Consúltalo con tu gestor.
 6. ~~Spring Boot 3.5 sin soporte~~ → resuelto: migrado a Spring Boot 4.1 en la fase 3.
 
 ## 12. Hoja de ruta
@@ -419,4 +421,4 @@ AdSense configurado, admite además `https:` en scripts, imágenes y conexiones 
 | 10 | Visor de webs para ganar puntos, presentación animada del ganador, premio de 500, rediseño y guía | ✅ |
 | 11 | Web en inglés, navegación centrada en la Arena, diseño nuevo y arreglo del modo "ventana aparte" | ✅ |
 | 12 | Preparado para la nube gratis: Supabase + Render + Vercel + Brevo + UptimeRobot; guía `docs/DESPLIEGUE.md`; sin herramientas de desarrollo | ✅ (falta que lo subas tú) |
-| 13 | Legal (con tu abogado, términos en inglés), dominio propio y AdSense, verificación de email | |
+| 13 | Legal (con tu abogado, términos en inglés), anuncios de Ezoic cuando te acepten, verificación de email | |

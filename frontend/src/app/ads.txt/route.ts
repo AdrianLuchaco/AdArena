@@ -1,15 +1,15 @@
-import { ADSENSE_CLIENT, ADSENSE_ENABLED } from "@/lib/adsense";
+import { ADS_ENABLED } from "@/lib/ads";
 
 /**
- * /ads.txt: Google lo exige para servir anuncios. Dice que tu cuenta de AdSense está autorizada a
- * vender los espacios de esta web. Se genera solo a partir de NEXT_PUBLIC_ADSENSE_CLIENT.
+ * /ads.txt: los anunciantes lo exigen para comprar los espacios de una web. Ezoic lo gestiona por ti
+ * (su "Ads.txt Manager"): aquí solo se redirige a su versión para tu dominio, que Ezoic mantiene al
+ * día. Solo con Ezoic activado; sin él, no existe (404).
  */
-export function GET() {
-  if (!ADSENSE_ENABLED) {
+export function GET(request: Request) {
+  if (!ADS_ENABLED) {
     return new Response("Not found", { status: 404 });
   }
-  const publisher = ADSENSE_CLIENT.replace(/^ca-/, "");
-  return new Response(`google.com, ${publisher}, DIRECT, f08c47fec0942fa0\n`, {
-    headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "public, max-age=86400" },
-  });
+  // Tu dominio, sin "www." (adarena.com)
+  const domain = new URL(request.url).hostname.replace(/^www\./, "");
+  return Response.redirect(`https://srv.adstxtmanager.com/19390/${domain}`, 301);
 }
