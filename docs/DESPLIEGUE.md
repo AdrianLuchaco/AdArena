@@ -62,6 +62,13 @@
 
 ## 1. Prepara dos claves
 
+> **Atajo:** en la carpeta del proyecto tienes dos ficheros que no se suben a GitHub: **`.env.render`**
+> y **`.env.vercel`** (en el Finder, pulsa Cmd + Mayús + . para ver los ficheros ocultos). Ya llevan el
+> `PROXY_SECRET` generado e igual en los dos. Rellena lo que pone `RELLENAR` a medida que avances, y al
+> final pega cada fichero entero en su panel: en Render, **Environment → Add from .env**; en Vercel,
+> pégalo en el primer campo "Key" de Environment Variables (lo separa solo). Si usas este atajo, no
+> hace falta que generes el `PROXY_SECRET` de abajo.
+
 Abre la app **Terminal** y ejecuta:
 
 ```bash
