@@ -17,6 +17,7 @@ import com.adarena.notification.service.Notices;
 import com.adarena.site.dto.SiteDtos.SiteInfo;
 import com.adarena.site.service.SitePreviewRefresher;
 import com.adarena.site.service.SitePreviewService;
+import com.adarena.user.domain.Role;
 import com.adarena.user.domain.User;
 import com.adarena.user.repository.UserRepository;
 import org.springframework.data.domain.Limit;
@@ -102,7 +103,9 @@ public class PromotionService {
             throw new FieldValidationException("url", e.getMessage().replace("The website address", "The link").replace("The website", "The link"));
         }
         int max = rules.tasks().maxActivePerUser();
-        if (taskRepository.countByOwnerIdAndStatusIn(ownerId, Set.of(SocialTaskStatus.ACTIVE, SocialTaskStatus.PAUSED)) >= max) {
+        // El admin no tiene límite: sus enlaces son los destacados y los iniciales de AdArena
+        boolean admin = userRepository.findById(ownerId).map(user -> user.getRole() == Role.ADMIN).orElse(false);
+        if (!admin && taskRepository.countByOwnerIdAndStatusIn(ownerId, Set.of(SocialTaskStatus.ACTIVE, SocialTaskStatus.PAUSED)) >= max) {
             throw ApiException.conflict("PROMOTION_LIMIT",
                     "You can have at most " + max + " promotions at a time. Delete one to add another.");
         }
@@ -154,7 +157,7 @@ public class PromotionService {
                     .map(SocialTaskReport::getReason).limit(10).toList();
             return new EarnDtos.AdminTask(task.getId(), task.getPlatform(), task.getTitle(), task.getDescription(),
                     task.getUrl(), task.getStatus(), task.getHiddenReason(), task.getReports(), task.getCompletions(),
-                    owner == null ? null : owner.getEmail(), owner == null ? null : owner.getDisplayName(),
+                    task.isFeatured(), task.getRewardPoints(), owner == null ? null : owner.getEmail(), owner == null ? null : owner.getDisplayName(),
                     task.getCreatedAt(), reasons);
         }).toList();
     }
@@ -179,6 +182,23 @@ public class PromotionService {
                 .orElseThrow(() -> ApiException.notFound("TASK_NOT_FOUND", "That link doesn't exist."));
         task.restore();
         auditService.record(adminId, "TASK_RESTORED", "SOCIAL_TASK", taskId, Map.of("url", task.getUrl()));
+    }
+
+    /**
+     * Destacar un enlace (o dejar de hacerlo). Destacado: sale el primero en Bonus links, marcado, y
+     * da los puntos de {@code featured-reward-points}; si no, los normales.
+     */
+    @Transactional
+    public void setFeatured(UUID adminId, UUID taskId, boolean featured) {
+        SocialTask task = taskRepository.findForUpdate(taskId)
+                .orElseThrow(() -> ApiException.notFound("TASK_NOT_FOUND", "That link doesn't exist."));
+        if (featured) {
+            task.feature(rules.tasks().featuredRewardPoints());
+        } else {
+            task.unfeature(rules.tasks().rewardPoints());
+        }
+        auditService.record(adminId, featured ? "TASK_FEATURED" : "TASK_UNFEATURED", "SOCIAL_TASK", taskId,
+                Map.of("url", task.getUrl(), "points", task.getRewardPoints()));
     }
 
     // ------------------------------------------------------------------ piezas internas

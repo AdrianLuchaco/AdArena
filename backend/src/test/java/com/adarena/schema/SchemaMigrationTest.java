@@ -3,11 +3,14 @@ package com.adarena.schema;
 import com.adarena.support.IntegrationTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -33,7 +36,42 @@ class SchemaMigrationTest {
     void appliesAllMigrations() {
         Integer applied = jdbc.queryForObject(
                 "SELECT count(*) FROM flyway_schema_history WHERE success AND version IS NOT NULL", Integer.class);
-        assertThat(applied).isEqualTo(12); // V1…V12
+        assertThat(applied).isEqualTo(13); // V1…V13
+    }
+
+    /**
+     * V13 con un administrador que ya existe (como en la nube): sus enlaces de YouTube y X pasan a
+     * destacados y se añaden los 6 enlaces iniciales (sin duplicarlos). Se deshace al terminar.
+     */
+    @Test
+    void featuredLinksMigrationSeedsStarterLinksOnce() throws IOException {
+        String sql = new ClassPathResource("db/migration/V13__featured_bonus_links.sql")
+                .getContentAsString(StandardCharsets.UTF_8)
+                .replace("ALTER TABLE social_tasks ADD COLUMN featured boolean NOT NULL DEFAULT false;", "");
+        new TransactionTemplate(transactionManager).executeWithoutResult(status -> {
+            UUID adminId = jdbc.queryForObject("SELECT id FROM users WHERE role = 'ADMIN' ORDER BY created_at LIMIT 1", UUID.class);
+            jdbc.update("""
+                    INSERT INTO social_tasks (id, owner_id, platform, title, url, status, reward_points)
+                    VALUES (gen_random_uuid(), ?, 'X', 'Mi X', 'https://x.com/prueba-v13', 'ACTIVE', 20)
+                    """, adminId);
+
+            jdbc.execute(sql);
+
+            assertThat(jdbc.queryForObject("SELECT featured AND reward_points = 100 FROM social_tasks WHERE url = 'https://x.com/prueba-v13'",
+                    Boolean.class)).isTrue();
+            assertThat(jdbc.queryForObject("""
+                    SELECT count(*) FROM social_tasks
+                    WHERE owner_id = ? AND url IN ('https://news.ycombinator.com', 'https://www.producthunt.com',
+                        'https://github.com/trending', 'https://www.youtube.com/@Fireship', 'https://roadmap.sh',
+                        'https://www.indiehackers.com') AND status = 'ACTIVE' AND reward_points = 20
+                    """, Integer.class, adminId)).isEqualTo(6);
+
+            // Si se volviera a ejecutar, no se duplica ningún enlace
+            jdbc.execute(sql);
+            assertThat(jdbc.queryForObject("SELECT count(*) FROM social_tasks WHERE url = 'https://roadmap.sh'", Integer.class))
+                    .isEqualTo(1);
+            status.setRollbackOnly();
+        });
     }
 
     @Test

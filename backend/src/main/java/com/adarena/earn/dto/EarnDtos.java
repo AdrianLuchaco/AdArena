@@ -104,7 +104,8 @@ public final class EarnDtos {
      * @param state AVAILABLE (sin empezar), STARTED (enlace abierto, falta reclamar) o DONE (hecha hoy)
      */
     public record TaskItem(UUID id, SocialPlatform platform, String platformLabel, String title, String description,
-                           String url, int rewardPoints, String state, Instant startedAt, SiteInfo site) {
+                           String url, int rewardPoints, boolean featured, String state, Instant startedAt,
+                           SiteInfo site) {
     }
 
     public record TasksOverview(long tasksDoneToday, int tasksPerDay, long earnedToday, Rules rules,
@@ -161,6 +162,6 @@ public final class EarnDtos {
     /** Una promoción vista desde el panel de administración. */
     public record AdminTask(UUID id, SocialPlatform platform, String title, String description, String url,
                             SocialTaskStatus status, String hiddenReason, int reports, int completions,
-                            String ownerEmail, String ownerName, Instant createdAt, List<String> reportReasons) {
+                            boolean featured, int rewardPoints, String ownerEmail, String ownerName, Instant createdAt, List<String> reportReasons) {
     }
 }

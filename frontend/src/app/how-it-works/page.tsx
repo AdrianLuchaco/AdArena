@@ -119,6 +119,11 @@ function Rules({ items }: { items: [string, React.ReactNode][] }) {
   );
 }
 
+/**
+ * Los pasos, en una cuadrícula con líneas finas entre casillas (el fondo oscuro que asoma por los
+ * huecos). La última casilla es una llamada a empezar: con 5 pasos completa la fila y no queda un
+ * hueco oscuro al final (ni con 2 columnas ni con 3).
+ */
 function Steps({ items }: { items: [string, string][] }) {
   return (
     <ol className="grid gap-px overflow-hidden rounded-lg bg-ink ring-2 ring-ink sm:grid-cols-2 xl:grid-cols-3">
@@ -129,6 +134,19 @@ function Steps({ items }: { items: [string, string][] }) {
           <p className="mt-1 text-sm">{text}</p>
         </li>
       ))}
+      <li className="flex flex-col justify-between gap-4 bg-brand p-5 text-white">
+        <div>
+          <span className="font-display text-5xl font-black uppercase leading-none text-gold">Go!</span>
+          <p className="mt-2 font-bold">Your turn</p>
+          <p className="mt-1 text-sm text-white/85">It takes a minute and it’s free. Tomorrow it could be you up there.</p>
+        </div>
+        <Link
+          href="/signup"
+          className="inline-flex h-11 items-center justify-center gap-2 self-start rounded-md bg-gold px-5 font-semibold text-ink hover:bg-white"
+        >
+          Create my account <ArrowRightIcon className="size-4" />
+        </Link>
+      </li>
     </ol>
   );
 }
@@ -214,7 +232,7 @@ function Points() {
   const rows = [
     ["Signing up", "200", "Once"],
     ["Watching an Arena project’s website", "10 every 10 s, plus 40 at 60 s", "Up to 100 per website per day"],
-    ["Bonus links (watching a community link)", "20 per link", "10 links a day"],
+    ["Bonus links (watching a community link)", "20 per link, 100 for featured links", "10 links a day"],
     ["Winning the Arena (when your ad goes live)", "500", "So you can bid again"],
   ];
   return (
@@ -307,7 +325,7 @@ function BonusLinks() {
     <Section
       id="bonus-links"
       title="Bonus links"
-      intro="Links the community promotes: YouTube channels, Instagram or TikTok profiles, websites. Each one gives 20 points for watching it for 10 seconds."
+      intro="Links the community promotes: YouTube channels, Instagram or TikTok profiles, websites. Each one gives 20 points for watching it for 10 seconds, and featured links, shown first, give 100."
     >
       <Rules
         items={[
