@@ -7,7 +7,7 @@ import { formatClock } from "@/lib/format";
 import { useCountdown } from "@/lib/hooks";
 import { AdView } from "../ad/AdView";
 import { WinnerShowcase } from "../ad/WinnerShowcase";
-import { AdSenseScript, AdSenseUnit } from "../ads/AdSenseUnit";
+import { AdUnit } from "../ads/AdUnit";
 import { ArenaScoreboard } from "../arena/ArenaScoreboard";
 import { Leaderboard, LeaderboardSkeleton } from "../arena/Leaderboard";
 import { Alert } from "../ui/Alert";
@@ -119,8 +119,7 @@ export function HomeClient() {
 
       {/* Un anuncio pequeño, al final y lejos de los botones */}
       <div className="mx-auto w-full max-w-5xl px-4 pb-14 sm:px-6">
-        <AdSenseUnit slot="banner" />
-        <AdSenseScript />
+        <AdUnit placement="homeBanner" />
       </div>
     </>
   );

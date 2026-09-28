@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Archivo, Big_Shoulders } from "next/font/google";
+import { AdsProvider } from "@/components/ads/AdsProvider";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { ToastProvider } from "@/components/ui/Toaster";
@@ -21,22 +22,24 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#e9ecf1",
+  themeColor: "#eef0f5",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" data-scroll-behavior="smooth" className={`${body.variable} ${heading.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
-        <ToastProvider>
-          <AuthProvider>
-            <ArenaProvider>
-              <SiteHeader />
-              <main className="flex flex-1 flex-col">{children}</main>
-              <SiteFooter />
-            </ArenaProvider>
-          </AuthProvider>
-        </ToastProvider>
+        <AdsProvider>
+          <ToastProvider>
+            <AuthProvider>
+              <ArenaProvider>
+                <SiteHeader />
+                <main className="flex flex-1 flex-col">{children}</main>
+                <SiteFooter />
+              </ArenaProvider>
+            </AuthProvider>
+          </ToastProvider>
+        </AdsProvider>
       </body>
     </html>
   );
