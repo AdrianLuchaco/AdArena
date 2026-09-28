@@ -269,6 +269,45 @@ class SocialTaskApiIntegrationTest extends ApiTestSupport {
     }
 
     @Test
+    void aFeaturedLinkGoesFirstAndGivesMorePoints() throws Exception {
+        createTask(ownerToken, "https://ejemplo.com/normal");
+        String featuredId = createTask(ownerToken, "https://ejemplo.com/destacado");
+        String adminToken = accessToken(login(ADMIN_EMAIL, ADMIN_PASSWORD));
+
+        mockMvc.perform(post("/api/admin/tasks/" + featuredId + "/feature").with(randomIp())
+                        .header(HttpHeaders.AUTHORIZATION, bearer(adminToken)))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/api/earn/tasks").with(randomIp()).header(HttpHeaders.AUTHORIZATION, bearer(visitorToken)))
+                .andExpect(jsonPath("$.tasks[0].id").value(featuredId))
+                .andExpect(jsonPath("$.tasks[0].featured").value(true))
+                .andExpect(jsonPath("$.tasks[0].rewardPoints").value(100));
+
+        long before = availablePoints(visitorToken);
+        action(visitorToken, featuredId, "start").andExpect(status().isOk());
+        waitSeconds(featuredId, 11);
+        action(visitorToken, featuredId, "claim").andExpect(status().isOk())
+                .andExpect(jsonPath("$.pointsAwarded").value(100));
+        assertThat(availablePoints(visitorToken)).isEqualTo(before + 100);
+
+        // Sin destacar, vuelve a los puntos normales
+        mockMvc.perform(post("/api/admin/tasks/" + featuredId + "/unfeature").with(randomIp())
+                        .header(HttpHeaders.AUTHORIZATION, bearer(adminToken)))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/api/admin/tasks").with(randomIp()).header(HttpHeaders.AUTHORIZATION, bearer(adminToken)))
+                .andExpect(jsonPath("$[?(@.id == '%s')].featured".formatted(featuredId)).value(false))
+                .andExpect(jsonPath("$[?(@.id == '%s')].rewardPoints".formatted(featuredId)).value(20));
+    }
+
+    @Test
+    void onlyTheAdminCanFeatureALink() throws Exception {
+        String taskId = createTask(ownerToken, "https://ejemplo.com/no-admin");
+        mockMvc.perform(post("/api/admin/tasks/" + taskId + "/feature").with(randomIp())
+                        .header(HttpHeaders.AUTHORIZATION, bearer(ownerToken)))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
     void thereIsADailyLimitOfTasks() throws Exception {
         // 11 tareas de 3 dueños distintos (cada uno puede tener 5 a la vez)
         String[] owners = {ownerToken, accessToken(register(uniqueEmail(), PASSWORD)),

@@ -136,6 +136,8 @@ app:
     # Créditos extra: visitar los enlaces que promocionan los usuarios
     tasks:
       reward-points: ${TASK_REWARD_POINTS:20}
+      # Los enlaces destacados (los elige el admin: Admin → Promotions → Feature) salen los primeros
+      featured-reward-points: ${FEATURED_TASK_REWARD_POINTS:100}
       min-seconds: 10
       max-per-day: ${TASKS_PER_DAY:10}
       max-active-per-user: 5

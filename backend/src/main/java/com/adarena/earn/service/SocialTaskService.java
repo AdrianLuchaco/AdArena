@@ -209,7 +209,7 @@ public class SocialTaskService {
     private static EarnDtos.TaskItem toItem(SocialTask task, SocialTaskCompletion completion, SiteInfo site) {
         String state = completion == null ? "AVAILABLE" : completion.isCompleted() ? "DONE" : "STARTED";
         return new EarnDtos.TaskItem(task.getId(), task.getPlatform(), task.getPlatform().getLabel(), task.getTitle(),
-                task.getDescription(), task.getUrl(), task.getRewardPoints(), state,
+                task.getDescription(), task.getUrl(), task.getRewardPoints(), task.isFeatured(), state,
                 completion == null ? null : completion.getStartedAt(), site);
     }
 }

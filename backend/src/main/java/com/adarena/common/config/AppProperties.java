@@ -189,6 +189,7 @@ public record AppProperties(
      */
     public record Tasks(
             @Positive int rewardPoints,
+            @Positive int featuredRewardPoints,
             @Positive int minSeconds,
             @Positive int maxPerDay,
             @Positive int maxActivePerUser,

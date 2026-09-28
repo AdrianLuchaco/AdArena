@@ -96,9 +96,13 @@ export function EarnShell({ children }: { children: React.ReactNode }) {
 function DayMeter({ overview, tasks }: { overview: EarnOverview; tasks: TasksOverview }) {
   const others = overview.projects.filter((p) => !p.own);
   const viewsMax = others.reduce((sum, p) => sum + p.dailyCap, 0);
-  const pendingTasks = tasks.tasks.filter((t) => t.state !== "DONE").length;
-  const tasksLeft = Math.max(0, Math.min(tasks.tasksPerDay - tasks.tasksDoneToday, pendingTasks));
-  const tasksMax = tasks.earnedToday + tasksLeft * overview.rules.taskRewardPoints;
+  // Lo que aún se puede ganar con los enlaces pendientes, empezando por los que más dan (los destacados)
+  const pendingPoints = tasks.tasks
+    .filter((t) => t.state !== "DONE")
+    .map((t) => t.rewardPoints)
+    .sort((a, b) => b - a);
+  const tasksLeft = Math.max(0, tasks.tasksPerDay - tasks.tasksDoneToday);
+  const tasksMax = tasks.earnedToday + pendingPoints.slice(0, tasksLeft).reduce((sum, points) => sum + points, 0);
   const earned = overview.earnedTodayFromViews + tasks.earnedToday;
   const max = Math.max(1, viewsMax + tasksMax);
 
@@ -154,6 +158,8 @@ function Tabs({ pathname, overview, tasks }: { pathname: string; overview: EarnO
     0,
     Math.min(tasks.tasksPerDay - tasks.tasksDoneToday, tasks.tasks.filter((t) => t.state !== "DONE").length),
   );
+  // Los enlaces destacados dan más puntos que los normales
+  const bestTaskPoints = Math.max(0, ...tasks.tasks.map((t) => t.rewardPoints));
   const items = [
     {
       href: "/earn",
@@ -164,7 +170,10 @@ function Tabs({ pathname, overview, tasks }: { pathname: string; overview: EarnO
     {
       href: "/earn/links",
       title: "Bonus links",
-      detail: `+${overview.rules.taskRewardPoints} pts each`,
+      detail:
+        bestTaskPoints > overview.rules.taskRewardPoints
+          ? `+${overview.rules.taskRewardPoints} to +${bestTaskPoints} pts each`
+          : `+${overview.rules.taskRewardPoints} pts each`,
       count: tasksLeft,
     },
   ];

@@ -40,6 +40,7 @@ public class SocialTask extends BaseEntity {
     private SocialTaskStatus status;
 
     private int rewardPoints;
+    private boolean featured;
     private int reports;
     private int completions;
     private String hiddenReason;
@@ -93,6 +94,18 @@ public class SocialTask extends BaseEntity {
         reports = 0;
     }
 
+    /** Destacado por el admin: sale el primero en Bonus links y da {@code points} puntos. */
+    public void feature(int points) {
+        featured = true;
+        rewardPoints = points;
+    }
+
+    /** Vuelve a ser un enlace normal, con los puntos normales. */
+    public void unfeature(int points) {
+        featured = false;
+        rewardPoints = points;
+    }
+
     public boolean isActive() {
         return status == SocialTaskStatus.ACTIVE;
     }
@@ -123,6 +136,10 @@ public class SocialTask extends BaseEntity {
 
     public int getRewardPoints() {
         return rewardPoints;
+    }
+
+    public boolean isFeatured() {
+        return featured;
     }
 
     public int getReports() {

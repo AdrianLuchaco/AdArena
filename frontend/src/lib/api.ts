@@ -410,6 +410,11 @@ export function restoreTask(id: string): Promise<void> {
   return request<void>(`/api/admin/tasks/${encodeURIComponent(id)}/restore`, { method: "POST", auth: true });
 }
 
+export function setTaskFeatured(id: string, featured: boolean): Promise<void> {
+  const action = featured ? "feature" : "unfeature";
+  return request<void>(`/api/admin/tasks/${encodeURIComponent(id)}/${action}`, { method: "POST", auth: true });
+}
+
 export function getSettings(): Promise<ArenaSettings> {
   return request<ArenaSettings>("/api/admin/settings", { auth: true });
 }

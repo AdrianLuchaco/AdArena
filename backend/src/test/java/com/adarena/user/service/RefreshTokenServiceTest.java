@@ -54,7 +54,7 @@ class RefreshTokenServiceTest {
                 new AppProperties.Jobs(false),
                 new AppProperties.Mail("AdArena <avisos@adarena.test>", null, 465, null, null, true, null),
                 new AppProperties.Rewards(200, 500, new AppProperties.Views(10, 10, 60, 40, 100),
-                        new AppProperties.Tasks(20, 10, 10, 5, 3)),
+                        new AppProperties.Tasks(20, 100, 10, 10, 5, 3)),
                 new AppProperties.Previews(false, Duration.ofHours(20), Duration.ofMinutes(2), "AdArenaBot/test"),
                 null);
         service = new RefreshTokenService(repository, properties, Clock.fixed(NOW, ZoneOffset.UTC));

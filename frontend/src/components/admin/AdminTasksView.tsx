@@ -1,11 +1,12 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { ApiError, getAdminTasks, hideTask, restoreTask } from "@/lib/api";
+import { ApiError, getAdminTasks, hideTask, restoreTask, setTaskFeatured } from "@/lib/api";
 import { cn } from "@/lib/cn";
 import { formatDateTime, prettyUrl } from "@/lib/format";
 import type { AdminTask, PromotionStatus } from "@/lib/types";
 import { PlatformBadge } from "../earn/PlatformBadge";
+import { FlameIcon } from "../icons";
 import { Alert } from "../ui/Alert";
 import { Button } from "../ui/Button";
 import { TextField } from "../ui/Field";
@@ -54,7 +55,8 @@ export function AdminTasksView() {
       <Alert tone="info" title="How it works">
         Promotions go live straight away. Focus on the reported ones: open the link and, if it breaks the rules
         (misleading, illegal or adult content, malware…), hide it with a reason. After 3 reports they hide themselves
-        until you review them.
+        until you review them. <strong>Feature</strong> a link (yours, for example) to show it first in Bonus links,
+        highlighted and with more points.
       </Alert>
       {tasks.length === 0 ? (
         <p className="rounded-md bg-surface px-5 py-6 text-ink-soft ring-1 ring-line">No promotions yet.</p>
@@ -90,10 +92,23 @@ function TaskRow({ task, onChanged }: { task: AdminTask; onChanged: () => Promis
 
   const status = STATUS[task.status];
   return (
-    <li className={cn("rounded-lg bg-surface p-5 ring-2", task.reports > 0 ? "ring-danger" : "ring-ink/15")}>
+    <li
+      className={cn(
+        "rounded-lg bg-surface p-5 ring-2",
+        task.reports > 0 ? "ring-danger" : task.featured ? "ring-gold-dark" : "ring-ink/15",
+      )}
+    >
       <div className="flex flex-wrap items-center gap-2">
         <PlatformBadge platform={task.platform} label={PLATFORM_LABEL[task.platform] ?? task.platform} />
         <span className={cn("rounded-sm px-2 py-0.5 text-xs font-semibold", status.className)}>{status.text}</span>
+        {task.featured && (
+          <span className="inline-flex items-center gap-1 rounded-sm bg-gold px-2 py-0.5 text-xs font-bold text-ink">
+            <FlameIcon className="size-3.5" /> Featured
+          </span>
+        )}
+        <span className="tabular rounded-sm bg-canvas px-2 py-0.5 text-xs font-semibold text-ink-soft ring-1 ring-line">
+          +{task.rewardPoints} pts
+        </span>
         {task.reports > 0 && (
           <span className="rounded-sm bg-danger-soft px-2 py-0.5 text-xs font-bold text-danger">
             {task.reports} {task.reports === 1 ? "report" : "reports"}
@@ -118,13 +133,28 @@ function TaskRow({ task, onChanged }: { task: AdminTask; onChanged: () => Promis
         </ul>
       )}
 
-      <div className="mt-4">
+      <div className="mt-4 flex flex-wrap items-start gap-2">
+        {task.status !== "HIDDEN" && !hiding && (
+          <Button
+            size="sm"
+            variant={task.featured ? "ghost" : "secondary"}
+            loading={busy}
+            onClick={() =>
+              void run(
+                () => setTaskFeatured(task.id, !task.featured),
+                task.featured ? "No longer featured" : "Featured: it shows first in Bonus links",
+              )
+            }
+          >
+            {task.featured ? "Unfeature" : "Feature"}
+          </Button>
+        )}
         {task.status === "HIDDEN" ? (
           <Button size="sm" variant="secondary" loading={busy} onClick={() => void run(() => restoreTask(task.id), "Promotion live again")}>
             Restore
           </Button>
         ) : hiding ? (
-          <div className="grid gap-2 sm:grid-cols-[1fr_auto] sm:items-end">
+          <div className="grid w-full gap-2 sm:grid-cols-[1fr_auto] sm:items-end">
             <TextField label="Reason (we send it to the owner)" value={reason} maxLength={300} onChange={(e) => setReason(e.target.value)} />
             <div className="flex gap-2">
               <Button size="sm" variant="dark" loading={busy} disabled={reason.trim().length < 3}

@@ -326,6 +326,8 @@ export interface TaskItem {
   description: string | null;
   url: string;
   rewardPoints: number;
+  /** Destacado por el admin: sale el primero y da más puntos */
+  featured: boolean;
   state: TaskState;
   startedAt: string | null;
   site: SiteInfo;
@@ -465,6 +467,8 @@ export interface AdminTask {
   hiddenReason: string | null;
   reports: number;
   completions: number;
+  featured: boolean;
+  rewardPoints: number;
   ownerEmail: string | null;
   ownerName: string | null;
   createdAt: string;

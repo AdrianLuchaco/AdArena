@@ -118,6 +118,18 @@ public class AdminController {
         promotionService.restore(CurrentUser.id(jwt), id);
     }
 
+    @Operation(summary = "Destacar una promoción: sale la primera en Bonus links y da más puntos")
+    @PostMapping("/tasks/{id}/feature")
+    public void featureTask(@AuthenticationPrincipal Jwt jwt, @PathVariable UUID id) {
+        promotionService.setFeatured(CurrentUser.id(jwt), id, true);
+    }
+
+    @Operation(summary = "Quitar el destacado: vuelve a dar los puntos normales")
+    @PostMapping("/tasks/{id}/unfeature")
+    public void unfeatureTask(@AuthenticationPrincipal Jwt jwt, @PathVariable UUID id) {
+        promotionService.setFeatured(CurrentUser.id(jwt), id, false);
+    }
+
     // ------------------------------------------------------------------ configuración y auditoría
 
     @Operation(summary = "Configuración de la Arena")

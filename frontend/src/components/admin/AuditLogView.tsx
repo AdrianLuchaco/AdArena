@@ -14,6 +14,8 @@ const ACTIONS: Record<string, string> = {
   TOP_UP_REJECTED: "Discarded a top-up (legacy)",
   TASK_HIDDEN: "Hid a promotion",
   TASK_RESTORED: "Restored a promotion",
+  TASK_FEATURED: "Featured a promotion",
+  TASK_UNFEATURED: "Unfeatured a promotion",
   SETTINGS_UPDATED: "Changed the settings",
 };
 

@@ -8,7 +8,7 @@ import { formatPoints, prettyUrl } from "@/lib/format";
 import type { TaskItem } from "@/lib/types";
 import { Alert } from "../ui/Alert";
 import { ButtonLink } from "../ui/Button";
-import { ArrowRightIcon, CheckIcon } from "../icons";
+import { ArrowRightIcon, CheckIcon, FlameIcon } from "../icons";
 import { SiteAvatar } from "../viewer/SiteAvatar";
 import { ModeChip } from "./EarnProjectsView";
 import { useEarnData } from "./EarnShell";
@@ -16,14 +16,17 @@ import { platformColor, platformSurface, PlatformBadge } from "./PlatformBadge";
 
 /**
  * Bonus links: los enlaces que promocionan otros usuarios (canales, perfiles, webs). Cada uno da
- * sus puntos tras mirarlo 10 s, una vez al día.
+ * sus puntos tras mirarlo 10 s, una vez al día. Los destacados (los elige el admin) van arriba, en
+ * su propio bloque, y dan más puntos.
  */
 export function TasksView() {
   const { tasks: overview } = useEarnData();
   const { rules } = overview;
   const limitReached = overview.tasksDoneToday >= overview.tasksPerDay;
-  const pending = overview.tasks.filter((task) => task.state !== "DONE");
+  const featured = overview.tasks.filter((task) => task.featured && task.state !== "DONE");
+  const pending = overview.tasks.filter((task) => !task.featured && task.state !== "DONE");
   const done = overview.tasks.filter((task) => task.state === "DONE");
+  const featuredPoints = Math.max(0, ...overview.tasks.filter((task) => task.featured).map((task) => task.rewardPoints));
 
   return (
     <div className="space-y-8">
@@ -31,8 +34,9 @@ export function TasksView() {
         <div>
           <h2 className="text-4xl">Community links</h2>
           <p className="mt-1 max-w-2xl text-ink-soft">
-            Watch each link for {rules.taskMinSeconds} seconds and earn +{rules.taskRewardPoints}. You earn by watching;
-            following or liking is up to you.{" "}
+            Watch each link for {rules.taskMinSeconds} seconds and earn +{rules.taskRewardPoints}
+            {featuredPoints > 0 && <> (featured links: +{featuredPoints})</>}. You earn by watching; following or
+            liking is up to you.{" "}
             <Link href="/promote" className="font-semibold text-brand hover:underline">
               Want your own link here? Promote it for free
             </Link>
@@ -58,13 +62,38 @@ export function TasksView() {
           </ButtonLink>
         </div>
       ) : (
-        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {[...pending, ...done].map((task) => (
-            <li key={task.id}>
-              <TaskTile task={task} disabled={limitReached && task.state !== "DONE"} />
-            </li>
-          ))}
-        </ul>
+        <>
+          {featured.length > 0 && (
+            <section aria-labelledby="featured-links">
+              <h3 id="featured-links" className="flex items-center gap-2 text-2xl">
+                <FlameIcon className="size-6 text-gold-dark" /> Featured
+              </h3>
+              <ul className="mt-3 grid gap-4 sm:grid-cols-2">
+                {featured.map((task) => (
+                  <li key={task.id}>
+                    <TaskTile task={task} disabled={limitReached} />
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+          {pending.length + done.length > 0 && (
+            <section aria-labelledby={featured.length > 0 ? "more-links" : undefined}>
+              {featured.length > 0 && (
+                <h3 id="more-links" className="text-2xl">
+                  More links
+                </h3>
+              )}
+              <ul className={cn("grid gap-4 sm:grid-cols-2 lg:grid-cols-3", featured.length > 0 && "mt-3")}>
+                {[...pending, ...done].map((task) => (
+                  <li key={task.id}>
+                    <TaskTile task={task} disabled={limitReached && task.state !== "DONE"} />
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+        </>
       )}
     </div>
   );
@@ -72,6 +101,7 @@ export function TasksView() {
 
 function TaskTile({ task, disabled }: { task: TaskItem; disabled: boolean }) {
   const done = task.state === "DONE";
+  const highlighted = task.featured && !done;
   const content = (
     <>
       <span className={cn("relative block aspect-[16/8] overflow-hidden", !task.site.imageUrl && platformSurface(task.platform))}>
@@ -91,6 +121,7 @@ function TaskTile({ task, disabled }: { task: TaskItem; disabled: boolean }) {
           className={cn(
             "tabular absolute right-3 top-3 rounded-sm px-2.5 py-1 text-sm font-extrabold",
             done ? "bg-success text-white" : "bg-gold text-ink ring-1 ring-ink",
+            highlighted && "px-3 py-1.5 text-base shadow-lift",
           )}
         >
           {done ? (
@@ -101,6 +132,11 @@ function TaskTile({ task, disabled }: { task: TaskItem; disabled: boolean }) {
             `+${task.rewardPoints}`
           )}
         </span>
+        {highlighted && (
+          <span className="absolute bottom-3 left-3 inline-flex items-center gap-1 rounded-sm bg-ink px-2.5 py-1 text-xs font-bold uppercase tracking-wide text-gold">
+            <FlameIcon className="size-3.5" /> Featured
+          </span>
+        )}
       </span>
       <span className="flex flex-1 flex-col gap-2 p-4">
         <span className="flex items-center gap-2.5">
@@ -132,7 +168,8 @@ function TaskTile({ task, disabled }: { task: TaskItem; disabled: boolean }) {
     </>
   );
   const className = cn(
-    "group flex h-full flex-col overflow-hidden rounded-lg bg-surface ring-2 ring-ink/15 transition",
+    "group flex h-full flex-col overflow-hidden rounded-lg ring-2 transition",
+    highlighted ? "bg-gold-soft ring-4 ring-gold" : "bg-surface ring-ink/15",
     done ? "opacity-70" : "hover:ring-ink",
   );
   if (disabled || done) {

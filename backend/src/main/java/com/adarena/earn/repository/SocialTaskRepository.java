@@ -17,11 +17,14 @@ import java.util.UUID;
 
 public interface SocialTaskRepository extends JpaRepository<SocialTask, UUID> {
 
-    /** Tareas que puede hacer un usuario: activas y de otros. Las menos visitadas primero (reparte el tráfico). */
+    /**
+     * Tareas que puede hacer un usuario: activas y de otros. Las destacadas primero; después, las
+     * menos visitadas (reparte el tráfico).
+     */
     @Query("""
             SELECT t FROM SocialTask t
             WHERE t.status = com.adarena.earn.domain.SocialTaskStatus.ACTIVE AND t.ownerId <> :userId
-            ORDER BY t.completions ASC, t.createdAt ASC
+            ORDER BY t.featured DESC, t.completions ASC, t.createdAt ASC
             """)
     List<SocialTask> findAvailableFor(@Param("userId") UUID userId, Limit limit);
 
