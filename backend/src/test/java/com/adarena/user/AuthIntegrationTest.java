@@ -57,7 +57,7 @@ class AuthIntegrationTest extends ApiTestSupport {
         // La contraseña se guarda con BCrypt, nunca en claro
         User saved = userRepository.findByEmail(email.toLowerCase()).orElseThrow();
         assertThat(saved.getPasswordHash()).startsWith("{bcrypt}$2").doesNotContain(PASSWORD);
-        assertThat(saved.getAcceptedTermsVersion()).isEqualTo("2026-09-27-en");
+        assertThat(saved.getAcceptedTermsVersion()).isEqualTo("2026-09-28-en");
     }
 
     @Test

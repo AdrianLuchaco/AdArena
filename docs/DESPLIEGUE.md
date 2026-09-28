@@ -242,6 +242,11 @@ No crees tablas: el backend las crea solo al arrancar la primera vez.
 `https://adarena.vercel.app`: en `.env.render` pon la tuya en `FRONTEND_ORIGINS` y `PUBLIC_URL`, y en
 Render → **adarena-api → Environment** cámbialas también → **Save changes** (reinicia en ~5 min).
 
+> **Compruébalo:** abre `https://adarena-api.onrender.com/` en el navegador. Te lleva a la primera
+> dirección de `FRONTEND_ORIGINS`: tiene que ser **tu** web (p. ej. `https://adarena-lilac.vercel.app`).
+> Si te lleva a `https://adarena.vercel.app`, Render sigue con el valor de ejemplo y no podrás
+> registrarte ni entrar ("Request rejected: it does not come from the AdArena website").
+
 **7.2 Autoriza a Render en Brevo.** Brevo bloquea las llamadas desde IPs que no conoce.
 1. Render → **adarena-api** → botón **Connect** (arriba a la derecha) → pestaña **Outbound** → copia las
    direcciones IP.
@@ -442,7 +447,7 @@ hay dos cosas que debes saber:
 | La web dice "We can’t load the homepage" | El backend está arrancando, o `BACKEND_URL` mal | Espera 10 min. Si sigue, revisa `BACKEND_URL` en Vercel (sin barra final) y **Redeploy** |
 | Entras y al recargar te pide entrar otra vez | `NEXT_PUBLIC_API_URL` no es `/` | Ponlo en `/` en Vercel y **Redeploy** |
 | "Connecting…" en vez de "Live now" | `NEXT_PUBLIC_WS_URL` mal, o `FRONTEND_ORIGINS` no coincide con la dirección de la web | `wss://…onrender.com/ws` en Vercel (y Redeploy); en Render, `FRONTEND_ORIGINS` exactamente igual que la dirección de tu web |
-| Al pujar o guardar sale un error de "origin" | `FRONTEND_ORIGINS` no coincide | Igual que arriba (con dominio: las dos, con y sin `www`) |
+| Al registrarte o entrar: "Request rejected: it does not come from the AdArena website" (o un error de "origin" al pujar) | `FRONTEND_ORIGINS` en Render no coincide con la dirección de tu web | Render → Environment: `FRONTEND_ORIGINS` y `PUBLIC_URL` exactamente como la dirección de tu web, sin barra final (con dominio: las dos, con y sin `www`) → Save. Comprobación en el paso 7.1. En Logs verás `Petición rechazada desde el origen …` con la dirección que llegó |
 | Vercel: el dominio no pasa a ✓ | Registros DNS mal o con la nube naranja | Revisa que sean exactamente los que pide Vercel y en **DNS only** (gris). Espera hasta 1 hora |
 | No llegan los emails; en Logs: `Brevo answered 401` | IP no autorizada o clave mal copiada | Paso 7.2; o genera otra clave |
 | En Logs: `Brevo answered 400 … sender` | El remitente de `MAIL_FROM` no está verificado | Paso 4.2 (o 10.1 con dominio) y que `MAIL_FROM` use exactamente ese email |
