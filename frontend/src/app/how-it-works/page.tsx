@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
+import { jsonLd, pageMetadata } from "@/lib/site";
 import Link from "next/link";
 import { ArrowRightIcon } from "@/components/icons";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "How it works",
   description:
-    "The full LaunchCrown guide: how to bid for the homepage, what happens if you win, how to earn Crown Points by watching websites, bonus links and promoting your link for free.",
-};
+    "The complete LaunchCrown guide: how to promote your startup for free, bid Crown Points for the homepage, what the winner gets and how to earn points.",
+  path: "/how-it-works",
+});
 
 const SECTIONS = [
   { id: "first-day", label: "Your first day" },
@@ -365,18 +367,33 @@ function Promote() {
   );
 }
 
+/** Preguntas frecuentes: se muestran en la página y van también a Google como datos estructurados. */
+const FAQ: [string, string][] = [
+  ["How can I promote my startup for free?", "Two ways, both free: post your link in Promote so the community visits it in Bonus links, or bid Crown Points in the daily Race to take over the whole LaunchCrown homepage for 24 hours."],
+  ["Can I buy points?", "No. Crown Points are only earned by taking part: signing up, watching websites, bonus links and winning the Race."],
+  ["Do points expire?", "No. Points you don’t spend stay in your account."],
+  ["Why did the count stop?", "Because you stopped watching the website: you switched tabs, went a while without touching anything, came back to LaunchCrown from its window or pressed I’m done. Go back to it and the count carries on."],
+  ["Why do some websites open in a separate window?", "Each website decides whether it can be shown inside others. The ones that can’t (like YouTube or Instagram) open separately, and points count while you’re on them."],
+  ["Can I use several accounts?", "No. It’s forbidden and points earned that way are cancelled. Points can’t be moved between accounts either."],
+  ["Are there ads on LaunchCrown?", "There may be ads on the homepage, on Promote and small ones under the standings, served by our partner Ezoic. Never on pages where you earn points: points never depend on seeing or clicking ads."],
+  ["My presentation doesn’t look right. What can I do?", "In Account you can ask us to read your website again. If it can’t be read, your classic ad is shown instead (image, name and description)."],
+];
+
+const FAQ_JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: FAQ.map(([question, answer]) => ({
+    "@type": "Question",
+    name: question,
+    acceptedAnswer: { "@type": "Answer", text: answer },
+  })),
+};
+
 function Faq() {
-  const items = [
-    ["Can I buy points?", "No. Crown Points are only earned by taking part: signing up, watching websites, bonus links and winning the Race."],
-    ["Do points expire?", "No. Points you don’t spend stay in your account."],
-    ["Why did the count stop?", "Because you stopped watching the website: you switched tabs, went a while without touching anything, came back to LaunchCrown from its window or pressed I’m done. Go back to it and the count carries on."],
-    ["Why do some websites open in a separate window?", "Each website decides whether it can be shown inside others. The ones that can’t (like YouTube or Instagram) open separately, and points count while you’re on them."],
-    ["Can I use several accounts?", "No. It’s forbidden and points earned that way are cancelled. Points can’t be moved between accounts either."],
-    ["Are there ads on LaunchCrown?", "There may be ads on the homepage, on Promote and small ones under the standings, served by our partner Ezoic. Never on pages where you earn points: points never depend on seeing or clicking ads."],
-    ["My presentation doesn’t look right. What can I do?", "In Account you can ask us to read your website again. If it can’t be read, your classic ad is shown instead (image, name and description)."],
-  ];
+  const items = FAQ;
   return (
     <Section id="faq" title="Questions" intro="What people ask us most.">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(FAQ_JSON_LD) }} />
       <div className="divide-y divide-line overflow-hidden rounded-lg bg-surface ring-2 ring-ink">
         {items.map(([question, answer]) => (
           <details key={question} className="group px-5 py-4 open:bg-canvas/60">

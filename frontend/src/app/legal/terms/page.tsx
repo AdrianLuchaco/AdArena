@@ -1,9 +1,15 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/site";
 import Link from "next/link";
 import { LegalPage } from "@/components/legal/LegalPage";
 import { CONTACT_EMAIL, LEGAL_UPDATED } from "@/lib/legal";
 
-export const metadata: Metadata = { title: "Terms and conditions" };
+export const metadata: Metadata = pageMetadata({
+  title: "Terms and conditions",
+  description:
+    "The rules of LaunchCrown: Crown Points, the daily Race for the homepage, prohibited content and your account.",
+  path: "/legal/terms",
+});
 
 export default function TermsPage() {
   return (

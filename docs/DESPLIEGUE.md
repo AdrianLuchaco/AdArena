@@ -24,6 +24,7 @@
 14. [Límites de los planes gratuitos](#14-límites-de-los-planes-gratuitos)
 15. [Si algo falla](#15-si-algo-falla)
 16. [El cambio de nombre: de AdArena a LaunchCrown](#16-el-cambio-de-nombre-de-adarena-a-launchcrown)
+17. [Que Google encuentre la web (Search Console)](#17-que-google-encuentre-la-web-search-console)
 
 ---
 
@@ -487,4 +488,27 @@ hacer `git push`, Vercel y Render se actualizan solos y la base de datos se reno
 - **UptimeRobot:** el nombre del monitor es solo una etiqueta.
 - **La carpeta de tu ordenador** (`Documents/AdArena`) y los nombres internos del código
   (`com.adarena`, la cookie `adarena_refresh`…): son invisibles para los usuarios.
+
+---
+
+## 17. Que Google encuentre la web (Search Console)
+
+La web ya le dice a Google todo lo que necesita: `https://www.launchcrown.com/robots.txt`,
+`https://www.launchcrown.com/sitemap.xml`, títulos y descripciones por página, la dirección oficial
+(canónica) de cada una y datos estructurados. Falta avisarle de que existe:
+
+1. Entra en **search.google.com/search-console** con tu cuenta de Google → **Añadir propiedad** →
+   **Dominio** → escribe `launchcrown.com` → Continuar.
+2. Google te da un registro **TXT** (`google-site-verification=…`). En **Cloudflare → launchcrown.com →
+   DNS → Add record**: Type **TXT**, Name **@**, Content: lo que te ha dado Google → Save.
+3. Vuelve a Search Console y pulsa **Verificar** (si falla, espera 10 minutos y repite).
+4. Menú **Sitemaps** → escribe `sitemap.xml` → **Enviar**.
+5. Menú **Inspección de URLs** → pega `https://www.launchcrown.com/` → **Solicitar indexación**. Haz lo
+   mismo con `/how-it-works`, `/promote` y `/race`.
+
+Google tarda de unos días a un par de semanas en empezar a mostrarla. En Search Console verás qué
+búsquedas te traen visitas.
+
+**Recomendado en Vercel:** en **Settings → Domains**, edita `adarena-lilac.vercel.app` y haz que
+**redirija** (308) a `www.launchcrown.com`. Así nadie (ni Google) ve la web en dos direcciones.
 
