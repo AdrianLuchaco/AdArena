@@ -56,8 +56,8 @@ export function NotificationsView() {
         <p className="mx-auto mt-2 max-w-md text-ink-soft">
           We’ll tell you here if someone outbids you, if you win and when your ad goes live.
         </p>
-        <ButtonLink href="/arena" className="mt-6">
-          Go to the Arena
+        <ButtonLink href="/race" className="mt-6">
+          Go to the Race
         </ButtonLink>
       </div>
     );

@@ -14,7 +14,7 @@ const MAX_POLLS = 12;
 
 /**
  * "Así se verá si ganas": la presentación animada montada con tu web (o tu anuncio clásico si tu
- * web no se ha podido leer). Tras guardar el anuncio, AdArena lee tu web en segundo plano: aquí se
+ * web no se ha podido leer). Tras guardar el anuncio, LaunchCrown lee tu web en segundo plano: aquí se
  * espera a que termine.
  *
  * @param enabled  solo si ya tienes anuncio guardado

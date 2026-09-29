@@ -15,13 +15,13 @@ const MOVEMENT_LABEL: Record<MovementType, string> = {
   SIGNUP_BONUS: "Welcome points",
   VIEW_REWARD: "Watching a project",
   TASK_REWARD: "Bonus link",
-  BID_RESERVE: "Bid in the Arena",
+  BID_RESERVE: "Bid in the Race",
   WINNER_REFUND: "Bid refunded",
   BID_WIN_CHARGE: "Winning ad",
   BID_FORFEIT: "Lost half",
-  ADMIN_ADJUSTMENT: "Adjustment by the AdArena team",
+  ADMIN_ADJUSTMENT: "Adjustment by the LaunchCrown team",
   TEST_GRANT: "Test points",
-  WINNER_BONUS: "Arena winner bonus",
+  WINNER_BONUS: "Race winner bonus",
   TOP_UP: "Top-up (legacy)",
 };
 
@@ -58,7 +58,7 @@ export function PointsView() {
     <div className="grid gap-6 lg:grid-cols-[1fr_1.15fr]">
       <div className="space-y-6">
         <section className="space-y-5 rounded-lg bg-surface p-5 shadow-lift ring-2 ring-ink sm:p-7">
-          <h2 className="text-4xl">Your Arena Points</h2>
+          <h2 className="text-4xl">Your Crown Points</h2>
           {error && <Alert tone="danger">{error}</Alert>}
           <div className="grid gap-3 sm:grid-cols-2">
             <div className="rounded-md bg-night p-5 text-white">
@@ -77,12 +77,12 @@ export function PointsView() {
           <p className="text-sm leading-relaxed text-ink-soft">
             When you bid, those points move to <strong>in bids</strong>. If you win, they’re spent when we publish your
             ad. If you don’t, half stays in play the next day and the other half is lost. Points aren’t money: they can’t
-            be bought, sold or exchanged for anything outside AdArena.
+            be bought, sold or exchanged for anything outside LaunchCrown.
           </p>
           <div className="flex flex-wrap gap-2">
             <ButtonLink href="/earn">Earn more points</ButtonLink>
-            <ButtonLink href="/arena" variant="secondary">
-              Go to the Arena
+            <ButtonLink href="/race" variant="secondary">
+              Go to the Race
             </ButtonLink>
           </div>
         </section>

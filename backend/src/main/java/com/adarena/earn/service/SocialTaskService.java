@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
 /**
  * Créditos extra: los usuarios ganan puntos VISITANDO los enlaces que promocionan otros usuarios.
  * <ol>
- *   <li>Al abrir el enlace en el visor (dentro de AdArena o en su propia ventana), el servidor
+ *   <li>Al abrir el enlace en el visor (dentro de LaunchCrown o en su propia ventana), el servidor
  *       apunta la hora ({@link #start}).</li>
  *   <li>Tras 10 s mirándolo, la web reclama los puntos ({@link #claim}). El servidor solo los da si
  *       han pasado al menos 10 s (con SU reloj) desde que se abrió y desde el último premio del
@@ -122,7 +122,7 @@ public class SocialTaskService {
         return new EarnDtos.TaskStarted(task.getId(), task.getUrl(), rules.tasks().minSeconds(), completion.getStartedAt());
     }
 
-    /** El usuario vuelve a AdArena: si ha pasado el tiempo mínimo, se le dan los puntos. */
+    /** El usuario vuelve a LaunchCrown: si ha pasado el tiempo mínimo, se le dan los puntos. */
     @Transactional
     public EarnDtos.TaskClaimed claim(UUID userId, UUID taskId) {
         SocialTask task = availableTask(userId, taskId);

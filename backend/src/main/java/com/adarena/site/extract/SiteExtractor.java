@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
  * presentación animada del ganador y la ficha de cada web en el visor.
  * <p>
  * Todo el texto se limpia (una línea, sin caracteres de control) y se recorta. React lo muestra
- * siempre como texto: nunca se inserta HTML de la web en AdArena.
+ * siempre como texto: nunca se inserta HTML de la web en LaunchCrown.
  */
 public final class SiteExtractor {
 

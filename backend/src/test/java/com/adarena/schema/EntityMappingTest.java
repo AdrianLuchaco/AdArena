@@ -123,7 +123,7 @@ class EntityMappingTest {
 
         // Notificaciones, email y auditoría
         em.persist(new Notification(user.getId(), NotificationType.OUTBID, "Te han superado",
-                "Otra persona te ha superado, vuelve a pujar", "/arena"));
+                "Otra persona te ha superado, vuelve a pujar", "/race"));
         em.persist(new OutboxEmail(user.getEmail(), "Te han superado", "<p>Hola</p>", "Hola",
                 "outbid:test", NOW));
         em.persist(new AdminAuditLog(admin.getId(), "APPROVE_AD", "AD_SLOT", slot.getId().toString(),

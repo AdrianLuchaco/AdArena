@@ -57,7 +57,7 @@ export function BidPanel({ round }: { round: RoundSummary | null }) {
           <ButtonLink href="/signup?next=/account" className="flex-1">
             Sign up free
           </ButtonLink>
-          <ButtonLink href="/login?next=/arena" variant="secondary" className="flex-1">
+          <ButtonLink href="/login?next=/race" variant="secondary" className="flex-1">
             Log in
           </ButtonLink>
         </div>
@@ -84,7 +84,7 @@ export function BidPanel({ round }: { round: RoundSummary | null }) {
   if (!round || !me.roundOpen) {
     return (
       <PanelFrame>
-        <Alert tone="warning" title={round ? "Today’s Arena has closed" : "The Arena hasn’t opened yet"}>
+        <Alert tone="warning" title={round ? "Today’s Race has closed" : "The Race hasn’t opened yet"}>
           {round ? "We’re setting up tomorrow’s. Come back in a moment." : "It opens in a few moments."}
         </Alert>
       </PanelFrame>

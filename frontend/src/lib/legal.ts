@@ -7,4 +7,4 @@
 export const CONTACT_EMAIL = process.env.NEXT_PUBLIC_CONTACT_EMAIL || "agencyluchaco@gmail.com";
 
 /** Fecha de la versión vigente de los textos legales (la de los Términos va también en el backend). */
-export const LEGAL_UPDATED = "28 September 2026";
+export const LEGAL_UPDATED = "29 September 2026";

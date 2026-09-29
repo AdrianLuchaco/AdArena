@@ -62,7 +62,7 @@ export function RegisterForm() {
   return (
     <AuthCard
       title="Sign up"
-      subtitle="It’s free, and you get 200 Arena Points to start."
+      subtitle="It’s free, and you get 200 Crown Points to start."
       footer={
         <>
           Already have an account?{" "}
@@ -119,7 +119,7 @@ export function RegisterForm() {
               <Link href="/legal/privacy" target="_blank" className="font-semibold text-ink underline">
                 Privacy policy
               </Link>
-              . I understand that if I don’t win in the Arena, I keep 50% of the points I bid for the next day and the
+              . I understand that if I don’t win in the Race, I keep 50% of the points I bid for the next day and the
               other 50% is lost.
             </span>
           </label>

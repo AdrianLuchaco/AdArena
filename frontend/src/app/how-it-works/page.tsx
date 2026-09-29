@@ -5,14 +5,14 @@ import { ArrowRightIcon } from "@/components/icons";
 export const metadata: Metadata = {
   title: "How it works",
   description:
-    "The full AdArena guide: how to bid for the homepage, what happens if you win, how to earn Arena Points by watching websites, bonus links and promoting your link for free.",
+    "The full LaunchCrown guide: how to bid for the homepage, what happens if you win, how to earn Crown Points by watching websites, bonus links and promoting your link for free.",
 };
 
 const SECTIONS = [
   { id: "first-day", label: "Your first day" },
-  { id: "arena", label: "The Arena: bidding" },
+  { id: "race", label: "The Race: bidding" },
   { id: "winning", label: "If you win" },
-  { id: "points", label: "Arena Points" },
+  { id: "points", label: "Crown Points" },
   { id: "watching", label: "Earning by watching" },
   { id: "bonus-links", label: "Bonus links" },
   { id: "promote", label: "Promote your link" },
@@ -25,9 +25,9 @@ export default function HowItWorksPage() {
     <div className="flex-1">
       <header className="track relative isolate border-b-2 border-ink text-white">
         <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-20">
-          <h1 className="max-w-[16ch] text-6xl text-balance sm:text-8xl">How AdArena works</h1>
+          <h1 className="max-w-[16ch] text-6xl text-balance sm:text-8xl">How LaunchCrown works</h1>
           <p className="mt-5 max-w-2xl text-lg leading-relaxed text-white/85 sm:text-xl">
-            Every day, projects bid Arena Points for the homepage. Points can’t be bought: you earn them by watching
+            Every day, projects bid Crown Points for the homepage. Points can’t be bought: you earn them by watching
             other people’s websites. The highest bid at midnight goes full screen for 24 hours.
           </p>
           <nav className="-mx-4 mt-8 flex gap-2 overflow-x-auto px-4 pb-1 lg:hidden" aria-label="Sections">
@@ -80,10 +80,10 @@ export default function HowItWorksPage() {
                 Sign up free <ArrowRightIcon className="size-5" />
               </Link>
               <Link
-                href="/arena"
+                href="/race"
                 className="inline-flex h-12 items-center rounded-md px-6 font-semibold ring-2 ring-ink hover:bg-white/40"
               >
-                See today’s Arena
+                See today’s Race
               </Link>
             </div>
           </section>
@@ -158,10 +158,10 @@ function FirstDay() {
     <Section id="first-day" title="Your first day" intro="Five steps, from signing up to being on the homepage.">
       <Steps
         items={[
-          ["Sign up", "It’s free and you get 200 Arena Points to start (once)."],
+          ["Sign up", "It’s free and you get 200 Crown Points to start (once)."],
           ["Set up your ad", "In Account: your project’s name, an image, one line and your website."],
           ["Earn more points", "In Earn points, open a project’s website: every 10 seconds you watch it, +10 points."],
-          ["Bid in the Arena", "Bid your points. You can bid several times and it adds up. We tell you if someone outbids you."],
+          ["Bid in the Race", "Bid your points. You can bid several times and it adds up. We tell you if someone outbids you."],
           ["Win the homepage", "At midnight the highest bid wins: its website goes full screen for 24 hours."],
         ]}
       />
@@ -172,8 +172,8 @@ function FirstDay() {
 function TheArena() {
   return (
     <Section
-      id="arena"
-      title="The Arena: bidding"
+      id="race"
+      title="The Race: bidding"
       intro="There’s a round every day that closes at 00:00 (Madrid time). Whoever has the highest total when it closes wins the next day’s homepage."
     >
       <Rules
@@ -192,8 +192,8 @@ function TheArena() {
           600 are lost.
         </p>
       </div>
-      <Link href="/arena" className={`inline-flex items-center gap-2 ${linkClass}`}>
-        Go to the Arena <ArrowRightIcon className="size-4" />
+      <Link href="/race" className={`inline-flex items-center gap-2 ${linkClass}`}>
+        Go to the Race <ArrowRightIcon className="size-4" />
       </Link>
     </Section>
   );
@@ -204,7 +204,7 @@ function IfYouWin() {
     <Section
       id="winning"
       title="If you win"
-      intro="Your ad takes over the AdArena homepage for 24 hours as a full-screen animated presentation built from your own website."
+      intro="Your ad takes over the LaunchCrown homepage for 24 hours as a full-screen animated presentation built from your own website."
     >
       <Rules
         items={[
@@ -231,15 +231,15 @@ function IfYouWin() {
 function Points() {
   const rows = [
     ["Signing up", "200", "Once"],
-    ["Watching an Arena project’s website", "10 every 10 s, plus 40 at 60 s", "Up to 100 per website per day"],
+    ["Watching an Race project’s website", "10 every 10 s, plus 40 at 60 s", "Up to 100 per website per day"],
     ["Bonus links (watching a community link)", "20 per link, 100 for featured links", "10 links a day"],
-    ["Winning the Arena (when your ad goes live)", "500", "So you can bid again"],
+    ["Winning the Race (when your ad goes live)", "500", "So you can bid again"],
   ];
   return (
     <Section
       id="points"
-      title="Arena Points"
-      intro="The points you bid with. They aren’t money: they can’t be bought, sold, exchanged for anything outside AdArena or moved to another account."
+      title="Crown Points"
+      intro="The points you bid with. They aren’t money: they can’t be bought, sold, exchanged for anything outside LaunchCrown or moved to another account."
     >
       <div className="overflow-hidden rounded-lg bg-surface ring-2 ring-ink">
         <table className="w-full text-left text-sm">
@@ -284,10 +284,10 @@ function Watching() {
     >
       <Rules
         items={[
-          ["Inside AdArena", "Most websites show right here, under the bar, and you can browse them normally. The ring fills every 10 seconds: +10 points. At 60 seconds, a +40 bonus."],
+          ["Inside LaunchCrown", "Most websites show right here, under the bar, and you can browse them normally. The ring fills every 10 seconds: +10 points. At 60 seconds, a +40 bonus."],
           [
             "In their own window",
-            "Some websites don’t allow being shown inside others (YouTube, Instagram, many shops). Press Open and it opens in a separate window. Points count while you’re on that website, that is, while you’re away from AdArena. Coming back to AdArena or pressing I’m done stops the count. If your browser blocks the window, allow pop-ups for AdArena.",
+            "Some websites don’t allow being shown inside others (YouTube, Instagram, many shops). Press Open and it opens in a separate window. Points count while you’re on that website, that is, while you’re away from LaunchCrown. Coming back to LaunchCrown or pressing I’m done stops the count. If your browser blocks the window, allow pop-ups for LaunchCrown.",
           ],
         ]}
       />
@@ -295,9 +295,9 @@ function Watching() {
         <p className="font-bold">The count stops straight away if you…</p>
         <ul className="mt-3 grid gap-2 text-sm text-white/80 sm:grid-cols-2">
           {[
-            "Switch tabs or minimise the browser (inside AdArena)",
-            "Go 45 seconds without touching anything (inside AdArena)",
-            "Come back to AdArena from the separate window",
+            "Switch tabs or minimise the browser (inside LaunchCrown)",
+            "Go 45 seconds without touching anything (inside LaunchCrown)",
+            "Come back to LaunchCrown from the separate window",
             "Press I’m done",
           ].map((text) => (
             <li key={text} className="flex items-start gap-2">
@@ -309,7 +309,7 @@ function Watching() {
       </div>
       <Rules
         items={[
-          ["Why not faster?", "Nobody can watch two websites at once. So AdArena’s server keeps one clock per person: ten tabs, or a website and a bonus link at the same time, earn the same as one. And it never pays for more time than has really passed, even if someone tampers with their browser."],
+          ["Why not faster?", "Nobody can watch two websites at once. So LaunchCrown’s server keeps one clock per person: ten tabs, or a website and a bonus link at the same time, earn the same as one. And it never pays for more time than has really passed, even if someone tampers with their browser."],
           ["Limits", "Up to 100 points a day per project (six 10-second rounds plus the bonus). Your own projects don’t earn points. Everything resets every day at 00:00 Madrid time."],
         ]}
       />
@@ -329,7 +329,7 @@ function BonusLinks() {
     >
       <Rules
         items={[
-          ["Watch and earn", "Open it, watch it for 10 seconds and the points are added. It opens like Arena websites do: inside AdArena or in its own window."],
+          ["Watch and earn", "Open it, watch it for 10 seconds and the points are added. It opens like Race websites do: inside LaunchCrown or in its own window."],
           ["Once a day", "Each link pays once a day, and up to 10 links a day."],
           ["No likes for points", "You earn by watching. Following or liking is up to you and never earns points (social networks forbid it)."],
           ["Reporting", "Something wrong with a link (broken, misleading, dangerous)? Open it, press the info button and report it. After 3 reports from different people it’s hidden until we review it."],
@@ -367,12 +367,12 @@ function Promote() {
 
 function Faq() {
   const items = [
-    ["Can I buy points?", "No. Arena Points are only earned by taking part: signing up, watching websites, bonus links and winning the Arena."],
+    ["Can I buy points?", "No. Crown Points are only earned by taking part: signing up, watching websites, bonus links and winning the Race."],
     ["Do points expire?", "No. Points you don’t spend stay in your account."],
-    ["Why did the count stop?", "Because you stopped watching the website: you switched tabs, went a while without touching anything, came back to AdArena from its window or pressed I’m done. Go back to it and the count carries on."],
+    ["Why did the count stop?", "Because you stopped watching the website: you switched tabs, went a while without touching anything, came back to LaunchCrown from its window or pressed I’m done. Go back to it and the count carries on."],
     ["Why do some websites open in a separate window?", "Each website decides whether it can be shown inside others. The ones that can’t (like YouTube or Instagram) open separately, and points count while you’re on them."],
     ["Can I use several accounts?", "No. It’s forbidden and points earned that way are cancelled. Points can’t be moved between accounts either."],
-    ["Are there ads on AdArena?", "There may be ads on the homepage, on Promote and small ones under the standings, served by our partner Ezoic. Never on pages where you earn points: points never depend on seeing or clicking ads."],
+    ["Are there ads on LaunchCrown?", "There may be ads on the homepage, on Promote and small ones under the standings, served by our partner Ezoic. Never on pages where you earn points: points never depend on seeing or clicking ads."],
     ["My presentation doesn’t look right. What can I do?", "In Account you can ask us to read your website again. If it can’t be read, your classic ad is shown instead (image, name and description)."],
   ];
   return (

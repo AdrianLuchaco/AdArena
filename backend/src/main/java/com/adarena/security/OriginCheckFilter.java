@@ -19,7 +19,7 @@ import java.util.Set;
 
 /**
  * Protección extra contra CSRF (una web maliciosa que hace que TU navegador envíe una petición a
- * AdArena) en las rutas de /api/auth, que son las únicas que usan la cookie de sesión:
+ * LaunchCrown) en las rutas de /api/auth, que son las únicas que usan la cookie de sesión:
  * <ul>
  *   <li>Si la petición trae la cabecera {@code Origin} (los navegadores la ponen siempre en los
  *       POST), debe ser uno de los orígenes del frontend. Si no, 403.</li>
@@ -55,7 +55,7 @@ public class OriginCheckFilter extends OncePerRequestFilter {
             // Si pasa con tu propia web, FRONTEND_ORIGINS (Render) no coincide con su dirección
             log.warn("Petición rechazada desde el origen {}: no está en FRONTEND_ORIGINS {}", origin, allowedOrigins);
             writer.write(request, response, Problems.of(HttpStatus.FORBIDDEN, "ORIGIN_NOT_ALLOWED",
-                    "Request rejected: it does not come from the AdArena website."));
+                    "Request rejected: it does not come from the LaunchCrown website."));
             return;
         }
         chain.doFilter(request, response);

@@ -19,7 +19,7 @@ import java.util.TreeSet;
 import java.util.UUID;
 
 /**
- * Los Arena Points de cada usuario, sobre el ledger de partida doble.
+ * Los Crown Points de cada usuario, sobre el ledger de partida doble.
  * <p>
  * Orden de bloqueo en TODA la aplicación (mismo orden siempre = nunca hay interbloqueos):
  * <ol>
@@ -126,7 +126,7 @@ public class WalletService {
     @Transactional
     public void reserveForBid(UserAccounts accounts, UUID bidId, long amountPoints) {
         record(LedgerTransaction.of(LedgerTransactionType.BID_RESERVE, "bid:" + bidId,
-                        "BID", bidId, "Bid in the Arena")
+                        "BID", bidId, "Bid in the Race")
                 .post(accounts.available(), -amountPoints)
                 .post(accounts.reserved(), amountPoints));
     }

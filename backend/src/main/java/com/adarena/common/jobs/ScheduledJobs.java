@@ -13,7 +13,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 /**
- * Todas las tareas automáticas de AdArena. Se desactivan con app.jobs.enabled=false (los tests lo
+ * Todas las tareas automáticas de LaunchCrown. Se desactivan con app.jobs.enabled=false (los tests lo
  * hacen para decidir ellos cuándo pasa cada cosa).
  * <p>
  * Todas son seguras aunque se ejecuten dos veces a la vez (por ejemplo, con dos instancias del

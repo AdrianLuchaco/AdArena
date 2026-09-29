@@ -100,7 +100,7 @@ class NotificationIntegrationTest extends ApiTestSupport {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.unreadCount").value(1))
                 .andExpect(jsonPath("$.items[0].type").value("OUTBID"))
-                .andExpect(jsonPath("$.items[0].link").value("/arena"))
+                .andExpect(jsonPath("$.items[0].link").value("/race"))
                 .andExpect(jsonPath("$.items[0].read").value(false))
                 .andReturn().getResponse().getContentAsString();
         String id = com.jayway.jsonpath.JsonPath.read(body, "$.items[0].id");

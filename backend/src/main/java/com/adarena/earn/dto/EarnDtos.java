@@ -34,7 +34,7 @@ public final class EarnDtos {
      *
      * @param own               es tu propio proyecto (no da puntos)
      * @param pointsEarnedToday lo que ya has ganado hoy viéndolo (máximo {@code dailyCap})
-     * @param site              su web: si se ve dentro de AdArena, su logo, su foto…
+     * @param site              su web: si se ve dentro de LaunchCrown, su logo, su foto…
      */
     public record EarnProject(UUID id, int position, String companyName, String description, String imageUrl,
                               long totalPoints, boolean own, int pointsEarnedToday, int dailyCap, SiteInfo site) {

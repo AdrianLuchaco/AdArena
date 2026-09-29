@@ -54,7 +54,7 @@ export function HistoryClient() {
       position: project.rank,
       context: "past",
       winner: round.winner?.id === project.id,
-      dateLabel: `Arena of ${formatLongDate(round.roundDate)}`,
+      dateLabel: `Race of ${formatLongDate(round.roundDate)}`,
     });
 
   return (
@@ -75,10 +75,10 @@ export function HistoryClient() {
         <div className="mt-10 rounded-lg border-2 border-dashed border-ink/30 px-6 py-14 text-center">
           <p className="font-display text-3xl font-black uppercase">No winners yet</p>
           <p className="mx-auto mt-2 max-w-md text-ink-soft">
-            The first winner shows up here as soon as the first Arena closes. Will it be your project?
+            The first winner shows up here as soon as the first Race closes. Will it be your project?
           </p>
-          <ButtonLink href="/arena" className="mt-6">
-            Go to the Arena
+          <ButtonLink href="/race" className="mt-6">
+            Go to the Race
           </ButtonLink>
         </div>
       )}

@@ -331,7 +331,7 @@ function PromotionForm({
         </div>
         <p className="mt-3 text-xs leading-relaxed text-muted">
           After you post it we read your link to add its image and logo. If your website allows it, it shows inside
-          AdArena; if not (like YouTube or Instagram), it opens in its own window.
+          LaunchCrown; if not (like YouTube or Instagram), it opens in its own window.
         </p>
       </div>
     </section>

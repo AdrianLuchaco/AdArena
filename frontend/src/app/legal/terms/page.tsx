@@ -7,14 +7,14 @@ export const metadata: Metadata = { title: "Terms and conditions" };
 
 export default function TermsPage() {
   return (
-    <LegalPage title="Terms and conditions" updated={`${LEGAL_UPDATED} (version 2026-09-28-en)`}>
+    <LegalPage title="Terms and conditions" updated={`${LEGAL_UPDATED} (version 2026-09-29-en)`}>
       <p>
-        On AdArena, projects compete every day by bidding <strong>Arena Points</strong> to take over the website’s
-        homepage for 24 hours (the “Arena”). By creating an account you accept these terms. Please read them carefully,
+        On LaunchCrown, projects compete every day by bidding <strong>Crown Points</strong> to take over the website’s
+        homepage for 24 hours (the “Race”). By creating an account you accept these terms. Please read them carefully,
         especially the section on <strong>what happens to your points if you don’t win</strong>.
       </p>
       <p>
-        AdArena is run from Spain. You can contact us at <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>. How we
+        LaunchCrown is run from Spain. You can contact us at <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>. How we
         handle your data is explained in the <Link href="/legal/privacy">Privacy policy</Link>.
       </p>
 
@@ -26,29 +26,29 @@ export default function TermsPage() {
           is done from your account.
         </li>
         <li>
-          You can stop using AdArena whenever you want and ask us to delete your account by writing to us from its
+          You can stop using LaunchCrown whenever you want and ask us to delete your account by writing to us from its
           email.
         </li>
       </ul>
 
-      <h2>2. What Arena Points are</h2>
+      <h2>2. What Crown Points are</h2>
       <ul>
         <li>
-          They are points for taking part in AdArena. <strong>They are not money</strong> and have no monetary value:
-          they can’t be bought, sold, exchanged for money or for anything outside AdArena, or transferred to another
+          They are points for taking part in LaunchCrown. <strong>They are not money</strong> and have no monetary value:
+          they can’t be bought, sold, exchanged for money or for anything outside LaunchCrown, or transferred to another
           account.
         </li>
         <li>
           You get them for free: 200 when you sign up (once), by watching other users’ project websites, through bonus
-          links and, if you win the Arena, 500 when your ad goes live on the homepage.
+          links and, if you win the Race, 500 when your ad goes live on the homepage.
         </li>
         <li>
-          We may change how many points each action earns and the daily limits. If we close AdArena or your account, the
+          We may change how many points each action earns and the daily limits. If we close LaunchCrown or your account, the
           points disappear without compensation, because they have no monetary value.
         </li>
       </ul>
 
-      <h2>3. How the Arena works</h2>
+      <h2>3. How the Race works</h2>
       <ul>
         <li>There is a bidding round every day that closes at 00:00 (Madrid time).</li>
         <li>You can bid several times: your bids for the day add up.</li>
@@ -82,18 +82,18 @@ export default function TermsPage() {
       <h2>5. Earning points fairly</h2>
       <ul>
         <li>
-          <strong>Watching websites:</strong> you earn points while you watch a project’s website, inside AdArena or, if
-          that website doesn’t allow being shown inside others, in its own window. Inside AdArena, the count stops if
+          <strong>Watching websites:</strong> you earn points while you watch a project’s website, inside LaunchCrown or, if
+          that website doesn’t allow being shown inside others, in its own window. Inside LaunchCrown, the count stops if
           you switch tabs, go to another app or stop using it. With a separate window, points count while you’re away
-          from AdArena on that website, and stop when you come back to AdArena or say you’re done.
+          from LaunchCrown on that website, and stop when you come back to LaunchCrown or say you’re done.
         </li>
         <li>
           <strong>Bonus links:</strong> you earn points by watching links other users promote. We will never ask you for
           likes, follows or subscriptions in exchange for points.
         </li>
         <li>
-          Other users’ websites you see on AdArena are the responsibility of their owners. They are shown isolated: they
-          can’t access your AdArena account.
+          Other users’ websites you see on LaunchCrown are the responsibility of their owners. They are shown isolated: they
+          can’t access your LaunchCrown account.
         </li>
         <li>
           There are daily limits. Using bots, scripts, extensions that simulate activity, multiple accounts or any other
@@ -123,7 +123,7 @@ export default function TermsPage() {
       <h2>7. What is shown publicly</h2>
       <p>
         While you compete, your ad (name, image, description and website) and your current bid total are shown on the
-        homepage and in the Arena. When the day ends, they stay in the winners’ history as they were at the close. Your
+        homepage and in the Race. When the day ends, they stay in the winners’ history as they were at the close. Your
         promotions are shown to logged-in users.
       </p>
 
@@ -147,11 +147,11 @@ export default function TermsPage() {
           homepage presentation. We only read what anyone can see on that page.
         </li>
         <li>
-          While you compete, other users can view your website inside AdArena (if your website allows it) to earn
+          While you compete, other users can view your website inside LaunchCrown (if your website allows it) to earn
           points. Your website decides whether it can be shown inside others.
         </li>
         <li>
-          Visits you receive from AdArena (through your ad or your promotions) come from people who earn points for
+          Visits you receive from LaunchCrown (through your ad or your promotions) come from people who earn points for
           watching you. If your website shows ads (for example Google AdSense), check your ad network’s rules on this
           kind of traffic: that is your responsibility.
         </li>
@@ -163,24 +163,24 @@ export default function TermsPage() {
 
       <h2>10. Advertising</h2>
       <p>
-        AdArena may be funded by ads served by our advertising partner, Ezoic, and the advertisers it works with. They
-        appear on the homepage, on Promote and, small, under the Arena standings. Never on pages where you earn points:
+        LaunchCrown may be funded by ads served by our advertising partner, Ezoic, and the advertisers it works with. They
+        appear on the homepage, on Promote and, small, under the Race standings. Never on pages where you earn points:
         points never depend on seeing or clicking ads. Those ads are chosen by our partner; we don’t review them one by
-        one and they are not part of the Arena.
+        one and they are not part of the Race.
       </p>
 
       <h2>11. Suspending or closing accounts</h2>
       <p>
         If you break these terms (for example, by cheating to earn points or publishing prohibited content), we may
-        remove the content, cancel the points involved, exclude you from the Arena or suspend or close your account.
+        remove the content, cancel the points involved, exclude you from the Race or suspend or close your account.
         When possible, we will tell you why by email, and you can reply to explain your side.
       </p>
 
       <h2>12. Availability and liability</h2>
       <ul>
         <li>
-          AdArena is a free service offered “as is”. We work to keep it running, but there may be interruptions,
-          maintenance or errors. If a technical problem affects a day’s Arena, we may extend, repeat or cancel that
+          LaunchCrown is a free service offered “as is”. We work to keep it running, but there may be interruptions,
+          maintenance or errors. If a technical problem affects a day’s Race, we may extend, repeat or cancel that
           round and, if so, return the points bid.
         </li>
         <li>We don’t guarantee any number of visits or results for your ad or your promotions.</li>
@@ -193,8 +193,8 @@ export default function TermsPage() {
 
       <h2>13. Changes to these terms</h2>
       <p>
-        We may update these terms to improve AdArena or to comply with the law. If the changes are important, we will
-        tell you in advance by email or on the website. If you keep using AdArena after they come into force, you accept
+        We may update these terms to improve LaunchCrown or to comply with the law. If the changes are important, we will
+        tell you in advance by email or on the website. If you keep using LaunchCrown after they come into force, you accept
         the new version; if you don’t agree, you can close your account.
       </p>
 

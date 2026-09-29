@@ -12,7 +12,7 @@ public final class SiteDtos {
     }
 
     @Schema(description = """
-            FRAME: la web se ve dentro de AdArena (iframe) y los puntos cuentan mientras la miras.
+            FRAME: la web se ve dentro de LaunchCrown (iframe) y los puntos cuentan mientras la miras.
             WINDOW: la web no se deja mostrar dentro de otras; se abre en una ventana aparte y los
             puntos cuentan mientras esa ventana está abierta y estás en ella.""")
     public enum ViewMode { FRAME, WINDOW }

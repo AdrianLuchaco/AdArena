@@ -29,7 +29,7 @@ const SCENE_NAMES: Record<SceneKind, string> = {
 };
 
 /**
- * La presentación animada del ganador: una "película" corta montada SOLA con lo que AdArena leyó
+ * La presentación animada del ganador: una "película" corta montada SOLA con lo que LaunchCrown leyó
  * de su web (logo, color de marca, titular, frases destacadas y fotos) y su propio anuncio.
  * Ocupa toda la portada y se toma el color de la marca que ha ganado: cada día, la portada es suya.
  *
@@ -289,7 +289,7 @@ function IntroScene({ name, showcase, winner, full }: { name: string; showcase: 
           )}
         >
           <CrownIcon className="size-5 text-gold" />
-          Won the Arena on <strong className="font-semibold">{formatLongDate(winner.roundDate)}</strong> with{" "}
+          Won the Race on <strong className="font-semibold">{formatLongDate(winner.roundDate)}</strong> with{" "}
           <strong className="tabular font-semibold text-gold">{formatPoints(winner.wonWithPoints)}</strong>
         </p>
       )}

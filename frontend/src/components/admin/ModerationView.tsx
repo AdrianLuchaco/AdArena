@@ -58,7 +58,7 @@ export function ModerationView() {
         <h2 className="text-4xl">To moderate</h2>
         {pending.length === 0 ? (
           <p className="rounded-md bg-surface px-5 py-6 text-ink-soft ring-1 ring-line">
-            No ads waiting. When today’s Arena closes, the winner shows up here.
+            No ads waiting. When today’s Race closes, the winner shows up here.
           </p>
         ) : (
           pending.map((slot) => <PendingSlot key={slot.id} slot={slot} onDone={load} />)
@@ -187,7 +187,7 @@ function PendingSlot({ slot, onDone }: { slot: AdminAdSlot; onDone: () => Promis
             <dt className="text-muted">Their day on the homepage</dt>
             <dd>
               From {formatDateTime(slot.startsAt)} to {formatDateTime(slot.endsAt)}
-              {slot.roundDate && <span className="text-muted">. Arena of {formatLongDate(slot.roundDate)}</span>}
+              {slot.roundDate && <span className="text-muted">. Race of {formatLongDate(slot.roundDate)}</span>}
             </dd>
             <dd className={cn("mt-1 font-semibold", hoursLeft < 3 ? "text-danger" : "text-warning")}>
               {hoursLeft} h left: if you don’t decide, their points will be refunded.

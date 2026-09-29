@@ -38,8 +38,8 @@ export function MyBidsView() {
       <div className="rounded-lg border-2 border-dashed border-ink/30 px-6 py-14 text-center">
         <p className="font-display text-3xl font-black uppercase">No bids yet</p>
         <p className="mx-auto mt-2 max-w-md text-ink-soft">Once you bid, every move shows up here.</p>
-        <ButtonLink href="/arena" className="mt-6">
-          Go to the Arena
+        <ButtonLink href="/race" className="mt-6">
+          Go to the Race
         </ButtonLink>
       </div>
     );

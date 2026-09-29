@@ -109,7 +109,7 @@ export function ArenaScoreboard({
               )}
             </>
           ) : (
-            <p className="text-white/85">Today’s Arena opens in a few moments.</p>
+            <p className="text-white/85">Today’s Race opens in a few moments.</p>
           )}
         </div>
       </div>

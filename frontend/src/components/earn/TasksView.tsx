@@ -49,7 +49,7 @@ export function TasksView() {
 
       {limitReached && (
         <Alert tone="success" title={`You’ve done all ${overview.tasksPerDay} for today`}>
-          There’ll be more tomorrow. Meanwhile, you can keep earning with the Arena websites.
+          There’ll be more tomorrow. Meanwhile, you can keep earning with the Race websites.
         </Alert>
       )}
 

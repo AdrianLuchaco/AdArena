@@ -17,7 +17,7 @@ import { ArrowRightIcon } from "../icons";
 const NOTICES = {
   NO_BIDS: {
     title: "The homepage is free today",
-    text: "Nobody bid yesterday. Today’s Arena is already open, so tomorrow could be yours.",
+    text: "Nobody bid yesterday. Today’s Race is already open, so tomorrow could be yours.",
   },
   PENDING_REVIEW: {
     title: "The winning ad is being reviewed",
@@ -86,13 +86,13 @@ export function HomeClient() {
         notice={notice}
         intro={
           <p>
-            Projects bid with Arena Points, which you earn for free. The highest bid at midnight takes over this
+            Projects bid with Crown Points, which you earn for free. The highest bid at midnight takes over this
             homepage for 24 hours.
           </p>
         }
         actions={
           <>
-            <ButtonLink href="/arena" size="lg" variant="gold">
+            <ButtonLink href="/race" size="lg" variant="gold">
               Bid now
             </ButtonLink>
             <ButtonLink href="/earn" size="lg" variant="glass">
@@ -106,10 +106,10 @@ export function HomeClient() {
         <div className="mb-5 flex items-end justify-between gap-4">
           <h2 className="text-4xl sm:text-5xl">Today’s standings</h2>
           <Link
-            href="/arena"
+            href="/race"
             className="hidden shrink-0 items-center gap-1.5 text-sm font-semibold hover:underline sm:flex"
           >
-            Open the Arena <ArrowRightIcon className="size-4" />
+            Open the Race <ArrowRightIcon className="size-4" />
           </Link>
         </div>
         <Leaderboard round={data.round} limit={5} />
@@ -131,7 +131,7 @@ function BidStrip() {
   const remaining = useCountdown(data?.round?.endsAt, clockOffset);
   return (
     <Link
-      href="/arena"
+      href="/race"
       className="group absolute inset-x-0 bottom-0 z-20 flex h-14 items-center gap-3 border-t-2 border-ink bg-gold px-4 text-ink sm:px-6"
     >
       <span className="min-w-0 flex-1 truncate font-display text-xl font-black uppercase sm:text-2xl">
@@ -158,8 +158,8 @@ const STEPS = [
   {
     title: "Bid",
     text: "Set up your ad and bid your points. Bids add up, and we tell you the moment someone outbids you.",
-    href: "/arena",
-    link: "Go to the Arena",
+    href: "/race",
+    link: "Go to the Race",
   },
   {
     title: "Win the homepage",

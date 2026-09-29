@@ -49,7 +49,7 @@ export function LoginForm() {
 
   return (
     <AuthCard
-      title="Log in to AdArena"
+      title="Log in to LaunchCrown"
       subtitle="Manage your ad and your bids."
       footer={
         <>

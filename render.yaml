@@ -1,5 +1,5 @@
 # =====================================================================
-# Render "Blueprint": crea el BACKEND de AdArena en Render con el plan gratuito.
+# Render "Blueprint": crea el BACKEND de LaunchCrown en Render con el plan gratuito.
 #
 # En Render: New → Blueprint → elige este repositorio. Render lee este archivo y te pide los
 # valores marcados con "sync: false" (los tienes explicados en docs/DESPLIEGUE.md).
@@ -27,7 +27,7 @@ services:
         sync: false
       - key: DB_PASSWORD
         sync: false
-      # El pooler gratuito de Supabase admite pocas conexiones: 5 es de sobra para AdArena
+      # El pooler gratuito de Supabase admite pocas conexiones: 5 es de sobra para LaunchCrown
       - key: DB_POOL_SIZE
         value: "5"
 
@@ -55,6 +55,6 @@ services:
       # --- Emails con Brevo (gratis, 300 al día) ---
       - key: BREVO_API_KEY
         sync: false
-      # "AdArena <tu-email-verificado-en-brevo@gmail.com>"
+      # "LaunchCrown <tu-email-verificado-en-brevo@gmail.com>"
       - key: MAIL_FROM
         sync: false

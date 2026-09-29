@@ -92,7 +92,7 @@ export function SiteHeader() {
       <div className="mx-auto flex h-16 max-w-6xl items-center gap-4 px-4 sm:px-6">
         <Logo />
 
-        <ArenaTicker active={pathname.startsWith("/arena")} onClick={close} />
+        <ArenaTicker active={pathname.startsWith("/race")} onClick={close} />
 
         <nav className="hidden h-full items-stretch lg:flex" aria-label="Main">
           {NAV.map((item) => {
@@ -129,7 +129,7 @@ export function SiteHeader() {
       {open && (
         <div className="animate-fade-in border-t border-line bg-canvas px-4 pb-5 pt-2 lg:hidden">
           <nav className="flex flex-col" aria-label="Main (mobile)">
-            {[{ href: "/arena", label: "The Arena: bid for the homepage" }, ...NAV, { href: "/how-it-works", label: "How it works" }].map(
+            {[{ href: "/race", label: "The Race: bid for the homepage" }, ...NAV, { href: "/how-it-works", label: "How it works" }].map(
               (item) => (
                 <Link
                   key={item.href}
@@ -165,16 +165,16 @@ function ArenaTicker({ active, onClick }: { active: boolean; onClick: () => void
   const remaining = useCountdown(data?.round?.endsAt, clockOffset);
   return (
     <Link
-      href="/arena"
+      href="/race"
       onClick={onClick}
       className={cn(
         "group flex h-10 shrink-0 items-center gap-2 rounded-md bg-night pl-2.5 pr-3 text-white transition",
         active ? "ring-2 ring-brand ring-offset-2 ring-offset-canvas" : "hover:bg-ink-soft",
       )}
-      aria-label={data?.round ? `The Arena closes in ${formatClock(remaining)}` : "The Arena"}
+      aria-label={data?.round ? `The Race closes in ${formatClock(remaining)}` : "The Race"}
     >
       <span className={cn("size-2 rounded-full", live ? "bg-live animate-pulse-dot" : "bg-white/40")} aria-hidden="true" />
-      <span className="font-display text-lg font-black uppercase leading-none tracking-wide">Arena</span>
+      <span className="font-display text-lg font-black uppercase leading-none tracking-wide">Race</span>
       {data?.round && (
         <span className="tabular hidden font-display text-lg font-bold leading-none text-gold min-[370px]:inline">
           {formatClock(remaining)}

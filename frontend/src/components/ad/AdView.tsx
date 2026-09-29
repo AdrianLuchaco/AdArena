@@ -109,7 +109,7 @@ export function AdView({
             <p className="flex w-fit flex-wrap items-center gap-x-2 gap-y-1 rounded-md bg-gold/15 px-4 py-2.5 text-sm text-white ring-1 ring-gold/50">
               <TrophyIcon className="size-5 text-gold" />
               <span>
-                Won the Arena on <strong className="font-semibold">{formatLongDate(winner.roundDate)}</strong> with{" "}
+                Won the Race on <strong className="font-semibold">{formatLongDate(winner.roundDate)}</strong> with{" "}
                 <strong className="tabular font-semibold text-gold">{formatPoints(winner.wonWithPoints)}</strong>
               </span>
             </p>

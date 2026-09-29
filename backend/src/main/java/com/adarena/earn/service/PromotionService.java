@@ -103,14 +103,14 @@ public class PromotionService {
             throw new FieldValidationException("url", e.getMessage().replace("The website address", "The link").replace("The website", "The link"));
         }
         int max = rules.tasks().maxActivePerUser();
-        // El admin no tiene límite: sus enlaces son los destacados y los iniciales de AdArena
+        // El admin no tiene límite: sus enlaces son los destacados y los iniciales de LaunchCrown
         boolean admin = userRepository.findById(ownerId).map(user -> user.getRole() == Role.ADMIN).orElse(false);
         if (!admin && taskRepository.countByOwnerIdAndStatusIn(ownerId, Set.of(SocialTaskStatus.ACTIVE, SocialTaskStatus.PAUSED)) >= max) {
             throw ApiException.conflict("PROMOTION_LIMIT",
                     "You can have at most " + max + " promotions at a time. Delete one to add another.");
         }
         SocialTask task = taskRepository.save(new SocialTask(ownerId, title, description, url, rules.tasks().rewardPoints()));
-        // Leemos su web en segundo plano: así sabremos si se puede ver dentro de AdArena y tendrá foto y logo
+        // Leemos su web en segundo plano: así sabremos si se puede ver dentro de LaunchCrown y tendrá foto y logo
         sitePreviewRefresher.request(url, ownerId);
         return toPromotion(task, 0, sitePreviewService.toSiteInfo(url, null));
     }
@@ -131,7 +131,7 @@ public class PromotionService {
         if (task.getStatus() != SocialTaskStatus.PAUSED) {
             throw ApiException.conflict("PROMOTION_NOT_PAUSED",
                     task.getStatus() == SocialTaskStatus.HIDDEN
-                            ? "This promotion is hidden for review. Only the AdArena team can publish it again."
+                            ? "This promotion is hidden for review. Only the LaunchCrown team can publish it again."
                             : "This promotion is already active.");
         }
         task.resume();

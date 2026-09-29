@@ -1,5 +1,5 @@
 # =====================================================================
-# Configuración base de AdArena (válida para producción).
+# Configuración base de LaunchCrown (válida para producción).
 # Todo lo sensible o que cambia entre entornos llega por variables de entorno.
 # El perfil "dev" (application-dev.yml) añade valores cómodos para trabajar en local.
 # =====================================================================
@@ -93,7 +93,7 @@ app:
 
   legal:
     # Versión vigente de los Términos. Se guarda en cada usuario al registrarse.
-    terms-version: "2026-09-28-en"
+    terms-version: "2026-09-29-en"
 
   # Si se definen, al arrancar se crea este administrador (solo si no existe ya).
   admin:
@@ -109,9 +109,9 @@ app:
   # Emails. Recomendado en la nube: BREVO_API_KEY (Brevo, gratis, 300 al día, por HTTPS).
   # Alternativa: SMTP (SMTP_HOST, SMTP_PORT, SMTP_USERNAME, SMTP_PASSWORD, SMTP_SSL).
   # Sin ninguna de las dos, los emails NO se envían: solo se escriben en el log.
-  # MAIL_FROM: el remitente, que debe estar verificado en tu proveedor ("AdArena <tu@email.com>").
+  # MAIL_FROM: el remitente, que debe estar verificado en tu proveedor ("LaunchCrown <tu@email.com>").
   mail:
-    from: ${MAIL_FROM:AdArena <avisos@adarena.local>}
+    from: ${MAIL_FROM:LaunchCrown <avisos@adarena.local>}
     host: ${SMTP_HOST:}
     port: ${SMTP_PORT:465}
     username: ${SMTP_USERNAME:}
@@ -119,7 +119,7 @@ app:
     ssl: ${SMTP_SSL:true}
     brevo-api-key: ${BREVO_API_KEY:}
 
-  # Arena Points: cómo se ganan (sin dinero real)
+  # Crown Points: cómo se ganan (sin dinero real)
   rewards:
     # Puntos de bienvenida al crear la cuenta (una sola vez; después solo se ganan participando)
     signup-bonus: ${SIGNUP_BONUS_POINTS:200}
@@ -144,12 +144,12 @@ app:
       reports-to-hide: 3
 
   # Lectura de la web de cada proyecto: para la presentación animada del ganador y para saber si
-  # se puede ver dentro de AdArena. Solo se leen webs públicas https (nunca direcciones internas).
+  # se puede ver dentro de LaunchCrown. Solo se leen webs públicas https (nunca direcciones internas).
   previews:
     enabled: ${SITE_PREVIEWS_ENABLED:true}
     max-age: 20h
     refresh-cooldown: 2m
-    user-agent: "Mozilla/5.0 (compatible; AdArenaBot/1.0; +https://adarena.com/como-funciona)"
+    user-agent: "Mozilla/5.0 (compatible; LaunchCrownBot/1.0; +https://launchcrown.com/how-it-works)"
 
   rate-limit:
     enabled: ${RATE_LIMIT_ENABLED:true}

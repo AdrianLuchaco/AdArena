@@ -13,7 +13,7 @@ export function SiteFooter() {
       <div className="mx-auto flex max-w-6xl flex-col gap-5 px-4 py-8 text-sm text-muted sm:px-6 md:flex-row md:items-center md:justify-between">
         <div className="flex items-center gap-2">
           <LogoMark className="size-5" />
-          <span>© {new Date().getFullYear()} AdArena. One homepage, one winner, every day.</span>
+          <span>© {new Date().getFullYear()} LaunchCrown. One homepage, one winner, every day.</span>
         </div>
         <nav className="flex flex-wrap gap-x-5 gap-y-2" aria-label="Footer">
           {LINKS.map((link) => (

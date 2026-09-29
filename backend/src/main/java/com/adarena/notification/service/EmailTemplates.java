@@ -24,7 +24,7 @@ public final class EmailTemplates {
     /** Email de un aviso: saludo, título, texto y botón que lleva a la web. */
     public static EmailContent notice(Notice notice, String recipientName, String webUrl) {
         String url = webUrl + notice.link();
-        String button = notice.emailButton() == null ? "Open AdArena" : notice.emailButton();
+        String button = notice.emailButton() == null ? "Open LaunchCrown" : notice.emailButton();
         return new EmailContent(notice.title(),
                 layout(recipientName, notice.title(), notice.body(), button, url, null),
                 plain(recipientName, notice.title(), notice.body(), button, url, null));
@@ -33,11 +33,11 @@ public final class EmailTemplates {
     /** "He olvidado mi contraseña". */
     public static EmailContent passwordReset(String recipientName, String resetUrl, long validMinutes) {
         String title = "Reset your password";
-        String body = "We received a request to change the password of your AdArena account. "
+        String body = "We received a request to change the password of your LaunchCrown account. "
                 + "Press the button to choose a new one. The link expires in " + validMinutes + " minutes and "
                 + "works only once.";
         String footnote = "If this wasn't you, ignore this email: your password won't change.";
-        return new EmailContent("Reset your AdArena password",
+        return new EmailContent("Reset your LaunchCrown password",
                 layout(recipientName, title, body, "Choose a new password", resetUrl, footnote),
                 plain(recipientName, title, body, "Choose a new password", resetUrl, footnote));
     }
@@ -53,7 +53,7 @@ public final class EmailTemplates {
                       <table role="presentation" width="100%%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#ffffff;border-radius:8px;padding:32px;border:2px solid #0c0f1f">
                         <tr><td>
                           <p style="margin:0 0 24px;font-size:20px;font-weight:800;letter-spacing:-0.02em">
-                            <span style="display:inline-block;width:14px;height:14px;border-radius:4px;background:%s;margin-right:8px"></span>AdArena
+                            <span style="display:inline-block;width:14px;height:14px;border-radius:4px;background:%s;margin-right:8px"></span>LaunchCrown
                           </p>
                           <p style="margin:0 0 8px;font-size:15px;color:#5b6070">Hi %s,</p>
                           <h1 style="margin:0 0 12px;font-size:24px;line-height:1.2">%s</h1>
@@ -62,7 +62,7 @@ public final class EmailTemplates {
                           <p style="margin:28px 0 0;font-size:13px;line-height:1.5;color:#5b6070">%s</p>
                         </td></tr>
                       </table>
-                      <p style="margin:20px 0 0;font-size:12px;color:#5b6070">AdArena. One homepage, one winner, every day.</p>
+                      <p style="margin:20px 0 0;font-size:12px;color:#5b6070">LaunchCrown. One homepage, one winner, every day.</p>
                     </td></tr>
                   </table>
                 </body>

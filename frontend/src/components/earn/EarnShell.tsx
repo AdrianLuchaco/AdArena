@@ -64,7 +64,7 @@ export function EarnShell({ children }: { children: React.ReactNode }) {
         <p className="mt-3 text-lg leading-relaxed text-ink-soft">
           Watch the websites of today’s projects and the links other people promote. Every second you watch counts.
           Then{" "}
-          <Link href="/arena" className="font-semibold text-ink underline decoration-brand decoration-2 underline-offset-4">
+          <Link href="/race" className="font-semibold text-ink underline decoration-brand decoration-2 underline-offset-4">
             bid your points for the homepage
           </Link>
           . Free, no real money.
@@ -116,8 +116,8 @@ function DayMeter({ overview, tasks }: { overview: EarnOverview; tasks: TasksOve
         {overview.reservedPoints > 0 && (
           <p className="mt-1 text-sm text-white/75">plus {formatPoints(overview.reservedPoints)} in bids</p>
         )}
-        <Link href="/arena" className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-white hover:text-gold">
-          Bid them in the Arena <ArrowRightIcon className="size-4" />
+        <Link href="/race" className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-white hover:text-gold">
+          Bid them in the Race <ArrowRightIcon className="size-4" />
         </Link>
       </div>
       <div>
@@ -138,7 +138,7 @@ function DayMeter({ overview, tasks }: { overview: EarnOverview; tasks: TasksOve
         <ul className="mt-3 flex flex-wrap gap-x-6 gap-y-1 text-sm text-white/85">
           <li className="flex items-center gap-2">
             <span className="size-2.5 bg-gold" />
-            Arena websites: <span className="tabular font-semibold text-white">{overview.earnedTodayFromViews} / {viewsMax}</span>
+            Race websites: <span className="tabular font-semibold text-white">{overview.earnedTodayFromViews} / {viewsMax}</span>
           </li>
           <li className="flex items-center gap-2">
             <span className="size-2.5 bg-white" />
@@ -164,7 +164,7 @@ function Tabs({ pathname, overview, tasks }: { pathname: string; overview: EarnO
     {
       href: "/earn",
       title: "Websites",
-      detail: `Arena projects, up to ${overview.rules.dailyCapPerProject} pts`,
+      detail: `Race projects, up to ${overview.rules.dailyCapPerProject} pts`,
       count: projectsLeft,
     },
     {
@@ -216,7 +216,7 @@ function AnonymousInvite({ pathname }: { pathname: string }) {
     <div className="track mt-8 rounded-2xl p-6 text-white shadow-lift ring-2 ring-ink sm:p-10">
       <p className="font-display text-5xl font-black uppercase leading-none">Start with 200 free points</p>
       <p className="mt-4 max-w-xl text-white/85">
-        Sign up and we give you 200 Arena Points. Then every 10 seconds you watch a project’s website earns you 10 more
+        Sign up and we give you 200 Crown Points. Then every 10 seconds you watch a project’s website earns you 10 more
         (up to 100 per website a day).
       </p>
       <div className="mt-8 flex flex-wrap gap-3">

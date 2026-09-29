@@ -44,17 +44,17 @@ interface SiteViewerProps {
 }
 
 /**
- * idle: aún no se ha abierto · open: se abrió y cuenta mientras no estés en AdArena ·
+ * idle: aún no se ha abierto · open: se abrió y cuenta mientras no estés en LaunchCrown ·
  * blocked: el navegador bloqueó la ventana (se ofrece un enlace normal)
  */
 type WindowState = "idle" | "open" | "blocked";
 
 /**
  * El visor de "Earn points": arriba, el marcador de puntos; debajo, LA WEB del otro proyecto.
- *  - Si la web se deja mostrar dentro de AdArena, se ve aquí mismo (iframe aislado con sandbox: no
- *    puede tocar AdArena ni cambiar de página la pestaña).
+ *  - Si la web se deja mostrar dentro de LaunchCrown, se ve aquí mismo (iframe aislado con sandbox: no
+ *    puede tocar LaunchCrown ni cambiar de página la pestaña).
  *  - Si no (YouTube, Instagram, X, muchas tiendas…), se abre en su propia ventana y cuenta el tiempo
- *    que pasas FUERA de AdArena desde que la abriste. En cuanto vuelves a AdArena, se para.
+ *    que pasas FUERA de LaunchCrown desde que la abriste. En cuanto vuelves a LaunchCrown, se para.
  *
  * Por qué no miramos si esa ventana "sigue abierta": YouTube, X o Instagram envían la cabecera
  * Cross-Origin-Opener-Policy, que corta el vínculo con quien las abre, y el navegador dice que la
@@ -115,7 +115,7 @@ export function SiteViewer({ site, name, badge, exitHref, next, earning, details
 
   function openWindow() {
     // En el mismo clic (si no, el navegador la bloquea). Se abre en blanco, se corta el acceso de la
-    // web a AdArena (opener = null) y después se carga la web.
+    // web a LaunchCrown (opener = null) y después se carga la web.
     const width = Math.min(1200, window.screen.availWidth - 80);
     const height = Math.min(900, window.screen.availHeight - 80);
     const opened = window.open("", "adarena-site", `popup,width=${width},height=${height},left=40,top=40`);
@@ -391,7 +391,7 @@ function statusText(
         text: "Points count while you're on the website",
       };
     case "here":
-      return { title: "Paused while you're on AdArena", text: `Go back to ${domain} to keep earning` };
+      return { title: "Paused while you're on LaunchCrown", text: `Go back to ${domain} to keep earning` };
     default:
       return {
         title: mode === "FRAME" ? "Earning points" : `Earning while you watch ${domain}`,
@@ -488,7 +488,7 @@ function WindowPortal({
               Open {site.domain}
             </button>
             <p className="max-w-sm text-sm text-white/60">
-              This website can&apos;t be shown inside AdArena, so it opens in its own window. Points count while you&apos;re
+              This website can&apos;t be shown inside LaunchCrown, so it opens in its own window. Points count while you&apos;re
               there. Come back here when you&apos;re done.
             </p>
             {state === "blocked" && (
@@ -497,7 +497,7 @@ function WindowPortal({
                 <a href={site.openUrl} target="_blank" rel="noopener noreferrer" onClick={onOpenedWithLink} className="font-bold underline">
                   Open it with this link
                 </a>{" "}
-                or allow pop-ups for AdArena.
+                or allow pop-ups for LaunchCrown.
               </p>
             )}
           </div>

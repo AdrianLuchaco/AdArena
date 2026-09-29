@@ -7,10 +7,10 @@ import java.net.UnknownHostException;
 import java.util.Arrays;
 
 /**
- * ¿Es una dirección de internet de verdad? Cuando AdArena lee la web de un proyecto, solo puede
+ * ¿Es una dirección de internet de verdad? Cuando LaunchCrown lee la web de un proyecto, solo puede
  * conectarse a direcciones públicas. Si una web (o su DNS) apuntara a una dirección interna
  * (127.0.0.1, 10.x, 192.168.x, 169.254.169.254 —los metadatos del servidor en la nube—…), alguien
- * podría usar AdArena para leer cosas de nuestra red privada. Eso se llama SSRF y aquí se bloquea.
+ * podría usar LaunchCrown para leer cosas de nuestra red privada. Eso se llama SSRF y aquí se bloquea.
  */
 public final class PublicAddresses {
 

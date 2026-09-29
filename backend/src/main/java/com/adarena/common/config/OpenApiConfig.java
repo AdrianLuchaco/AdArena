@@ -21,10 +21,10 @@ public class OpenApiConfig {
     OpenAPI adarenaOpenApi() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("AdArena API")
+                        .title("LaunchCrown API")
                         .version("v1")
                         .description("""
-                                API de AdArena: cada día, los proyectos compiten por ocupar la portada.
+                                API de LaunchCrown: cada día, los proyectos compiten por ocupar la portada.
                                 Los errores siguen el formato RFC 9457 (application/problem+json) con un
                                 campo `code` estable que el frontend puede usar."""))
                 .components(new Components().addSecuritySchemes(BEARER, new SecurityScheme()

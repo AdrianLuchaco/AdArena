@@ -50,7 +50,7 @@ export function AdminOverviewView() {
       <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <Stat label="Points issued today" value={formatPoints(overview.issuedTodayPoints)} strong />
         <Stat label="Points issued in total" value={formatPoints(overview.issuedPoints)} />
-        <Stat label="Points spent in the Arena" value={formatPoints(overview.spentPoints)} />
+        <Stat label="Points spent in the Race" value={formatPoints(overview.spentPoints)} />
         <Stat label="Users’ points" value={formatPoints(overview.usersAvailablePoints + overview.usersReservedPoints)} />
       </section>
 
@@ -66,7 +66,7 @@ export function AdminOverviewView() {
           </p>
           <p className="mt-1 text-sm text-ink-soft">
             {balanced
-              ? "Every point issued is in someone’s account or has been spent in the Arena."
+              ? "Every point issued is in someone’s account or has been spent in the Race."
               : "Something is wrong in the ledger. Check the audit log and investigate."}
           </p>
         </div>
@@ -81,7 +81,7 @@ export function AdminOverviewView() {
           </p>
         </div>
         <div className="rounded-lg bg-surface p-5 ring-2 ring-ink/15">
-          <p className="font-bold">Today’s Arena</p>
+          <p className="font-bold">Today’s Race</p>
           {overview.openRound ? (
             <p className="mt-1 text-sm text-ink-soft">
               {overview.openRound.participants} projects, {formatPoints(overview.openRound.totalPoints)} in play, closes{" "}

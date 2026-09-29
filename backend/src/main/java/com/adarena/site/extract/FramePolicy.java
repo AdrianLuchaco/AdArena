@@ -7,7 +7,7 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * ¿Deja esta web que la mostremos dentro de AdArena (en un iframe)? Cada web lo decide con sus
+ * ¿Deja esta web que la mostremos dentro de LaunchCrown (en un iframe)? Cada web lo decide con sus
  * cabeceras, y el navegador obedece:
  * <ul>
  *   <li>{@code Content-Security-Policy: frame-ancestors …}: la lista de webs que pueden mostrarla.
@@ -23,7 +23,7 @@ public final class FramePolicy {
 
     /**
      * @param headers    cabeceras de la respuesta (nombres en minúsculas)
-     * @param ourOrigins los orígenes de AdArena (p. ej. https://adarena.com)
+     * @param ourOrigins los orígenes de LaunchCrown (p. ej. https://adarena.com)
      */
     public static boolean allowsFraming(Map<String, List<String>> headers, Collection<String> ourOrigins) {
         Boolean byCsp = null;

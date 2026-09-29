@@ -37,7 +37,7 @@ const csp = [
   `connect-src 'self' ${apiUrl} ${wsUrl}${external}`,
   // Iframes: el visor de "Gana puntos" muestra las webs de los proyectos (cualquier web https) y los
   // anuncios de Google también van en iframes. Las webs se cargan aisladas (atributo sandbox): no
-  // pueden leer AdArena ni cambiar de página la pestaña.
+  // pueden leer LaunchCrown ni cambiar de página la pestaña.
   "frame-src 'self' https:",
   "object-src 'none'",
   "base-uri 'self'",
@@ -83,6 +83,8 @@ const nextConfig: NextConfig = {
       ["/admin/registro", "/admin/audit-log"],
       ["/legal/terminos", "/legal/terms"],
       ["/legal/privacidad", "/legal/privacy"],
+      // Cambio de nombre a LaunchCrown: la Arena pasa a ser la Race
+      ["/arena", "/race"],
     ];
     return moved.map(([source, destination]) => ({ source, destination, permanent: true }));
   },

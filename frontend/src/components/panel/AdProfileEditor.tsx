@@ -89,7 +89,7 @@ export function AdProfileEditor() {
         <div>
           <h2 className="text-4xl">{isNew ? "Create your ad" : "Your ad"}</h2>
           <p className="mt-1 text-sm leading-relaxed text-ink-soft">
-            It’s what everyone sees on the homepage if you win, and what shows in the Arena while you compete. You
+            It’s what everyone sees on the homepage if you win, and what shows in the Race while you compete. You
             need it ready to bid, and you can change it whenever you want.
           </p>
         </div>
@@ -97,7 +97,7 @@ export function AdProfileEditor() {
         {error && <Alert tone="danger">{error}</Alert>}
         {saved && (
           <Alert tone="success" title="Ad saved!">
-            It’s ready to compete in the Arena.
+            It’s ready to compete in the Race.
           </Alert>
         )}
 
@@ -143,8 +143,8 @@ export function AdProfileEditor() {
             {isNew ? "Create ad" : "Save changes"}
           </Button>
           {!isNew && (
-            <ButtonLink href="/arena" variant="secondary" size="lg">
-              Go to the Arena
+            <ButtonLink href="/race" variant="secondary" size="lg">
+              Go to the Race
             </ButtonLink>
           )}
         </div>
