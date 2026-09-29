@@ -1,8 +1,14 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/site";
 import { LegalPage } from "@/components/legal/LegalPage";
 import { CONTACT_EMAIL, LEGAL_UPDATED } from "@/lib/legal";
 
-export const metadata: Metadata = { title: "Privacy policy" };
+export const metadata: Metadata = pageMetadata({
+  title: "Privacy policy",
+  description:
+    "How LaunchCrown handles your data: what we keep, why, who helps us run the service and your rights under the GDPR.",
+  path: "/legal/privacy",
+});
 
 export default function PrivacyPage() {
   return (

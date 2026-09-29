@@ -7,7 +7,6 @@ import { formatClock } from "@/lib/format";
 import { useCountdown } from "@/lib/hooks";
 import { AdView } from "../ad/AdView";
 import { WinnerShowcase } from "../ad/WinnerShowcase";
-import { AdUnit } from "../ads/AdUnit";
 import { ArenaScoreboard } from "../arena/ArenaScoreboard";
 import { Leaderboard, LeaderboardSkeleton } from "../arena/Leaderboard";
 import { Alert } from "../ui/Alert";
@@ -30,7 +29,8 @@ const NOTICES = {
  *  - Con ganador aprobado: su presentación a pantalla completa (lo que se gana) con una franja
  *    amarilla para pujar por mañana; debajo, el marcador de la Arena.
  *  - Sin ganador: el marcador de la Arena es la cabecera.
- *  - Siempre: los primeros de la clasificación, los 3 pasos para ganar y un anuncio pequeño.
+ *  - Siempre: los primeros de la clasificación. Los 3 pasos para ganar, el texto sobre la web y el
+ *    anuncio pequeño no dependen de los datos: van en HomeStatic, ya escritos en el HTML (SEO).
  */
 export function HomeClient() {
   const { data, error, clockOffset, live, reload } = useArena();
@@ -115,12 +115,7 @@ export function HomeClient() {
         <Leaderboard round={data.round} limit={5} />
       </section>
 
-      <HowToWin />
-
-      {/* Un anuncio pequeño, al final y lejos de los botones */}
-      <div className="mx-auto w-full max-w-5xl px-4 pb-14 sm:px-6">
-        <AdUnit placement="homeBanner" />
-      </div>
+      {/* Debajo van "How to win", el texto sobre LaunchCrown y el anuncio: app/page.tsx (HomeStatic) */}
     </>
   );
 }
@@ -145,64 +140,6 @@ function BidStrip() {
         Bid now <ArrowRightIcon className="size-4" />
       </span>
     </Link>
-  );
-}
-
-const STEPS = [
-  {
-    title: "Earn points",
-    text: "Get 200 when you sign up. Then earn more for free by watching other projects’ websites.",
-    href: "/earn",
-    link: "Start earning",
-  },
-  {
-    title: "Bid",
-    text: "Set up your ad and bid your points. Bids add up, and we tell you the moment someone outbids you.",
-    href: "/race",
-    link: "Go to the Race",
-  },
-  {
-    title: "Win the homepage",
-    text: "Highest bid at midnight wins. Your website becomes the full-screen homepage for 24 hours, plus 500 points.",
-    href: "/winners",
-    link: "See past winners",
-  },
-];
-
-/** Los 3 pasos para ganar (es una secuencia de verdad, por eso van numerados). */
-function HowToWin() {
-  return (
-    <section className="border-y-2 border-ink bg-surface">
-      <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6 sm:py-16">
-        <h2 className="text-4xl sm:text-5xl">How to win</h2>
-        <ol className="mt-8 grid gap-px overflow-hidden rounded-lg bg-ink ring-2 ring-ink md:grid-cols-3">
-          {STEPS.map((step, index) => (
-            <li key={step.title} className="flex flex-col bg-surface p-6">
-              <span className="font-display text-7xl font-black leading-none text-brand" aria-hidden="true">
-                {index + 1}
-              </span>
-              <h3 className="mt-3 text-3xl">{step.title}</h3>
-              <p className="mt-2 flex-1 leading-relaxed text-ink-soft">{step.text}</p>
-              <Link
-                href={step.href}
-                className="mt-4 inline-flex items-center gap-1.5 font-semibold text-brand hover:underline"
-              >
-                {step.link} <ArrowRightIcon className="size-4" />
-              </Link>
-            </li>
-          ))}
-        </ol>
-        <p className="mt-6 text-ink-soft">
-          If you don’t win, you keep 50% of your bid for tomorrow.{" "}
-          <Link
-            href="/how-it-works"
-            className="font-semibold text-ink underline decoration-brand decoration-2 underline-offset-4"
-          >
-            Read the full guide
-          </Link>
-        </p>
-      </div>
-    </section>
   );
 }
 
