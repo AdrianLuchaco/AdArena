@@ -1,0 +1,7 @@
+# Vídeos renderizados y ficheros temporales del render (se regeneran con render.py)
+*.mp4
+*.render.json
+_frames/
+*.wav
+stills*.png
+*.log

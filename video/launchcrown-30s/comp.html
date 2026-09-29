@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<!-- LaunchCrown · "A day in 30 seconds" · built with onetake (© 2026 Patrick, github.com/feitangyuan · PolyForm Noncommercial 1.0.0 · lineage otk-7f3e1c) -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>LaunchCrown · a day in 30 seconds</title>
+<script src="look.js"></script>
+<style>
+html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:var(--ground)}
+body{font-family:var(--text);color:var(--ink)}
+#stage{position:absolute;inset:0;overflow:hidden;background:var(--ground)}
+#grid{position:absolute;left:0;top:0;width:1920px;height:1080px}
+#world{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0}
+.a{position:absolute;left:0;top:0;transform-origin:50% 50%}
+.mono{font-family:var(--mono)}
+.disp{font-family:var(--display);font-weight:900;text-transform:uppercase;letter-spacing:.01em}
+
+/* clock */
+#clockLab{left:0;width:1920px;top:104px;text-align:center;font-family:var(--mono);font-size:18px;letter-spacing:.24em;color:var(--mute)}
+#clock{left:0;width:1920px;top:126px;text-align:center;font-family:var(--mono);font-size:96px;font-weight:700;line-height:1;white-space:nowrap}
+#plus{left:1250px;top:136px;font-family:var(--display);font-weight:900;font-size:64px;color:var(--accent);white-space:nowrap}
+#words{left:0;width:1920px;top:268px;text-align:center;font-size:44px;font-weight:700;white-space:nowrap}
+#words span{display:inline-block;margin:0 .16em}
+#words .g{color:var(--accent)}
+#caption{left:220px;top:250px;font-size:28px;font-weight:600;color:var(--mute);white-space:nowrap}
+
+/* track */
+#track{left:180px;top:305px;width:1400px;height:470px;border-radius:22px;background:var(--deep)}
+.lane{position:absolute;left:0;right:0;height:0;border-top:2px solid rgba(255,255,255,.22)}
+#startline{position:absolute;left:30px;top:10px;bottom:10px;width:0;border-left:3px solid rgba(255,255,255,.55)}
+#yourlane{left:220px;top:688px;width:300px;height:64px;border:2px dashed rgba(255,210,58,.8);border-radius:12px;box-sizing:border-box;
+  font-family:var(--mono);font-size:18px;color:var(--accent);letter-spacing:.14em;display:flex;align-items:center;justify-content:center}
+.runner{width:300px;height:64px;border-radius:12px;background:#fff;color:var(--accent2);display:flex;align-items:center;gap:12px;padding:0 16px 0 10px;box-sizing:border-box;
+  box-shadow:0 14px 30px -14px rgba(5,10,60,.6)}
+.runner .sq{width:44px;height:44px;border-radius:9px;flex:none;display:grid;place-items:center;font-family:var(--display);font-weight:900;font-size:26px;color:#fff}
+.runner .nm{flex:1;font-size:22px;font-weight:700;white-space:nowrap;overflow:hidden}
+.runner .pt{font-family:var(--mono);font-size:20px;font-weight:700;white-space:nowrap}
+#lead{width:58px;height:58px;filter:drop-shadow(0 4px 6px rgba(5,10,60,.45))}
+
+/* the homepage at the finish */
+#gate{left:1610px;top:445px;width:300px;height:169px;border-radius:10px;border:2px dashed rgba(255,255,255,.55);box-sizing:border-box;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}
+#gate b{font-family:var(--display);font-weight:900;font-size:40px;line-height:1;color:#fff}
+#gate i{font-style:normal;font-family:var(--mono);font-size:13px;letter-spacing:.16em;color:var(--mute)}
+#gateCrown{left:1736px;top:392px;width:48px;height:48px}
+
+/* earn */
+#site{left:330px;top:950px;width:620px;height:380px;border-radius:16px;background:#fff;overflow:hidden;box-shadow:0 30px 60px -30px rgba(5,10,60,.7)}
+#site .bar{position:absolute;left:0;right:0;top:0;height:40px;background:#eef0f5}
+#site .bar i{position:absolute;top:14px;width:11px;height:11px;border-radius:50%;background:#cdd2dc}
+#site .url{position:absolute;left:50%;top:9px;transform:translateX(-50%);width:260px;height:22px;border-radius:6px;background:#fff;font:14px var(--mono);color:#5b6070;text-align:center;line-height:22px}
+#page{position:absolute;left:0;top:40px;width:620px}
+#site .foot{position:absolute;left:0;right:0;bottom:0;height:82px;background:rgba(12,15,31,.94);display:flex;align-items:center;padding:0 18px;gap:14px;box-sizing:border-box}
+#ring{width:52px;height:52px;flex:none}
+#site .foot .lbl{flex:1;color:#fff;font-size:19px;font-weight:600}
+#watch{height:48px;padding:0 22px;border-radius:10px;background:var(--ground);color:#fff;font-size:19px;font-weight:700;line-height:48px;white-space:nowrap}
+.pop{font-family:var(--display);font-weight:900;font-size:34px;color:var(--accent);white-space:nowrap}
+#bonus{left:1080px;top:1170px;width:520px;height:90px;border-radius:14px;background:rgba(255,210,58,.12);border:3px solid var(--accent);box-sizing:border-box;
+  display:flex;align-items:center;padding:0 22px;gap:14px}
+#bonus .t{flex:1;font-size:20px;font-weight:700;color:#fff}
+#bonus .t small{display:block;font-family:var(--mono);font-size:14px;color:var(--accent);letter-spacing:.14em;margin-bottom:4px}
+#bonus .chip{font-family:var(--mono);font-size:22px;font-weight:700;background:var(--accent);color:var(--accent2);border-radius:8px;padding:6px 12px}
+#bidbtn{left:1080px;top:1290px;width:520px;height:64px;border-radius:12px;background:var(--accent);color:var(--accent2);font-size:21px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;white-space:nowrap}
+#earncap{left:330px;top:1372px;font-size:36px;font-weight:700;white-space:nowrap}
+#earncap b{color:var(--accent)}
+
+/* you: wallet → runner → homepage, one element */
+#you{border-radius:14px;overflow:hidden;transform-origin:0 0;box-shadow:0 18px 40px -18px rgba(5,10,60,.7)}
+#you .v{position:absolute;left:0;top:0}
+#wallet{width:520px;height:190px;background:#fff;color:var(--accent2);padding:24px 28px;box-sizing:border-box}
+#wallet small{display:block;font-family:var(--mono);font-size:16px;letter-spacing:.18em;color:#5b6070}
+#wallet .n{font-family:var(--display);font-weight:900;font-size:104px;line-height:1;margin-top:10px;white-space:nowrap}
+#wallet .n i{font-style:normal;font-size:44px;margin-left:10px;color:#5b6070}
+#yrun{width:300px;height:64px;background:var(--accent);color:var(--accent2);display:flex;align-items:center;gap:12px;padding:0 16px 0 10px;box-sizing:border-box}
+#yrun .sq{width:44px;height:44px;border-radius:9px;background:var(--accent2);display:grid;place-items:center}
+#yrun .nm{flex:1;font-size:22px;font-weight:800;white-space:nowrap}
+#yrun .pt{font-family:var(--mono);font-size:20px;font-weight:700}
+#home{width:1920px;height:1080px;background:var(--accent);color:var(--accent2);transform-origin:0 0}
+#home .top{position:absolute;left:0;right:0;top:0;height:92px;background:var(--accent2);display:flex;align-items:center;padding:0 60px;gap:16px;box-sizing:border-box}
+#home .top .w{font-family:var(--display);font-weight:900;font-size:34px;color:#fff;letter-spacing:.02em}
+#home .top .chip{margin-left:auto;font-family:var(--mono);font-size:22px;color:var(--accent);letter-spacing:.14em}
+#home h1{position:absolute;left:0;right:0;top:300px;margin:0;text-align:center;font-family:var(--display);font-weight:900;font-size:230px;line-height:1;text-transform:uppercase}
+#home p{position:absolute;left:0;right:0;top:580px;margin:0;text-align:center;font-size:58px;font-weight:700}
+#home .cta{position:absolute;left:760px;top:720px;width:400px;height:92px;border-radius:16px;background:var(--accent2);color:#fff;font-size:34px;font-weight:700;display:flex;align-items:center;justify-content:center}
+#bidchip{height:40px;padding:0 16px;border-radius:9px;background:var(--accent);color:var(--accent2);font-family:var(--mono);font-size:19px;font-weight:700;line-height:40px;white-space:nowrap;
+  box-shadow:0 10px 20px -10px rgba(5,10,60,.7)}
+
+/* end card, screen space */
+#end{position:absolute;inset:0;background:var(--ground)}
+#endGrid{position:absolute;left:0;top:0;width:1920px;height:1080px}
+#bigCrown{position:absolute;left:0;top:0;transform-origin:0 0}
+#mark{position:absolute;left:0;width:1920px;top:500px;text-align:center;font-family:var(--display);font-weight:900;font-size:150px;line-height:1;letter-spacing:.02em;white-space:nowrap}
+#mark span{display:inline-block;transform-origin:50% 90%}
+#tagline{position:absolute;left:0;width:1920px;top:690px;text-align:center;font-size:40px;font-weight:600;color:var(--mute);white-space:nowrap}
+#url{position:absolute;left:0;width:1920px;top:770px;text-align:center;font-family:var(--mono);font-size:34px;font-weight:700;color:var(--accent);white-space:nowrap}
+
+#cursor{position:absolute;left:0;top:0;width:36px;height:46px;filter:drop-shadow(0 3px 6px rgba(0,0,0,.35))}
+#hud{position:absolute;right:14px;bottom:10px;font:14px var(--mono);color:#fff;display:none}
+</style>
+</head>
+<body>
+<div id="stage">
+  <canvas id="grid" width="1920" height="1080"></canvas>
+  <div id="world">
+    <div id="clockLab" class="a">BIDDING CLOSES IN</div>
+    <div id="clock" class="a"></div>
+    <div id="plus" class="a">+2:00</div>
+    <div id="words" class="a"><span>One homepage.</span><span class="g">Every day.</span></div>
+    <div id="caption" class="a">Startups bid points for tomorrow’s homepage.</div>
+
+    <div id="track" class="a"><div id="startline"></div></div>
+    <div id="yourlane" class="a">YOUR LANE</div>
+    <div id="runners"></div>
+    <div id="gate" class="a"><i>TOMORROW’S</i><b>HOMEPAGE</b></div>
+    <svg id="gateCrown" class="a" viewBox="0 0 32 32"><path d="M6 21V10.5l5.5 5L16 7l4.5 8.5 5.5-5V21z" fill="#ffd23a"/><rect x="6" y="23" width="20" height="3" fill="#fff"/></svg>
+    <svg id="lead" class="a" viewBox="0 0 32 32"><path d="M6 21V10.5l5.5 5L16 7l4.5 8.5 5.5-5V21z" fill="#ffd23a" stroke="#0c0f1f" stroke-width="1.2" stroke-linejoin="round"/></svg>
+
+    <div id="site" class="a">
+      <div class="bar"><i style="left:14px"></i><i style="left:32px"></i><i style="left:50px"></i><div class="url">pocketchef.app</div></div>
+      <div id="page"></div>
+      <div class="foot"><svg id="ring" viewBox="0 0 52 52"><circle cx="26" cy="26" r="21" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="6"/>
+        <circle id="ringArc" cx="26" cy="26" r="21" fill="none" stroke="#ffd23a" stroke-width="6" stroke-linecap="round" transform="rotate(-90 26 26)" stroke-dasharray="131.95" stroke-dashoffset="131.95"/></svg>
+        <div class="lbl">Watching Pocket Chef</div><div id="watch">Watch &amp; earn</div></div>
+    </div>
+    <div id="pops"></div>
+    <div id="bonus" class="a"><div class="t"><small>FEATURED BONUS LINK</small>Visit a maker’s YouTube channel</div><div class="chip">+100</div></div>
+    <div id="bidbtn" class="a">Bid 400 pts on tomorrow’s homepage</div>
+    <div id="earncap" class="a">Earn points by <b>discovering startups.</b></div>
+
+    <div id="you" class="a">
+      <div id="wallet" class="v"><small>YOUR STARTUP · CROWN POINTS</small><div class="n"><span id="wal">200</span><i>pts</i></div></div>
+      <div id="yrun" class="v"><div class="sq"><svg width="30" height="30" viewBox="0 0 32 32"><path d="M6 21V10.5l5.5 5L16 7l4.5 8.5 5.5-5V21z" fill="#ffd23a"/></svg></div>
+        <div class="nm">Your startup</div><div class="pt" id="ypt">400</div></div>
+      <div id="home" class="v">
+        <div class="top"><svg id="homeCrown" width="46" height="46" viewBox="0 0 32 32"><path d="M6 21V10.5l5.5 5L16 7l4.5 8.5 5.5-5V21z" fill="#ffd23a"/><rect x="6" y="23" width="20" height="3" fill="#fff"/></svg>
+          <div class="w">LAUNCHCROWN</div><div class="chip">TODAY’S WINNER</div></div>
+        <h1>Your startup</h1>
+        <p>The whole homepage. 24 hours. Free.</p>
+        <div class="cta">Visit website →</div>
+      </div>
+    </div>
+    <div id="bidchip" class="a">BID +200</div>
+  </div>
+
+  <div id="end">
+    <canvas id="endGrid" width="1920" height="1080"></canvas>
+    <svg id="bigCrown" viewBox="0 0 32 32" width="32" height="32"><rect width="32" height="32" rx="5" fill="#0c0f1f"/><path d="M6 21V10.5l5.5 5L16 7l4.5 8.5 5.5-5V21z" fill="#ffd23a"/><rect x="6" y="23" width="20" height="3" fill="#fff"/></svg>
+    <div id="mark"></div>
+    <div id="tagline">Win the homepage for your startup. Every day. Free.</div>
+    <div id="url">launchcrown.com</div>
+  </div>
+
+  <svg id="cursor" viewBox="0 0 34 44"><path d="M4 3 L30 22 L18 24 L26 40 L20 43 L12 27 L4 36 Z" fill="#0c0f1f" stroke="#fff" stroke-width="2.5" stroke-linejoin="round"/></svg>
+  <div id="hud"></div>
+</div>
+<script src="motion.js"></script>
+<script>
+// ══════════════════════════════════════════════════════════════════════════════════════════════
+// "A day in 30 seconds": one continuous camera over one world. #you is the thread:
+// wallet (earn) → runner (bid, race) → the homepage itself (win). Everything is a pure function of t.
+// ══════════════════════════════════════════════════════════════════════════════════════════════
+const DUR=30;
+window.__meta={dur:DUR,fps:30,w:1920,h:1080,
+  inFrame:{ you:[15.7,24.5], clock:[0.3,8.2], hand:[10.0,14.3] },
+  cuts:[28.0] };                                        // the iris into the end card is the one meant boundary
+const {clamp,lerp,seg,sstep,ssstep,spring,ring,spline,ease}=OM;
+const $=id=>document.getElementById(id);
+
+// ─────────────── timeline ───────────────
+const T={ words:[0.35,0.8], wordsOut:2.6, pull:[2.6,3.9], runnersIn:3.05, caption:5.3,
+  whipDown:[8.35,9.2], click1:10.0, ringDone:11.5, click2:12.05, earncap:12.35, bidIn:13.55, click3:14.42,
+  morphUp:[14.5,15.55], land:15.55, chipIn:20.25, click4:21.82, midnight:24.2, toGate:[24.5,25.15], dive:[25.2,26.3], endIris:[28.0,28.7], mark:28.45 };
+
+// ─────────────── the race ───────────────
+const LANE_Y=[360,450,540,630,720], X0=220, PPT=1.6;          // token left = X0 + points·PPT
+const RUN=[{nm:'Nimbus Notes',c:'#16a34a',l:'N'},{nm:'Kiln',c:'#f97316',l:'K'},{nm:'Pocket Chef',c:'#ec4899',l:'P'},{nm:'Lumen Maps',c:'#0891b2',l:'L'}];
+const BIDS=[ [4.40,0,120],[4.62,1,100],[4.84,2,80],[5.60,3,90],[6.20,1,120],[6.90,0,150],[7.60,2,90],[8.10,3,60],
+             [16.6,0,100],[17.25,2,80],[18.8,1,250],   [15.55,4,400],[21.82,4,200] ];
+function total(i,t,smooth=true){ let s=0; for(const [tb,j,a] of BIDS) if(j===i) s+= smooth ? a*spring(t-tb,0.62,13) : (t>=tb?a*clamp(seg(t,tb,tb+0.35)*1.0001):0); return s; }
+function hopY(i,t){ let y=0; for(const [tb,j] of BIDS) if(j===i&&i<4){ const u=seg(t,tb,tb+0.34); y-=Math.sin(u*Math.PI)*16; } return y; }
+const runnerX=(i,t)=>X0+total(i,t)*PPT;
+
+// countdown (seconds left), with the last-minute bid pushing the close back 2 minutes
+const RK_A=[[0,86400],[2.6,86400],[9.0,21600,ease.cubicInOut],[15.4,900,ease.sineInOut],[18.6,300,ease.sineInOut],[20.8,3,ease.cubicOut]];
+const RK_B=[[21.82,123],[24.2,0,u=>1-Math.pow(1-u,1.6)]];
+function keyed(keys,t){ if(t<=keys[0][0]) return keys[0][1]; for(let i=1;i<keys.length;i++){ const [t1,v1,c]=keys[i], [t0,v0]=keys[i-1]; if(t<=t1) return lerp(v0,v1,(c||ease.linear)(seg(t,t0,t1))); } return keys[keys.length-1][1]; }
+const remaining=t=> t<T.click4 ? keyed(RK_A,t) : keyed(RK_B,t);
+function hms(s){ s=Math.max(0,Math.floor(s)); const h=Math.floor(s/3600),m=Math.floor(s/60)%60,x=s%60; return [h,m,x].map(v=>String(v).padStart(2,'0')).join(':'); }
+
+// ─────────────── rects for #you ───────────────
+const WALLET={x:1080,y:950,w:520,h:190,r:14}, GATE={x:1610,y:445,w:300,h:169,r:10};
+const laneRect=(t)=>({x:runnerX(4,t),y:LANE_Y[4]-32,w:300,h:64,r:12});
+function youRect(t){
+  if(t<T.morphUp[0]) return {...WALLET};
+  if(t<T.morphUp[1]){ const B=laneRect(T.land); const m=OM.morphRect(t,T.morphUp[0],T.morphUp[1],WALLET,B,{curve:ease.expoInOut});
+    return {x:m.x,y:m.y-Math.sin(m.k*Math.PI)*150,w:m.w,h:m.h,r:m.r,k:m.k}; }
+  if(t<T.toGate[0]) return laneRect(t);
+  const A=laneRect(T.toGate[0]); const m=OM.morphRect(t,T.toGate[0],T.toGate[1],A,GATE,{curve:ease.expoInOut});
+  return {x:m.x,y:m.y-Math.sin(m.k*Math.PI)*70,w:m.w,h:m.h,r:m.r,k:m.k};
+}
+
+// ─────────────── the hand (world coordinates) ───────────────
+const BTN={x:845,y:1284}, BON={x:1340,y:1215}, BID={x:1340,y:1322};
+const CHIP=()=>({x:runnerX(4,T.chipIn)+300+14, y:LANE_Y[4]-20});
+let HAND=[], CLICKS=[T.click1,T.click2,T.click3,T.click4];
+function buildHand(){ const c=CHIP();
+  HAND=[{t:9.2,x:1560,y:1720},{t:9.95,x:BTN.x,y:BTN.y},{t:10.5,x:BTN.x+10,y:BTN.y+14},{t:11.45,x:BTN.x+10,y:BTN.y+14},
+        {t:11.98,x:BON.x,y:BON.y},{t:12.45,x:BON.x+44,y:BON.y+38},{t:13.62,x:BON.x+44,y:BON.y+38},{t:14.35,x:BID.x,y:BID.y},{t:14.9,x:BID.x+20,y:BID.y+30},
+        {t:19.9,x:c.x+260,y:c.y+190},{t:20.8,x:c.x+80,y:c.y+26},{t:21.76,x:c.x+80,y:c.y+26},{t:22.4,x:c.x+130,y:c.y+70}]; }
+const handVis=t=> (t>=9.25&&t<14.95) ? sstep(9.25,9.45,t)*(1-sstep(14.7,14.95,t)) : (t>=19.9&&t<22.5) ? sstep(19.9,20.1,t)*(1-sstep(22.25,22.5,t)) : 0;
+
+// ─────────────── camera ───────────────
+const KEYS=[
+  {t:0,x:960,y:190,zoom:2.4},{t:2.6,x:960,y:190,zoom:2.4},
+  {t:3.9,x:960,y:525,zoom:1.0,curve:ease.quintInOut},
+  {t:6.1,x:1000,y:530,zoom:1.06,curve:ease.sineInOut},{t:8.3,x:960,y:535,zoom:1.04,curve:ease.sineInOut},
+  {t:9.2,x:960,y:1190,zoom:1.15,curve:ease.expoInOut},{t:14.5,x:960,y:1190,zoom:1.15},
+  {t:15.55,x:930,y:600,zoom:1.05,curve:ease.expoInOut},{t:18.6,x:990,y:540,zoom:1.02,curve:ease.sineInOut},
+  {t:20.8,x:1150,y:450,zoom:1.32,curve:ease.cubicInOut},{t:21.82,x:1150,y:450,zoom:1.32},
+  {t:23.9,x:1120,y:470,zoom:1.24,curve:ease.sineInOut},{t:24.5,x:1120,y:470,zoom:1.24},
+  {t:25.15,x:1700,y:520,zoom:2.0,curve:ease.sineInOut},{t:26.3,x:1760,y:529.5,zoom:6.4,curve:ease.expoInOut}];
+const HITS=[[4.42,4,10],[T.land,12,8],[T.click4+0.02,14,8],[T.midnight,7,9]];
+const handEnv=t=> (sstep(2.7,3.2,t)*(1-sstep(8.2,8.4,t)) + sstep(15.7,16.2,t)*(1-sstep(20.3,20.8,t)) + sstep(22.0,22.5,t)*(1-sstep(23.7,24.1,t)));
+function camAt(t){ const c=OM.camera(t,KEYS), e=handEnv(t)*4.0;
+  let x=c.x+e*(Math.sin(1.7*t)+0.6*Math.sin(2.9*t+1))/c.zoom, y=c.y+e*(Math.sin(1.3*t+2)+0.5*Math.sin(3.3*t))/c.zoom, rot=c.rot;
+  for(const [th,amp,dec] of HITS){ const s=OM.shake(t,th,{amp,decay:dec,seed:Math.round(th*100)}); x+=s.x/c.zoom; y+=s.y/c.zoom; rot+=s.rot; }
+  return {x,y,zoom:c.zoom,rot}; }
+
+// the crown over the leader: a spring follower, simulated once at 240 Hz (deterministic)
+let LEAD=null;
+function leaderAt(t){ let b=-1,bi=0; for(let i=0;i<5;i++){ const v=total(i,t,false)+(i===4?0.5:0); if(v>b){b=v;bi=i;} } return bi; }
+function tokenTop(i,t){ const x = i===4 ? youRect(t).x : runnerX(i,t); return {x:x+32, y:LANE_Y[i]-32}; }   // the crown sits on the leader's icon
+function simulateLead(){ const hz=240, n=Math.ceil(DUR*hz)+2; const X=new Float32Array(n),Y=new Float32Array(n); let x=0,y=0,vx=0,vy=0;
+  for(let k=0;k<n;k++){ const t=k/hz; const g=tokenTop(leaderAt(t),t); if(k===0){x=g.x;y=g.y;}
+    const w=26, z=0.72; const ax=w*w*(g.x-x)-2*z*w*vx, ay=w*w*(g.y-y)-2*z*w*vy; vx+=ax/hz; vy+=ay/hz; x+=vx/hz; y+=vy/hz; X[k]=x; Y[k]=y; }
+  LEAD={at(t){ const f=clamp(t*hz,0,n-1), i=Math.floor(f), j=Math.min(n-1,i+1), u=f-i; return {x:lerp(X[i],X[j],u), y:lerp(Y[i],Y[j],u)}; }}; }
+
+// ─────────────── DOM ───────────────
+const clockEl=$('clock');
+$('track').insertAdjacentHTML('beforeend', [0,1,2,3,4,5].map(i=>`<div class="lane" style="top:${10+i*90}px"></div>`).join(''));
+const runEls=RUN.map(r=>{const d=document.createElement('div'); d.className='a runner'; d.innerHTML=`<div class="sq" style="background:${r.c}">${r.l}</div><div class="nm">${r.nm}</div><div class="pt">0</div>`; $('runners').appendChild(d); return d;});
+$('page').innerHTML=`<div style="height:230px;background:linear-gradient(135deg,#ec4899,#f472b6);padding:34px 36px;box-sizing:border-box;color:#fff">
+  <div style="font:900 44px/1 var(--display);text-transform:uppercase">Cook anything<br>in 15 minutes</div>
+  <div style="margin-top:14px;font:600 18px var(--text);opacity:.9">Recipes from what’s already in your fridge.</div></div>
+  <div style="padding:22px 36px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">${['#fde68a','#bbf7d0','#fbcfe8','#bfdbfe','#fed7aa','#ddd6fe'].map(c=>`<div style="height:96px;border-radius:10px;background:${c}"></div>`).join('')}</div>`;
+const POPS=[[10.25,'+10'],[10.45,'+10'],[10.65,'+10'],[10.85,'+10'],[11.05,'+10'],[11.25,'+10'],[11.5,'+40'],[T.click2+0.08,'+100']];
+const popEls=POPS.map(([_,s])=>{const d=document.createElement('div'); d.className='a pop'; d.textContent=s; $('pops').appendChild(d); return d;});
+const WAL_STEPS=[[10.25,10],[10.45,10],[10.65,10],[10.85,10],[11.05,10],[11.25,10],[11.5,40],[T.click2+0.12,100]];
+const markEl=$('mark'); const ML=[...'LAUNCHCROWN'].map(ch=>{const s=document.createElement('span'); s.textContent=ch; markEl.appendChild(s); return s;});
+
+const CULL=['clockLab','clock','plus','words','caption','track','yourlane','runners','gateCrown','lead','site','pops','bonus','bidbtn','earncap','bidchip'];
+function put(el,x,y,s=1,op=1,extra=''){ el.style.opacity=op; el.style.transform=`translate(${x.toFixed(2)}px,${y.toFixed(2)}px) scale(${s.toFixed(4)}) ${extra}`; el.style.visibility=op<=0.001?'hidden':'visible'; }
+function dots(ctx,cam,depth,alpha){ ctx.setTransform(1,0,0,1,0,0); ctx.clearRect(0,0,1920,1080); const G=OM.lattice(cam,{depth,spacing:60,px:1.6});
+  ctx.setTransform(...G.matrix); ctx.fillStyle=`rgba(255,255,255,${alpha})`; ctx.beginPath();
+  for(let x=G.x0;x<=G.x1;x+=G.spacing) for(let y=G.y0;y<=G.y1;y+=G.spacing){ ctx.moveTo(x+G.r,y); ctx.arc(x,y,G.r,0,Math.PI*2); } ctx.fill(); }
+const gctx=$('grid').getContext('2d'), ectx=$('endGrid').getContext('2d');
+
+// ─────────────── the frame at time t ───────────────
+let CAM=null, VIEW=null;
+function seek(t){
+  CAM=camAt(t); VIEW=OM.view(CAM);
+  dots(gctx,CAM,1.2,0.16);
+  $('world').style.transform=`matrix(${VIEW.map(v=>v.toFixed(6)).join(',')})`;
+
+  // clock
+  const rem=remaining(t); clockEl.textContent=hms(rem);
+  const closed=t>=T.midnight; clockEl.style.color = closed ? 'var(--accent)' : 'var(--ink)';
+  const ci=OM.impact(t,T.midnight,{decay:8,omega:24,sqx:0.08,sqy:0.1}), cb=OM.impact(t,T.click4+0.03,{decay:8,omega:24,sqx:0.06,sqy:0.08});
+  put(clockEl,0,0,1,1,`scale(${(ci.sx*cb.sx).toFixed(4)},${(ci.sy*cb.sy).toFixed(4)})`);
+  $('clockLab').textContent = closed ? 'THE RACE IS CLOSED' : 'BIDDING CLOSES IN';
+  { const w=OM.wordRise(t,T.click4+0.03,{zeta:0.5,omega:20,dist:30}), out=1-sstep(23.4,23.8,t); put($('plus'),0,w.y,w.s,t>=T.click4?w.op*out:0); }
+
+  // hook words
+  { const out=OM.liftOut(t,T.wordsOut,{dur:0.3,dist:40,blur:0});
+    [...$('words').children].forEach((s,i)=>{ const w=OM.wordRise(t,T.words[i]); s.style.opacity=w.op*out.op; s.style.transform=`translateY(${(w.y+out.dy).toFixed(1)}px) scale(${w.s.toFixed(4)})`; }); }
+  { const w=OM.wordRise(t,T.caption), out=1-sstep(8.3,8.6,t); put($('caption'),0,w.y,1,t>=T.caption?w.op*out:0); }
+
+  // track, gate, lanes
+  const tr=sstep(2.75,3.3,t); put($('track'),0,(1-tr)*30,1,tr);
+  { const g=OM.popIn(t,3.45); put($('gate'),0,g.dy,g.s,t>=3.45?g.op:0); const c=OM.popIn(t,3.6,{rise:24}); const gi=OM.impact(t,T.toGate[1],{decay:7,omega:20});
+    put($('gateCrown'),0,c.dy,c.s*gi.sx,t>=3.6?c.op*(1-sstep(T.toGate[1],T.toGate[1]+0.2,t)):0); }
+  { const p=OM.popIn(t,3.5); put($('yourlane'),0,p.dy,p.s,t>=3.5?p.op*(1-sstep(T.land-0.1,T.land+0.05,t))*(0.72+0.28*Math.cos(t*5)**2*(t<T.land?1:0)):0); }
+  RUN.forEach((r,i)=>{ const el=runEls[i]; const p=OM.popIn(t,T.runnersIn+i*0.09); const x=runnerX(i,t), y=LANE_Y[i]-32+hopY(i,t);
+    const fade=1-sstep(T.dive[0]+0.2,T.dive[0]+0.6,t);
+    put(el,x,y+p.dy,p.s,t>=T.runnersIn+i*0.09?p.op*fade:0); el.querySelector('.pt').textContent=Math.round(total(i,t,false)); });
+  { const L=LEAD.at(t), on=sstep(4.95,5.2,t)*(1-sstep(T.midnight,T.midnight+0.25,t)); const b=Math.sin(t*6)*3; put($('lead'),L.x-29,L.y-40+b,1,on,`rotate(${(-8+Math.sin(t*4)*3).toFixed(2)}deg)`); }
+
+  // earn: the site, ring, pops, bonus, bid button, caption
+  const earnOut=1-sstep(14.6,15.1,t);
+  { const p=OM.popIn(t,8.95); put($('site'),0,p.dy,p.s,t>=8.95?p.op*earnOut:0);
+    const pr=seg(t,T.click1+0.05,T.ringDone); $('ringArc').setAttribute('stroke-dashoffset',(131.95*(1-pr)).toFixed(2));
+    $('page').style.transform=`translateY(${(-ease.smoother(seg(t,T.click1+0.1,T.ringDone))*150).toFixed(1)}px)`;
+    const pw=OM.press(t,T.click1); $('watch').style.transform=`scale(${pw.s.toFixed(3)})`; $('watch').style.background=pw.active?'var(--accent)':'var(--ground)'; $('watch').style.color=pw.active?'var(--accent2)':'#fff'; }
+  POPS.forEach(([tp,s],i)=>{ const el=popEls[i]; const big=i===POPS.length-1; const last=i>=POPS.length-2;                         // the +40 and the +100 stay a little longer
+    const w=OM.wordRise(t,tp,{dist:20}), o=1-sstep(tp+(last?0.45:0.16),tp+(last?0.7:0.28),t);
+    const bx= big? BON.x+150 : 350+ (i%3)*70, by= big? BON.y-70 : 896;        // above the card, on the blue
+    put(el,bx,by+w.y-seg(t,tp,tp+0.7)*40,big?1.3:1,t>=tp?w.op*o:0); });
+  { const p=OM.popIn(t,9.1); const pr=OM.press(t,T.click2,{depth:0.08}); put($('bonus'),0,p.dy,p.s*pr.s,t>=9.1?p.op*earnOut:0); }
+  { const p=OM.popIn(t,T.bidIn); const pr=OM.press(t,T.click3,{depth:0.1}); const out=1-sstep(T.click3+0.1,T.click3+0.3,t); put($('bidbtn'),0,p.dy,p.s*pr.s,t>=T.bidIn?p.op*out:0); }
+  { const w=OM.wordRise(t,T.earncap), out=1-sstep(14.45,14.7,t); put($('earncap'),0,w.y,w.s,t>=T.earncap?w.op*out:0); }
+
+  // #you — wallet → runner → homepage
+  { const R=youRect(t); const you=$('you'); const inp=OM.popIn(t,9.0);
+    let wal=200; for(const [ts,a] of WAL_STEPS) wal+=a*ease.expoOut(seg(t,ts,ts+0.25)); $('wal').textContent=Math.round(wal);
+    $('ypt').textContent=Math.round(400+ (t>=T.click4 ? 200*ease.expoOut(seg(t,T.click4,T.click4+0.35)) : 0));
+    const kUp = t<T.morphUp[0]?0 : t<T.morphUp[1]? R.k : 1, kHome = t<T.toGate[0]?0 : t<T.toGate[1]? R.k : 1;
+    // the container is sized in world px; its three views crossfade inside it
+    you.style.width=R.w.toFixed(2)+'px'; you.style.height=R.h.toFixed(2)+'px'; you.style.borderRadius=(R.r*(1-kHome)+ (kHome>0.98?0:R.r*kHome*0.3)).toFixed(1)+'px';
+    const lnd=OM.impact(t,T.land,{decay:7,omega:22}), bump=OM.impact(t,T.click4+0.02,{decay:7,omega:22});
+    const sq = t<T.toGate[0] ? `scale(${(lnd.sx*bump.sx).toFixed(4)},${(lnd.sy*bump.sy).toFixed(4)})` : '';
+    put(you,R.x,R.y+(t<9.0?inp.dy:0),1,t>=9.0?(t<9.6?inp.op:1):0,sq);
+    you.style.transformOrigin='50% 100%';
+    const sw=R.w/520, sr=R.w/300, sh=R.w/1920;
+    $('wallet').style.transform=`scale(${sw.toFixed(5)})`; $('wallet').style.transformOrigin='0 0'; $('wallet').style.opacity=clamp(1-kUp*1.8);
+    $('yrun').style.transform=`scale(${sr.toFixed(5)})`; $('yrun').style.transformOrigin='0 0'; $('yrun').style.opacity=clamp((kUp-0.35)*2.2)*clamp(1-kHome*1.6);
+    $('home').style.transform=`scale(${sh.toFixed(6)})`; $('home').style.opacity=clamp((kHome-0.4)*2.2);
+    you.style.boxShadow = kHome>0.9 ? 'none' : ''; }
+  { const c=CHIP(); const p=OM.popIn(t,T.chipIn); const pr=OM.press(t,T.click4,{depth:0.14}); const out=1-sstep(T.click4+0.15,T.click4+0.4,t);
+    put($('bidchip'),c.x,c.y+p.dy,p.s*pr.s,t>=T.chipIn?p.op*out:0); $('bidchip').style.background=pr.active?'#fff':'var(--accent)'; }
+
+  // hand: world knots → screen
+  { const cu=OM.cursor(t,HAND,CLICKS); const [sx,sy]=OM.project(VIEW,cu.x,cu.y); const v=handVis(t);
+    put($('cursor'),sx-5,sy-4,cu.s,v); $('cursor').style.transformOrigin='5px 4px'; }
+
+  // end card: an iris opens from the crown in the homepage's bar
+  { const hc=homeCrownScreen(); const ir=OM.iris(t,T.endIris[0],T.endIris[1],hc.cx,hc.cy,{curve:ease.expoOut});
+    const on=t>=T.endIris[0]; $('end').style.display=on?'block':'none';
+    if(on){ $('end').style.clipPath=`circle(${ir.r.toFixed(1)}px at ${hc.cx.toFixed(1)}px ${hc.cy.toFixed(1)}px)`;
+      dots(ectx,{x:960,y:540,zoom:1,rot:0},1.2,0.16);
+      const m=OM.morphRect(t,T.endIris[0]+0.05,T.endIris[1]+0.1,{x:hc.cx-hc.w/2,y:hc.cy-hc.h/2,w:hc.w,h:hc.h},{x:870,y:280,w:180,h:180},{curve:ease.expoOut});
+      const im=OM.impact(t,T.endIris[1]+0.1,{decay:7,omega:20});
+      $('bigCrown').style.transform=`translate(${m.x.toFixed(1)}px,${m.y.toFixed(1)}px) scale(${(m.w/32).toFixed(4)}) scale(${im.sx.toFixed(4)},${im.sy.toFixed(4)})`;
+      ML.forEach((s,i)=>{ const d=OM.letterDrop(t,T.mark,i,{stagger:0.045}); s.style.opacity=d.op; s.style.transform=`translateY(${d.y.toFixed(1)}px) scale(${d.sx.toFixed(4)},${d.sy.toFixed(4)})`; });
+      { const w=OM.wordRise(t,29.05); $('tagline').style.opacity=w.op; $('tagline').style.transform=`translateY(${w.y.toFixed(1)}px)`; }
+      { const w=OM.wordRise(t,29.25); $('url').style.opacity=w.op; $('url').style.transform=`translateY(${w.y.toFixed(1)}px)`; } } }
+
+  // cull: during the dive into the homepage, everything but #you has left the frame. Off-frame layers still get
+  // rasterised at 6× zoom and stall the screenshot, so they leave the page (onetake: "Things that bit").
+  const diving=t>=25.9;                    // from here the camera (zoom ≥ 5.6) sees only the homepage
+  for(const id of CULL) $(id).style.display = diving ? 'none' : '';
+  $('gate').style.display = t>=T.toGate[1]+0.05 ? 'none' : '';
+  $('hud').textContent='t='+t.toFixed(3);
+  return Promise.resolve();
+}
+// the small crown in the homepage's top bar, on screen (the homepage is #you at the gate)
+function homeCrownScreen(){ const R=youRect(Math.max(T.dive[1],0)), s=R.w/1920; const x0=R.x+(60)*s, y0=R.y+(23)*s, w=46*s;
+  const M=OM.view(camAt(T.endIris[0])); const a=OM.project(M,x0,y0), b=OM.project(M,x0+w,y0+w); return {cx:(a[0]+b[0])/2, cy:(a[1]+b[1])/2, w:b[0]-a[0], h:b[1]-a[1]}; }
+
+// ─────────────── probe / render hooks ───────────────
+function boxes(t){ const cam=camAt(t), M=OM.view(cam); const R=youRect(t); const cu=OM.cursor(t,HAND,CLICKS); const h=OM.project(M,cu.x,cu.y);
+  const out={ you:{...OM.projectBox(M,R),op:t>=9?1:0}, clock:{...OM.projectBox(M,{x:760,y:126,w:400,h:96}),op:1}, hand:{x:h[0],y:h[1],w:30,h:40,op:handVis(t)} };
+  RUN.forEach((r,i)=>{ out['r'+i]={...OM.projectBox(M,{x:runnerX(i,t),y:LANE_Y[i]-32+hopY(i,t),w:300,h:64}),op:t>=T.runnersIn?1:0}; }); return {cam,out}; }
+window.__track=t=>{ const o=boxes(t).out, r={}; for(const k in o){ r[k]={x:o[k].x,y:o[k].y,w:o[k].w,h:o[k].h,op:o[k].op}; } return r; };
+window.__motion=(t0,t1)=>{ const a=boxes(t0), b=boxes(t1), m=camAt((t0+t1)/2); let d=OM.screenTravel(a.cam,b.cam,m);
+  for(const k in a.out){ const p=a.out[k], q=b.out[k]; if(!(p.op>0||q.op>0)) continue; d=Math.max(d,Math.abs(p.x-q.x)+Math.abs(p.w-q.w),Math.abs(p.y-q.y)+Math.abs(p.h-q.h)); }
+  if(t1>=T.endIris[0]&&t0<=T.endIris[1]+0.4) d=Math.max(d,120); if(t1>=T.mark&&t0<=T.mark+0.9) d=Math.max(d,40);
+  return d; };
+window.__seek=async t=>{ await seek(t); return true; };
+window.__ready=(window.LOOK?LOOK.ready:document.fonts.ready).then(()=>{ buildHand(); simulateLead(); return seek(0); });
+const q=new URLSearchParams(location.search);
+if(q.has('t')) __ready.then(()=>seek(parseFloat(q.get('t'))));
+if(q.has('hud')) $('hud').style.display='block';
+if(q.has('play')) __ready.then(()=>{const t0=performance.now();(function loop(){seek(((performance.now()-t0)/1000)%DUR);requestAnimationFrame(loop);})();});
+</script>
+</body>
+</html>

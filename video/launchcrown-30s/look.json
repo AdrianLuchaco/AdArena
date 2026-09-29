@@ -1,0 +1,20 @@
+{
+  "name": "launchcrown",
+  "from": "the product: www.launchcrown.com (globals.css tokens)",
+  "mood": "cobalt race track, white lanes, one gold — the product's own stadium scoreboard",
+  "color": {
+    "ground": "#2437ff",
+    "deep": "#1523d4",
+    "card": "#ffffff",
+    "line": "#5a68ff",
+    "mute": "#c5cbff",
+    "ink": "#ffffff",
+    "accent": "#ffd23a",
+    "accent2": "#0c0f1f"
+  },
+  "type": {
+    "display": { "face": "Archivo Condensed", "weight": 900, "tracking": 0.0 },
+    "text": { "face": "Archivo", "weight": 600, "tracking": -0.01 },
+    "mono": { "face": "Geist Mono", "weight": 600, "tracking": 0.0 }
+  }
+}
