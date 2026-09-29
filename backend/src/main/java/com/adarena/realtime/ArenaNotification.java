@@ -10,6 +10,6 @@ public record ArenaNotification(String type, String title, String message, Strin
 
     public static ArenaNotification outbid() {
         return new ArenaNotification("OUTBID", "You've been outbid",
-                "Someone just outbid you. Bid again to take the lead.", "/arena");
+                "Someone just outbid you. Bid again to take the lead.", "/race");
     }
 }

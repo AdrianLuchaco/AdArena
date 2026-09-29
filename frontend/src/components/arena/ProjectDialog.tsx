@@ -112,10 +112,10 @@ export function ProjectDialog({
               <span className="text-sm text-muted">
                 {project.context === "live"
                   ? leading
-                    ? "Leading today's Arena"
+                    ? "Leading today's Race"
                     : project.gapToLeaderPoints !== undefined
                       ? `${formatPoints(project.gapToLeaderPoints)} behind the leader`
-                      : "In today's Arena"
+                      : "In today's Race"
                   : [project.winner ? null : `Finished ${ordinal(project.position)}`, project.dateLabel]
                       .filter(Boolean)
                       .join(", ")}
@@ -164,13 +164,13 @@ export function ProjectDialog({
                 </ButtonLink>
               )}
               {project.context === "live" && showBidButton && (
-                <ButtonLink href="/arena" size="lg" variant="secondary" className="flex-1">
-                  Bid in the Arena
+                <ButtonLink href="/race" size="lg" variant="secondary" className="flex-1">
+                  Bid in the Race
                 </ButtonLink>
               )}
             </div>
             <p className="text-xs text-muted">
-              Opens in a new tab. AdArena doesn’t review the content of advertisers’ websites.
+              Opens in a new tab. LaunchCrown doesn’t review the content of advertisers’ websites.
             </p>
           </div>
         </article>

@@ -32,7 +32,7 @@ import type {
 } from "./types";
 
 /**
- * Cliente de la API de AdArena.
+ * Cliente de la API de LaunchCrown.
  *
  * Sesión:
  *  - El access token (15 min) vive SOLO en memoria (esta variable). Nunca en localStorage.
@@ -54,7 +54,7 @@ export class ApiError extends Error {
   }
 }
 
-const NETWORK_ERROR_MESSAGE = "We can't reach AdArena. Check your connection and try again.";
+const NETWORK_ERROR_MESSAGE = "We can't reach LaunchCrown. Check your connection and try again.";
 const REFRESH_MARGIN_MS = 30_000;
 
 let accessToken: string | null = null;
@@ -290,7 +290,7 @@ export function resetPassword(token: string, newPassword: string): Promise<void>
   return request<void>("/api/auth/password/reset", { method: "POST", body: { token, newPassword } });
 }
 
-// ------------------------------------------------------------------ Arena Points
+// ------------------------------------------------------------------ Crown Points
 
 export function getPoints(): Promise<PointsOverview> {
   return request<PointsOverview>("/api/me/points", { auth: true });

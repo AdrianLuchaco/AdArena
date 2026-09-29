@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 /**
  * Enlaces que tienen una versión oficial "para incrustar". YouTube no deja mostrar su web dentro de
- * otras, pero sí su reproductor: si alguien promociona un VÍDEO, se ve dentro de AdArena. (Los
+ * otras, pero sí su reproductor: si alguien promociona un VÍDEO, se ve dentro de LaunchCrown. (Los
  * canales y perfiles de redes sociales no tienen versión incrustable: se abren en una ventana.)
  */
 public final class EmbedLinks {

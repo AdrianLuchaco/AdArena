@@ -43,7 +43,7 @@ export function Leaderboard({
         <p className="font-display text-4xl font-black uppercase">No bids yet today</p>
         <p className="mx-auto mt-2 max-w-md text-white/85">The first project to bid goes straight to the front.</p>
         {showBidButton && (
-          <ButtonLink href="/arena" variant="gold" className="mt-6">
+          <ButtonLink href="/race" variant="gold" className="mt-6">
             Place the first bid
           </ButtonLink>
         )}
@@ -76,10 +76,10 @@ export function Leaderboard({
       </ol>
       {hidden > 0 && (
         <Link
-          href="/arena"
+          href="/race"
           className="flex items-center justify-center gap-2 border-t-2 border-white/25 px-4 py-3 text-sm font-semibold transition hover:bg-white/10"
         >
-          See all {ranking.length} projects in the Arena
+          See all {ranking.length} projects in the Race
           <ArrowRightIcon className="size-4" />
         </Link>
       )}

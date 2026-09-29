@@ -82,14 +82,14 @@ export function TaskViewer({ id }: { id: string }) {
   const next = useMemo(() => {
     const candidate = overview?.tasks.find((t) => t.id !== id && t.state !== "DONE");
     if (candidate && !limitReached) return { href: `/watch/link/${candidate.id}`, label: "Next link" };
-    return { href: "/earn", label: "Arena websites" };
+    return { href: "/earn", label: "Race websites" };
   }, [overview, id, limitReached]);
 
   if (authStatus === "anonymous") {
     return (
       <div className="mx-auto w-full max-w-lg flex-1 px-4 py-24 text-center">
         <h1 className="text-4xl font-black">Log in to earn bonus points</h1>
-        <p className="mt-2 text-ink-soft">Create a free account and start with 200 Arena Points.</p>
+        <p className="mt-2 text-ink-soft">Create a free account and start with 200 Crown Points.</p>
         <div className="mt-6 flex flex-wrap justify-center gap-3">
           <ButtonLink href={`/signup?next=/watch/link/${id}`}>Create free account</ButtonLink>
           <ButtonLink href={`/login?next=/watch/link/${id}`} variant="secondary">

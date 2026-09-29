@@ -1,4 +1,4 @@
-# Subir AdArena a internet, paso a paso
+# Subir LaunchCrown a internet, paso a paso
 
 > Todo gratis salvo el **dominio** (≈ 10 $ al año, opcional pero recomendado).
 > Tiempo: unas 2 horas la primera vez. Hazlo en orden: cada paso usa datos del anterior.
@@ -23,6 +23,7 @@
 13. [El día a día](#13-el-día-a-día)
 14. [Límites de los planes gratuitos](#14-límites-de-los-planes-gratuitos)
 15. [Si algo falla](#15-si-algo-falla)
+16. [El cambio de nombre: de AdArena a LaunchCrown](#16-el-cambio-de-nombre-de-adarena-a-launchcrown)
 
 ---
 
@@ -61,7 +62,7 @@
 **Por qué así:**
 - **La web reenvía la API (`/api/*`):** sin eso, el navegador bloquearía la cookie de sesión entre la web y el backend y tendrías que volver a entrar cada vez que recargas. (Está en `frontend/src/proxy.ts`; funciona con dominio y sin él).
 - **Brevo por HTTPS:** el plan gratuito de Render bloquea los puertos de correo (SMTP).
-- **Supabase:** siempre encendido y sin límite de horas (el backend consulta la base de datos cada pocos segundos para cerrar la Arena a su hora).
+- **Supabase:** siempre encendido y sin límite de horas (el backend consulta la base de datos cada pocos segundos para cerrar la Race a su hora).
 
 ---
 
@@ -96,7 +97,7 @@ En la carpeta del proyecto (`Documents/AdArena`) hay dos ficheros **que nunca se
 | `ADMIN_PASSWORD` | Tu contraseña de administrador (mínimo 12 caracteres) | Te la inventas tú (larga y que no uses en otro sitio) | — |
 | `ADMIN_NAME` | Tu nombre visible | Déjalo en `Admin` o pon el tuyo | — |
 | `BREVO_API_KEY` | Clave para enviar emails | Brevo → **SMTP & API → API Keys** | 4 |
-| `MAIL_FROM` | Remitente de los emails | `AdArena <tu-email-verificado-en-brevo>`; con dominio, `AdArena <avisos@tudominio.com>` | 4 y 10 |
+| `MAIL_FROM` | Remitente de los emails | `LaunchCrown <tu-email-verificado-en-brevo>`; con dominio, `LaunchCrown <avisos@tudominio.com>` | 4 y 10 |
 
 (`JWT_SECRET` no está: Render lo genera solo).
 
@@ -158,7 +159,7 @@ automáticas (unos 10 minutos; al acabar, ✓ verde).
    - **Region:** **Central EU (Frankfurt)**.
    - Si aparece **"Enable Data API"** (a veces dentro de "Security options"), **desmárcala**.
    - **Create new project** y espera un par de minutos.
-3. **Apaga la "API automática" de Supabase** (AdArena no la usa; así nadie puede entrar a las tablas
+3. **Apaga la "API automática" de Supabase** (LaunchCrown no la usa; así nadie puede entrar a las tablas
    por ahí): menú de la izquierda **Integrations → Data API** (o **Project Settings → Data API**) →
    desactiva **Enable Data API** → guarda. (El backend además le quita los permisos al crear las
    tablas: es una segunda barrera).
@@ -183,11 +184,11 @@ No crees tablas: el backend las crea solo al arrancar la primera vez.
 
 ## 4. Emails: Brevo
 
-1. **brevo.com → Sign up free.** Te pedirá algunos datos (en empresa puedes poner "AdArena") y
+1. **brevo.com → Sign up free.** Te pedirá algunos datos (en empresa puedes poner "LaunchCrown") y
    confirmar tu email.
 2. **Remitente:** menú de tu cuenta (arriba a la derecha) → **Senders, domains & dedicated IPs →
-   Senders → Add a sender**. Nombre `AdArena`, email: el tuyo (por ejemplo tu Gmail). Te llega un email:
-   confírmalo. En `.env.render`: `MAIL_FROM=AdArena <ese-email>`.
+   Senders → Add a sender**. Nombre `LaunchCrown`, email: el tuyo (por ejemplo tu Gmail). Te llega un email:
+   confírmalo. En `.env.render`: `MAIL_FROM=LaunchCrown <ese-email>`.
    - Cuando tengas dominio (paso 10) lo cambiarás a `avisos@tudominio.com`.
 3. **Clave de la API:** menú de tu cuenta → **SMTP & API** → pestaña **API Keys** → **Generate a new API
    key** (nombre `adarena-render`). Cópiala (empieza por `xkeysib-`) y pégala en `.env.render` como
@@ -245,7 +246,7 @@ Render → **adarena-api → Environment** cámbialas también → **Save change
 > **Compruébalo:** abre `https://adarena-api.onrender.com/` en el navegador. Te lleva a la primera
 > dirección de `FRONTEND_ORIGINS`: tiene que ser **tu** web (p. ej. `https://adarena-lilac.vercel.app`).
 > Si te lleva a `https://adarena.vercel.app`, Render sigue con el valor de ejemplo y no podrás
-> registrarte ni entrar ("Request rejected: it does not come from the AdArena website").
+> registrarte ni entrar ("Request rejected: it does not come from the LaunchCrown website").
 
 **7.2 Autoriza a Render en Brevo.** Brevo bloquea las llamadas desde IPs que no conoce.
 1. Render → **adarena-api** → botón **Connect** (arriba a la derecha) → pestaña **Outbound** → copia las
@@ -257,7 +258,7 @@ Render → **adarena-api → Environment** cámbialas también → **Save change
 ## 8. Que no se duerma nunca: UptimeRobot
 
 Render duerme el backend gratuito tras 15 minutos sin visitas (y despertar tarda minutos). Si estuviera
-dormido a medianoche, la Arena se cerraría tarde.
+dormido a medianoche, la Race se cerraría tarde.
 
 1. **uptimerobot.com → Register for free.**
 2. **+ New monitor** → **HTTP(s)** → URL: `https://TU-BACKEND.onrender.com/actuator/health` →
@@ -312,7 +313,7 @@ Tres partes, todas gratis. Hazlas en este orden.
    ofrece configurarlo **automáticamente con Cloudflare**, úsalo; si no, créalos a mano en Cloudflare →
    **DNS → Records → Add record** (tipo y valor exactos que te da Brevo).
 3. En Brevo pulsa **Authenticate / Verify**: cuando salga en verde, el dominio está listo.
-4. En `.env.render` y en Render → Environment: `MAIL_FROM=AdArena <avisos@tudominio.com>` → **Save changes**.
+4. En `.env.render` y en Render → Environment: `MAIL_FROM=LaunchCrown <avisos@tudominio.com>` → **Save changes**.
 
 Con esto los emails de la web dejan de ir a spam.
 
@@ -340,13 +341,13 @@ emails al día entre la web y tú).
 
 ## 11. Pruébalo todo
 
-1. Abre tu web (`https://tudominio.com` o la de Vercel). Verás la Arena abierta, sin pujas (es una base
+1. Abre tu web (`https://tudominio.com` o la de Vercel). Verás la Race abierta, sin pujas (es una base
    de datos nueva: sin datos de ejemplo).
 2. **Log in** con tu `ADMIN_EMAIL` y `ADMIN_PASSWORD` → arriba aparece **Admin**.
 3. **Recarga la página:** debes seguir dentro.
 4. En una ventana privada, **Sign up** con otro email tuyo → debes tener 200 puntos.
 5. **Email:** en esa cuenta, sal y usa **Forgot your password?** → te debe llegar (mira también en spam).
-6. Crea un anuncio (**Account → My ad**) y puja en la **Arena**.
+6. Crea un anuncio (**Account → My ad**) y puja en la **Race**.
 7. Tras la medianoche (hora de Madrid), en **Admin → Moderation** apruebas al ganador y sale en la portada.
 
 **Pásame, si quieres que lo revise:** la dirección de tu web y la del backend, y si algo falla, una
@@ -378,7 +379,7 @@ hay dos cosas que debes saber:
    | Número | Dónde está |
    |---|---|
    | 101 | Portada, al final |
-   | 102 | La Arena, bajo la clasificación |
+   | 102 | La Race, bajo la clasificación |
    | 103 | Promote, bajo la cabecera |
    | 104 | Promote, columna derecha (escritorio) |
    | 105 | Promote, columna derecha, segundo (escritorio) |
@@ -447,10 +448,43 @@ hay dos cosas que debes saber:
 | La web dice "We can’t load the homepage" | El backend está arrancando, o `BACKEND_URL` mal | Espera 10 min. Si sigue, revisa `BACKEND_URL` en Vercel (sin barra final) y **Redeploy** |
 | Entras y al recargar te pide entrar otra vez | `NEXT_PUBLIC_API_URL` no es `/` | Ponlo en `/` en Vercel y **Redeploy** |
 | "Connecting…" en vez de "Live now" | `NEXT_PUBLIC_WS_URL` mal, o `FRONTEND_ORIGINS` no coincide con la dirección de la web | `wss://…onrender.com/ws` en Vercel (y Redeploy); en Render, `FRONTEND_ORIGINS` exactamente igual que la dirección de tu web |
-| Al registrarte o entrar: "Request rejected: it does not come from the AdArena website" (o un error de "origin" al pujar) | `FRONTEND_ORIGINS` en Render no coincide con la dirección de tu web | Render → Environment: `FRONTEND_ORIGINS` y `PUBLIC_URL` exactamente como la dirección de tu web, sin barra final (con dominio: las dos, con y sin `www`) → Save. Comprobación en el paso 7.1. En Logs verás `Petición rechazada desde el origen …` con la dirección que llegó |
+| Al registrarte o entrar: "Request rejected: it does not come from the LaunchCrown website" (o un error de "origin" al pujar) | `FRONTEND_ORIGINS` en Render no coincide con la dirección de tu web | Render → Environment: `FRONTEND_ORIGINS` y `PUBLIC_URL` exactamente como la dirección de tu web, sin barra final (con dominio: las dos, con y sin `www`) → Save. Comprobación en el paso 7.1. En Logs verás `Petición rechazada desde el origen …` con la dirección que llegó |
 | Vercel: el dominio no pasa a ✓ | Registros DNS mal o con la nube naranja | Revisa que sean exactamente los que pide Vercel y en **DNS only** (gris). Espera hasta 1 hora |
 | No llegan los emails; en Logs: `Brevo answered 401` | IP no autorizada o clave mal copiada | Paso 7.2; o genera otra clave |
 | En Logs: `Brevo answered 400 … sender` | El remitente de `MAIL_FROM` no está verificado | Paso 4.2 (o 10.1 con dominio) y que `MAIL_FROM` use exactamente ese email |
 | Los emails llegan a spam | Sin dominio verificado en Brevo | Paso 10.1 |
 | No te llegan los emails de `hola@tudominio.com` | Email Routing sin activar o sin confirmar el destino | Paso 10.2; mira que el SPF sea uno solo |
 | GitHub → Actions con ✗ roja | Algún test ha fallado | Abre el detalle y mándame el error |
+
+---
+
+## 16. El cambio de nombre: de AdArena a LaunchCrown
+
+La web se llamaba AdArena. Ahora es **LaunchCrown**: la Arena es la **Race** (dirección `/race`; la
+antigua `/arena` redirige sola) y los Arena Points son **Crown Points**. El código ya está cambiado; al
+hacer `git push`, Vercel y Render se actualizan solos y la base de datos se renombra sola (migración V14).
+
+**Lo que SÍ tienes que cambiar tú:**
+
+| Dónde | Qué | Por qué |
+|---|---|---|
+| Render → adarena-api → **Environment** | `MAIL_FROM=LaunchCrown <tu-email>` → **Save** | Es el nombre que ven en los emails |
+| Brevo → **Senders** | Edita tu remitente y pon de nombre `LaunchCrown` | Igual que arriba |
+| Dominio (paso 9) | Compra **launchcrown.com** y conéctalo | Luego `FRONTEND_ORIGINS` y `PUBLIC_URL` con él (paso 9.3) |
+
+**Lo que NO hace falta cambiar** (nadie lo ve, y cambiarlo puede romper cosas):
+
+- **Render: el servicio `adarena-api`.** No lo renombres ni en Render ni en `render.yaml`: el Blueprint
+  lo reconoce por ese nombre y, si lo cambias, crearía un servicio NUEVO vacío. Su dirección
+  (`adarena-api.onrender.com`) no la ve nadie: la web habla con él por detrás.
+- **Vercel: el proyecto `adarena`** y la dirección `adarena-lilac.vercel.app`. Cuando tengas
+  `launchcrown.com`, la gente entrará por ahí. Si quieres, puedes cambiar el nombre del proyecto en
+  Settings → General → Project Name: es solo un nombre, no cambia nada más.
+- **Supabase: el proyecto `adarena`.** Es solo una etiqueta (Settings → General si quieres
+  cambiarla). La conexión no depende del nombre.
+- **GitHub: el repositorio.** Puedes renombrarlo (Settings → Repository name) y GitHub redirige solo,
+  pero no aporta nada. Si lo haces, comprueba después que Vercel y Render siguen desplegando.
+- **UptimeRobot:** el nombre del monitor es solo una etiqueta.
+- **La carpeta de tu ordenador** (`Documents/AdArena`) y los nombres internos del código
+  (`com.adarena`, la cookie `adarena_refresh`…): son invisibles para los usuarios.
+

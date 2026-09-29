@@ -36,7 +36,7 @@ class SchemaMigrationTest {
     void appliesAllMigrations() {
         Integer applied = jdbc.queryForObject(
                 "SELECT count(*) FROM flyway_schema_history WHERE success AND version IS NOT NULL", Integer.class);
-        assertThat(applied).isEqualTo(13); // V1…V13
+        assertThat(applied).isEqualTo(14); // V1…V14
     }
 
     /**
@@ -70,6 +70,29 @@ class SchemaMigrationTest {
             jdbc.execute(sql);
             assertThat(jdbc.queryForObject("SELECT count(*) FROM social_tasks WHERE url = 'https://roadmap.sh'", Integer.class))
                     .isEqualTo(1);
+            status.setRollbackOnly();
+        });
+    }
+
+    /** V14 (AdArena → LaunchCrown): los avisos ya enviados pasan a usar los nombres nuevos. Se deshace al terminar. */
+    @Test
+    void renameMigrationUpdatesExistingNotifications() throws IOException {
+        String sql = new ClassPathResource("db/migration/V14__rename_to_launchcrown.sql").getContentAsString(StandardCharsets.UTF_8);
+        new TransactionTemplate(transactionManager).executeWithoutResult(status -> {
+            UUID userId = jdbc.queryForObject("SELECT id FROM users ORDER BY created_at LIMIT 1", UUID.class);
+            UUID id = UUID.randomUUID();
+            jdbc.update("""
+                    INSERT INTO notifications (id, user_id, type, title, body, link)
+                    VALUES (?, ?, 'AUCTION_LOST', 'The Arena has closed',
+                            'You keep 50 Arena Points for today''s Arena on AdArena.', '/arena?tab=bids')
+                    """, id, userId);
+
+            jdbc.execute(sql);
+
+            Map<String, Object> row = jdbc.queryForMap("SELECT title, body, link FROM notifications WHERE id = ?", id);
+            assertThat(row.get("title")).isEqualTo("The Race has closed");
+            assertThat(row.get("body")).isEqualTo("You keep 50 Crown Points for today's Race on LaunchCrown.");
+            assertThat(row.get("link")).isEqualTo("/race?tab=bids");
             status.setRollbackOnly();
         });
     }

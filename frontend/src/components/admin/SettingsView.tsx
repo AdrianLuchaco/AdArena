@@ -94,7 +94,7 @@ export function SettingsView() {
   return (
     <form onSubmit={handleSubmit} className="max-w-3xl space-y-6 rounded-lg bg-surface p-5 shadow-lift ring-2 ring-ink sm:p-7" noValidate>
       <Alert tone="info" title="They apply from the next round">
-        Today’s Arena keeps the rules it opened with: nobody changes the rules mid-game. Every change is recorded in
+        Today’s Race keeps the rules it opened with: nobody changes the rules mid-game. Every change is recorded in
         the audit log.
       </Alert>
       {error && <Alert tone="danger">{error}</Alert>}

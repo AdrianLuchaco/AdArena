@@ -15,7 +15,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 /**
- * Lo que AdArena sabe de una web: si se puede mostrar dentro de AdArena y lo que hemos leído de
+ * Lo que LaunchCrown sabe de una web: si se puede mostrar dentro de LaunchCrown y lo que hemos leído de
  * ella (nombre, titular, descripción, color, logo, fotos y frases destacadas). Una fila por
  * dirección, compartida por quien la use (anuncio o promoción).
  * <p>

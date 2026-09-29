@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.UUID;
 
-@Tag(name = "Arena Points")
+@Tag(name = "Crown Points")
 @RestController
 public class WalletController {
 

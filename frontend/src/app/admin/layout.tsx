@@ -3,7 +3,7 @@ import { AdminShell } from "@/components/admin/AdminShell";
 import { RequireAuth } from "@/components/auth/RequireAuth";
 
 export const metadata: Metadata = {
-  title: { default: "Admin", template: "%s · Admin · AdArena" },
+  title: { default: "Admin", template: "%s · Admin · LaunchCrown" },
   robots: { index: false, follow: false },
 };
 

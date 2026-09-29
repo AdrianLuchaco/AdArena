@@ -11,13 +11,13 @@ public final class Notices {
 
     /** Regla 4: "Otra persona te ha superado, vuelve a pujar" (con enlace directo). */
     public static Notice outbid() {
-        return new Notice(NotificationType.OUTBID, "You've been outbid in the Arena",
-                "Someone just outbid you. Bid again to take your spot back before the Arena closes.",
-                "/arena", true, "Bid again");
+        return new Notice(NotificationType.OUTBID, "You've been outbid in the Race",
+                "Someone just outbid you. Bid again to take your spot back before the Race closes.",
+                "/race", true, "Bid again");
     }
 
     public static Notice won(long totalPoints) {
-        return new Notice(NotificationType.AUCTION_WON, "You won the Arena!",
+        return new Notice(NotificationType.AUCTION_WON, "You won the Race!",
                 "Your project finished first with " + Points.format(totalPoints) + ". We'll review your ad and it will "
                         + "take over the homepage as soon as we approve it. If we can't publish it, you get all your points back.",
                 "/account", true, "See my ad");
@@ -26,9 +26,9 @@ public final class Notices {
     public static Notice lost(long carriedPoints) {
         String body = carriedPoints > 0
                 ? "Another project won this time. You keep " + Points.format(carriedPoints)
-                  + " as your starting bid in today's Arena, automatically."
+                  + " as your starting bid in today's Race, automatically."
                 : "Another project won this time. You get another shot tomorrow!";
-        return new Notice(NotificationType.AUCTION_LOST, "The Arena has closed", body, "/arena", false, null);
+        return new Notice(NotificationType.AUCTION_LOST, "The Race has closed", body, "/race", false, null);
     }
 
     public static Notice promoted(long totalPoints) {
@@ -43,7 +43,7 @@ public final class Notices {
                 ? " And here are " + Points.format(winnerBonusPoints) + " on us, so you can bid again."
                 : "";
         return new Notice(NotificationType.AD_APPROVED, "Your ad is on the homepage",
-                "Congratulations! Everyone will see your ad on the AdArena homepage until " + untilText + "." + bonus,
+                "Congratulations! Everyone will see your ad on the LaunchCrown homepage until " + untilText + "." + bonus,
                 "/", true, "See it live");
     }
 

@@ -14,8 +14,8 @@ const heading = Big_Shoulders({ variable: "--font-heading", subsets: ["latin"], 
 
 export const metadata: Metadata = {
   title: {
-    default: "AdArena · Win the homepage, every day",
-    template: "%s · AdArena",
+    default: "LaunchCrown · Win the homepage, every day",
+    template: "%s · LaunchCrown",
   },
   description:
     "Every day, projects bid for our homepage. Whoever bids the most by midnight takes over the whole homepage for 24 hours.",

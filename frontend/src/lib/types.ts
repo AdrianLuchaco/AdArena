@@ -50,12 +50,12 @@ export type HomeState = "AD" | "PENDING_REVIEW" | "NO_BIDS" | "NO_AD";
 // ------------------------------------------------------------------ webs de los proyectos
 
 /**
- * FRAME: la web se ve dentro de AdArena y los puntos cuentan mientras la miras.
+ * FRAME: la web se ve dentro de LaunchCrown y los puntos cuentan mientras la miras.
  * WINDOW: la web no se deja mostrar dentro de otras; se abre en su propia ventana.
  */
 export type ViewMode = "FRAME" | "WINDOW";
 
-/** Una web en el visor y en las tarjetas (lo que AdArena ha leído de ella). */
+/** Una web en el visor y en las tarjetas (lo que LaunchCrown ha leído de ella). */
 export interface SiteInfo {
   mode: ViewMode;
   /** Lo que se carga en el visor (solo FRAME): la web o su reproductor oficial */
@@ -209,7 +209,7 @@ export interface NotificationsResponse {
   items: NotificationItem[];
 }
 
-// ------------------------------------------------------------------ Arena Points
+// ------------------------------------------------------------------ Crown Points
 
 export type MovementType =
   | "TOP_UP"

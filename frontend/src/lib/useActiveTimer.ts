@@ -4,10 +4,10 @@ import { useEffect, useRef, useState } from "react";
 
 /**
  * Cómo se está mirando la web del proyecto:
- *  - "frame": dentro de AdArena (iframe). Cuenta mientras esta pestaña se ve, tiene el foco y hay
+ *  - "frame": dentro de LaunchCrown (iframe). Cuenta mientras esta pestaña se ve, tiene el foco y hay
  *    alguien usándola.
  *  - "window": en su propia ventana (webs que no se dejan mostrar dentro de otras). Cuenta desde que
- *    la abres y mientras estás FUERA de AdArena (en cuanto vuelves a AdArena, se para).
+ *    la abres y mientras estás FUERA de LaunchCrown (en cuanto vuelves a LaunchCrown, se para).
  */
 export type TimerMode = "frame" | "window";
 
@@ -17,7 +17,7 @@ export type PauseReason =
   | "blur" // (frame) estás en otra aplicación o ventana
   | "idle" // (frame) 45 s sin tocar nada
   | "closed" // (window) todavía no has abierto la web (o pulsaste "I'm done")
-  | "here" // (window) estás en AdArena, no en la web
+  | "here" // (window) estás en LaunchCrown, no en la web
   | null;
 
 interface ActiveTimerOptions {
@@ -89,9 +89,9 @@ export function useActiveTimer({
     const update = () => {
       const now = performance.now();
       const nextReason = computeReason();
-      // Dentro de AdArena: solo suma si estaba activo al principio Y al final del intervalo.
+      // Dentro de LaunchCrown: solo suma si estaba activo al principio Y al final del intervalo.
       // En ventana aparte: basta con el principio (al volver, el navegador avisa en el acto; y en el
-      // móvil la pestaña de AdArena se "congela" mientras estás en la otra web).
+      // móvil la pestaña de LaunchCrown se "congela" mientras estás en la otra web).
       const counts = mode === "frame" ? reason === null && nextReason === null : reason === null;
       if (counts) {
         accumulated += now - lastSample;

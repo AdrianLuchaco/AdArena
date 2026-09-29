@@ -38,7 +38,7 @@ export function ArenaClient() {
     if (error) {
       return (
         <div className="mx-auto flex w-full max-w-lg flex-1 flex-col justify-center gap-4 px-4 py-24">
-          <Alert tone="danger" title="We can’t load the Arena">
+          <Alert tone="danger" title="We can’t load the Race">
             {error}
           </Alert>
           <Button variant="secondary" onClick={() => void reload()} className="self-start">
@@ -47,7 +47,7 @@ export function ArenaClient() {
         </div>
       );
     }
-    return <PageSpinner label="Loading the Arena…" />;
+    return <PageSpinner label="Loading the Race…" />;
   }
 
   return (
@@ -57,7 +57,7 @@ export function ArenaClient() {
         clockOffset={clockOffset}
         live={live}
         showLeader={false}
-        title="Today’s Arena"
+        title="Today’s Race"
         intro={<p>The highest bid when the clock hits zero wins tomorrow’s homepage for 24 hours.</p>}
       />
 
@@ -66,10 +66,10 @@ export function ArenaClient() {
           <h2 className="mb-4 text-4xl">Live standings</h2>
           <Leaderboard round={round} showBidButton={false} />
           <Link
-            href="/how-it-works#arena"
+            href="/how-it-works#race"
             className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-ink-soft hover:text-ink"
           >
-            <BookIcon className="size-4" /> Arena rules: bids, ties and the 50% rule
+            <BookIcon className="size-4" /> Race rules: bids, ties and the 50% rule
           </Link>
           {/* Un anuncio pequeño, debajo de la clasificación y lejos del botón de pujar */}
           <AdUnit placement="arenaBanner" className="mt-8" />

@@ -130,7 +130,7 @@ public record AppProperties(
     }
 
     /**
-     * Cómo se ganan los Arena Points. Los valores por defecto están en application.yml.
+     * Cómo se ganan los Crown Points. Los valores por defecto están en application.yml.
      *
      * @param signupBonus puntos de bienvenida al crear la cuenta (una sola vez)
      * @param winnerBonus puntos de regalo al ganador cuando su anuncio sale en portada, para que
@@ -146,12 +146,12 @@ public record AppProperties(
 
     /**
      * Lectura de la web de cada proyecto (título, logo, imágenes, frases destacadas y si se puede
-     * mostrar dentro de AdArena).
+     * mostrar dentro de LaunchCrown).
      *
      * @param enabled         false en los tests: nunca se sale a internet
      * @param maxAge          a partir de cuándo se vuelve a leer una web
      * @param refreshCooldown tiempo mínimo entre dos lecturas de la misma web pedidas por su dueño
-     * @param userAgent       cómo se presenta AdArena ante las webs que lee
+     * @param userAgent       cómo se presenta LaunchCrown ante las webs que lee
      */
     public record Previews(
             boolean enabled,

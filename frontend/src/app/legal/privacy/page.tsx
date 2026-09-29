@@ -8,14 +8,14 @@ export default function PrivacyPage() {
   return (
     <LegalPage title="Privacy policy" updated={LEGAL_UPDATED}>
       <p>
-        We handle your data carefully and only for what’s necessary to run AdArena. This page explains what we keep,
+        We handle your data carefully and only for what’s necessary to run LaunchCrown. This page explains what we keep,
         why, who helps us process it and what rights you have under the EU General Data Protection Regulation (GDPR) and
         Spanish data protection law.
       </p>
 
       <h2>Who is responsible</h2>
       <p>
-        AdArena is run from Spain. The data controller is the owner of AdArena, whom you can reach at{" "}
+        LaunchCrown is run from Spain. The data controller is the owner of LaunchCrown, whom you can reach at{" "}
         <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a> for anything related to your data.
       </p>
 
@@ -29,7 +29,7 @@ export default function PrivacyPage() {
           <strong>Your ad:</strong> project name, website, description and image.
         </li>
         <li>
-          <strong>Your activity:</strong> your bids, your Arena Points movements, which projects you watched and for how
+          <strong>Your activity:</strong> your bids, your Crown Points movements, which projects you watched and for how
           long, and which bonus links you completed. We need this to give you your points, apply daily limits and
           prevent cheating.
         </li>
@@ -58,7 +58,7 @@ export default function PrivacyPage() {
           password): same basis. We don’t send marketing emails.
         </li>
         <li>
-          <strong>To detect abuse</strong> (bots, duplicate accounts, fake activity) and keep the Arena fair: our
+          <strong>To detect abuse</strong> (bots, duplicate accounts, fake activity) and keep the Race fair: our
           legitimate interest, and yours, in a fair competition.
         </li>
         <li>
@@ -70,13 +70,13 @@ export default function PrivacyPage() {
       <h2>What is public</h2>
       <p>
         While you compete, your ad (project name, image, description and website) and your bid total are visible to
-        everyone on the homepage and in the Arena, and winners stay in the public winners’ history. Your promotions are
+        everyone on the homepage and in the Race, and winners stay in the public winners’ history. Your promotions are
         shown to logged-in users. Your name and email are never shown to other users.
       </p>
 
       <h2>Who helps us</h2>
       <p>
-        We don’t sell your data. We only share it with the providers we need to run AdArena, who process it on our
+        We don’t sell your data. We only share it with the providers we need to run LaunchCrown, who process it on our
         behalf:
       </p>
       <ul>
@@ -123,13 +123,13 @@ export default function PrivacyPage() {
 
       <h2>Minimum age</h2>
       <p>
-        AdArena is for people aged 14 or over, the age from which Spanish law lets you consent to the use of your data.
+        LaunchCrown is for people aged 14 or over, the age from which Spanish law lets you consent to the use of your data.
         If we find out that an account belongs to someone younger, we will delete it.
       </p>
 
       <h2>Security</h2>
       <p>
-        All connections to AdArena are encrypted (HTTPS), passwords are hashed, and access to the database is limited to
+        All connections to LaunchCrown are encrypted (HTTPS), passwords are hashed, and access to the database is limited to
         the server. No system is 100% secure, but if a breach ever affected your data, we would tell you and the
         authorities as the law requires.
       </p>
@@ -140,12 +140,12 @@ export default function PrivacyPage() {
         can’t work without it.
       </p>
       <p>
-        When ads are shown (on the homepage, on Promote and under the Arena standings), our advertising partner Ezoic
+        When ads are shown (on the homepage, on Promote and under the Race standings), our advertising partner Ezoic
         and the advertisers it works with may use cookies to show and measure them. Before that, a consent notice asks
         for your choice, and you can change it at any time from that notice. Pages where you earn points have no ads.
       </p>
       <p>
-        When you watch another project’s website inside AdArena, that website belongs to its owner and may use its own
+        When you watch another project’s website inside LaunchCrown, that website belongs to its owner and may use its own
         cookies, just as if you visited it directly. YouTube videos are shown in their privacy-enhanced mode.
       </p>
 

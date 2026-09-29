@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
 
-@Tag(name = "Gana puntos", description = "Ver proyectos de la Arena y Créditos extra")
+@Tag(name = "Gana puntos", description = "Ver proyectos de la carrera del día (Race) y Bonus links")
 @RestController
 @RequestMapping("/api/earn")
 public class EarnController {

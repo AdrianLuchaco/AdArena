@@ -38,10 +38,10 @@ import java.util.UUID;
 
 /**
  * Lee la web de un proyecto y guarda lo que encuentra ({@link SitePreview}). Se ejecuta en segundo
- * plano ({@link SitePreviewRefresher}): nunca hace esperar a quien está usando AdArena.
+ * plano ({@link SitePreviewRefresher}): nunca hace esperar a quien está usando LaunchCrown.
  * <p>
  * Las imágenes se descargan (máx. 5 MB), se sanean igual que las que suben los usuarios (se
- * vuelven a codificar desde cero) y se guardan en AdArena: nunca enlazamos imágenes de otras webs.
+ * vuelven a codificar desde cero) y se guardan en LaunchCrown: nunca enlazamos imágenes de otras webs.
  * Si una foto no ha cambiado desde la última lectura, se reutiliza en vez de descargarla otra vez.
  */
 @Service
@@ -204,7 +204,7 @@ public class SitePreviewUpdater {
         return null;
     }
 
-    /** Una imagen ya guardada en AdArena y la dirección de la que salió. */
+    /** Una imagen ya guardada en LaunchCrown y la dirección de la que salió. */
     private record Stored(String source, UUID imageId, byte[] data) {
     }
 

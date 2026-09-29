@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
 /**
  * Intercambio de visitas: los usuarios ganan puntos viendo la WEB de los proyectos de la Arena.
  * <ul>
- *   <li>La web cuenta el tiempo que pasas mirando la web del proyecto: dentro de AdArena (iframe) o,
+ *   <li>La web cuenta el tiempo que pasas mirando la web del proyecto: dentro de LaunchCrown (iframe) o,
  *       si no se deja mostrar, en su propia ventana. Se pausa si te vas a otra cosa.</li>
  *   <li>Cada tramo de 10 s da 10 puntos; al llegar a 60 s, 40 de bonus (100 en total). Como mucho 100
  *       puntos al día por proyecto.</li>
@@ -222,7 +222,7 @@ public class ViewRewardService {
 
         WalletService.Balance balance = walletService.grant(viewerId, points, LedgerTransactionType.VIEW_REWARD,
                 "view:" + view.getId() + ":" + view.getTicks(), "PROJECT_VIEW", view.getId(),
-                "Watching an Arena project's website" + (bonus ? " (+ " + config.bonusAfterSeconds() + " s bonus)" : ""));
+                "Watching an Race project's website" + (bonus ? " (+ " + config.bonusAfterSeconds() + " s bonus)" : ""));
         return new EarnDtos.TickResult(points, ticks, bonus, view.getPointsEarned(), cap, view.getPointsEarned() >= cap,
                 balance.availablePoints());
     }
@@ -233,7 +233,7 @@ public class ViewRewardService {
                 .orElseThrow(ApiExceptions::projectNotFound);
         if (!participation.getAuction().isOpen() || participation.getTotalPoints() <= 0) {
             throw ApiException.conflict("PROJECT_NOT_IN_ARENA",
-                    "This project is no longer in today's Arena, so it doesn't earn points.");
+                    "This project is no longer in today's Race, so it doesn't earn points.");
         }
         return participation;
     }

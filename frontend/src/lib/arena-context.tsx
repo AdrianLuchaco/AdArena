@@ -25,7 +25,7 @@ interface ArenaContextValue {
   /** Avisos sin leer (la campana de la cabecera) */
   unreadCount: number;
   refreshUnread: () => void;
-  /** Tus Arena Points libres (null sin sesión). Se muestran en la cabecera. */
+  /** Tus Crown Points libres (null sin sesión). Se muestran en la cabecera. */
   points: number | null;
   /** Actualiza los puntos de la cabecera con un valor que ya conocemos (p. ej. tras pujar). */
   setPoints: (points: number) => void;
@@ -38,7 +38,7 @@ const TOAST_STYLE: Record<NotificationType, { tone: "success" | "danger" | "info
   AUCTION_WON: { tone: "success", action: "See my ad" },
   CANDIDATE_PROMOTED: { tone: "success", action: "See my ad" },
   AD_APPROVED: { tone: "success", action: "See it live" },
-  AUCTION_LOST: { tone: "info", action: "Open the Arena" },
+  AUCTION_LOST: { tone: "info", action: "Open the Race" },
   WINNER_REFUNDED: { tone: "info", action: "See my points" },
   AD_REJECTED: { tone: "danger", action: "See my points" },
   TASK_HIDDEN: { tone: "danger", action: "See my promotions" },
@@ -72,7 +72,7 @@ export function ArenaProvider({ children }: { children: React.ReactNode }) {
     try {
       apply(await getHome());
     } catch (e) {
-      setError(e instanceof ApiError ? e.message : "We couldn't load the Arena.");
+      setError(e instanceof ApiError ? e.message : "We couldn't load the Race.");
     }
   }, [apply]);
 

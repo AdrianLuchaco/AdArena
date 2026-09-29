@@ -148,7 +148,7 @@ export function ProjectViewer({ id }: { id: string }) {
       goal: 0,
       message: {
         title: "Earn points watching this website",
-        text: "Create a free account: you get 200 Arena Points to start, and up to 100 more with every project, every day.",
+        text: "Create a free account: you get 200 Crown Points to start, and up to 100 more with every project, every day.",
         action: (
           <>
             <ButtonLink href={`/signup?next=/watch/${id}`} size="sm">
@@ -166,7 +166,7 @@ export function ProjectViewer({ id }: { id: string }) {
       ...base,
       state: "info",
       goal: 0,
-      message: { title: "Not in today's Arena", text: "Only projects competing today earn points." },
+      message: { title: "Not in today's Race", text: "Only projects competing today earn points." },
     };
   } else if (startError) {
     earning = { ...base, state: "info", message: { title: "We can't count right now", text: startError } };
@@ -204,7 +204,7 @@ export function ProjectViewer({ id }: { id: string }) {
           </span>
         ) : undefined
       }
-      exitHref={loggedIn ? "/earn" : "/arena"}
+      exitHref={loggedIn ? "/earn" : "/race"}
       next={next}
       earning={earning}
       details={<ProjectDetails project={project} />}

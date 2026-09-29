@@ -25,7 +25,7 @@ export function EarnProjectsView() {
       <div className="rounded-lg border-2 border-dashed border-ink/30 px-6 py-14 text-center">
         <p className="font-display text-3xl font-black uppercase">No websites to watch yet today</p>
         <p className="mx-auto mt-2 max-w-md text-ink-soft">
-          As soon as someone bids in the Arena, their website shows up here. Meanwhile, try the bonus links.
+          As soon as someone bids in the Race, their website shows up here. Meanwhile, try the bonus links.
         </p>
         <ButtonLink href="/earn/links" className="mt-6">
           Go to bonus links
@@ -95,7 +95,7 @@ function Spotlight({ project }: { project: EarnProject }) {
         />
         <span className="absolute inset-0 bg-linear-to-t from-night/70 via-transparent to-transparent md:bg-linear-to-r md:from-transparent md:via-transparent md:to-night/60" />
         <span className="absolute left-4 top-4 rounded-sm bg-white px-3 py-1 text-sm font-bold text-ink">
-          {ordinal(project.position)} in the Arena
+          {ordinal(project.position)} in the Race
         </span>
       </span>
       <span className="flex flex-col justify-center gap-4 p-6 sm:p-8">
@@ -208,7 +208,7 @@ function ProjectCard({ project }: { project: EarnProject }) {
   );
 }
 
-/** Dónde se ve la web: dentro de AdArena o en su propia ventana. */
+/** Dónde se ve la web: dentro de LaunchCrown o en su propia ventana. */
 export function ModeChip({ mode, dark = false }: { mode: "FRAME" | "WINDOW"; dark?: boolean }) {
   const Icon = mode === "FRAME" ? EyeIcon : WindowIcon;
   return (
@@ -217,7 +217,7 @@ export function ModeChip({ mode, dark = false }: { mode: "FRAME" | "WINDOW"; dar
         "inline-flex items-center gap-1 rounded-sm px-2 py-1 text-xs font-semibold",
         dark ? "bg-white/12 text-white/85" : "bg-canvas text-ink-soft",
       )}
-      title={mode === "FRAME" ? "The website shows inside AdArena" : "The website opens in its own window"}
+      title={mode === "FRAME" ? "The website shows inside LaunchCrown" : "The website opens in its own window"}
     >
       <Icon className="size-3.5" />
       {mode === "FRAME" ? "Shows here" : "Opens separately"}

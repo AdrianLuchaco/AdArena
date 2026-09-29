@@ -1,6 +1,6 @@
-# AdArena
+# LaunchCrown
 
-Cada día, los proyectos compiten en **la Arena** por la portada de la web, pujando con **Arena Points**: puntos gratuitos que se ganan dentro de la web (no son dinero). Quien más ha pujado a medianoche aparece a pantalla completa durante las siguientes 24 horas.
+Cada día, los proyectos compiten en **la Race** por la portada de la web, pujando con **Crown Points**: puntos gratuitos que se ganan dentro de la web (no son dinero). Quien más ha pujado a medianoche aparece a pantalla completa durante las siguientes 24 horas.
 
 La web está **en inglés** (desde la fase 11); el código, los comentarios y la documentación siguen en español.
 
@@ -12,11 +12,11 @@ La web está **en inglés** (desde la fase 11); el código, los comentarios y la
 
 ## Qué hace
 
-- **La Arena:** pujas que se suman, clasificación en directo, cuenta atrás y pujas de última hora que alargan el contador.
+- **La Race:** pujas que se suman, clasificación en directo, cuenta atrás y pujas de última hora que alargan el contador.
 - **Cierre diario automático** a medianoche (Madrid): gana el 1.º; los demás conservan el 50 % para el día siguiente.
 - **Moderación:** el anuncio ganador sale en portada cuando lo apruebas. Si lo rechazas, recupera el 100 % de sus puntos y pasa el siguiente.
 - **Presentación animada del ganador:** su web se lee sola (logo, color, titular, frases y fotos) y la portada se convierte en una "película" de 5 escenas con su color de marca.
-- **Gana puntos mirando webs:** 200 al registrarte y, en un visor a pantalla completa, 10 cada 10 s mirando la web de cada proyecto (dentro de AdArena o en su ventana), bonus a los 60 s y hasta 100 al día por proyecto, con antitrampas. También con los **Bonus links** (mirar enlaces que promocionan otros usuarios). Quien gana la Arena recibe 500.
+- **Gana puntos mirando webs:** 200 al registrarte y, en un visor a pantalla completa, 10 cada 10 s mirando la web de cada proyecto (dentro de LaunchCrown o en su ventana), bonus a los 60 s y hasta 100 al día por proyecto, con antitrampas. También con los **Bonus links** (mirar enlaces que promocionan otros usuarios). Quien gana la Race recibe 500.
 - **Promote:** cualquiera publica gratis sus redes o su web para que aparezcan en los Bonus links. Anuncios de **Ezoic** (opcionales, se activan con una variable) aquí, en la portada y bajo las clasificaciones; nunca donde se ganan puntos.
 - **Guía «How it works»** con todo explicado paso a paso.
 - **Avisos** en la web, al instante y por email ("te han superado", "has ganado"…).
@@ -38,7 +38,7 @@ No hace falta instalar Maven: el backend incluye el Maven Wrapper (`./mvnw`).
 
 Se abre la web en **http://localhost:3000**. Para pararlo todo: `Ctrl + C`.
 
-Si al arrancar te dice que el puerto 8081 o el 3000 **está ocupado** (normalmente porque AdArena se quedó abierto en otra terminal), libéralos con:
+Si al arrancar te dice que el puerto 8081 o el 3000 **está ocupado** (normalmente porque LaunchCrown se quedó abierto en otra terminal), libéralos con:
 
 ```bash
 ./dev.sh stop
@@ -59,8 +59,8 @@ Cuentas de prueba (solo en local):
 
 **En local:**
 - Los emails no se envían: se escriben en la consola del backend (busca `[EMAIL NOT SENT`).
-- Los datos de ejemplo (4 anunciantes, una Arena en marcha y un ganador) solo existen en tu ordenador.
-- Los anunciantes de ejemplo tienen "webs de ejemplo" (logo, fotos y frases) para ver la presentación animada. Con tu propio anuncio, AdArena lee tu web de verdad.
+- Los datos de ejemplo (4 anunciantes, una Race en marcha y un ganador) solo existen en tu ordenador.
+- Los anunciantes de ejemplo tienen "webs de ejemplo" (logo, fotos y frases) para ver la presentación animada. Con tu propio anuncio, LaunchCrown lee tu web de verdad.
 
 ## Tests
 

@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Tag(name = "Arena", description = "Pujar y consultar tu participación en la ronda del día")
+@Tag(name = "Race", description = "Pujar y consultar tu participación en la ronda del día")
 @RestController
 @RequestMapping("/api/arena")
 public class ArenaController {

@@ -121,7 +121,7 @@ public class ModerationService {
         WalletService.UserAccounts accounts = walletService.lockUserAccounts(slot.getUserId());
         if (winnerBonus > 0) {
             walletService.grant(slot.getUserId(), winnerBonus, LedgerTransactionType.WINNER_BONUS,
-                    "winner-bonus:" + slot.getId(), "AD_SLOT", slot.getId(), "Prize for winning the Arena");
+                    "winner-bonus:" + slot.getId(), "AD_SLOT", slot.getId(), "Prize for winning the Race");
         }
         if (held > 0) {
             LedgerAccount spent = walletService.lockSystemAccount(LedgerAccountType.POINTS_SPENT);

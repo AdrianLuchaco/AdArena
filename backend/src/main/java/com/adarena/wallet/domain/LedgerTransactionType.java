@@ -1,7 +1,7 @@
 package com.adarena.wallet.domain;
 
 public enum LedgerTransactionType {
-    /** HISTÓRICO: recarga con dinero de antes de los Arena Points. Ya no se crean. */
+    /** HISTÓRICO: recarga con dinero de antes de los Crown Points. Ya no se crean. */
     TOP_UP,
     /** Puja: USER_AVAILABLE -> USER_RESERVED. */
     BID_RESERVE,

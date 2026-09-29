@@ -72,7 +72,7 @@ class SecurityIntegrationTest extends ApiTestSupport {
     void openApiDocumentIsPublished() throws Exception {
         mockMvc.perform(get("/v3/api-docs").with(randomIp()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.info.title").value("AdArena API"))
+                .andExpect(jsonPath("$.info.title").value("LaunchCrown API"))
                 .andExpect(jsonPath("$.paths['/api/auth/login']").exists());
     }
 
