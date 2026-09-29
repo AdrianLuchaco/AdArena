@@ -16,6 +16,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.time.LocalDate;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -65,7 +66,8 @@ public class ArenaFixtures {
     /** Cierra cualquier ronda abierta y abre una nueva que termina dentro de {@code endsIn}. */
     public Auction openRound(Duration endsIn) {
         closeOpenRounds();
-        Instant now = Instant.now();
+        // Con la precisión de PostgreSQL (microsegundos), como el reloj de la aplicación
+        Instant now = Instant.now().truncatedTo(ChronoUnit.MICROS);
         Instant end = now.plus(endsIn);
         Instant opens = end.minus(Duration.ofHours(24));
         LocalDate uniqueDate = LocalDate.of(2100, 1, 1).plusDays(ROUND_COUNTER.incrementAndGet());
