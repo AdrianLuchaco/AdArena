@@ -29,3 +29,7 @@ frontend/.vercel
 
 # --- Notas locales de herramientas (no se suben) ---
 .remember/
+
+claude-seo/
+video/
+docs/

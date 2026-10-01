@@ -6,7 +6,16 @@ import { SiteHeader } from "@/components/layout/SiteHeader";
 import { ToastProvider } from "@/components/ui/Toaster";
 import { ArenaProvider } from "@/lib/arena-context";
 import { AuthProvider } from "@/lib/auth-context";
-import { SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE, SITE_URL, jsonLd } from "@/lib/site";
+import {
+  ORGANIZATION_ID,
+  ORGANIZATION_JSON_LD,
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  SITE_TAGLINE,
+  SITE_URL,
+  WEBSITE_ID,
+  jsonLd,
+} from "@/lib/site";
 import "./globals.css";
 
 // Tipografías: Archivo para el texto y Big Shoulders (rotulación de estadio) para titulares y cifras
@@ -51,34 +60,22 @@ export const metadata: Metadata = {
   category: "business",
 };
 
-/** Quién somos y qué es la web, para Google (datos estructurados de schema.org). */
+/**
+ * Quién somos y qué es la web, para Google (datos estructurados de schema.org). Va en todas las páginas;
+ * lo propio de cada una (tipo de página, migas de pan…) lo pone la página con pageJsonLd().
+ */
 const SITE_JSON_LD = {
   "@context": "https://schema.org",
   "@graph": [
-    {
-      "@type": "Organization",
-      "@id": `${SITE_URL}/#organization`,
-      name: SITE_NAME,
-      url: SITE_URL,
-      logo: `${SITE_URL}/icon.svg`,
-    },
+    ORGANIZATION_JSON_LD,
     {
       "@type": "WebSite",
-      "@id": `${SITE_URL}/#website`,
+      "@id": WEBSITE_ID,
       name: SITE_NAME,
       url: SITE_URL,
       description: SITE_DESCRIPTION,
       inLanguage: "en",
-      publisher: { "@id": `${SITE_URL}/#organization` },
-    },
-    {
-      "@type": "WebApplication",
-      name: SITE_NAME,
-      url: SITE_URL,
-      applicationCategory: "BusinessApplication",
-      operatingSystem: "Any (web browser)",
-      description: SITE_DESCRIPTION,
-      offers: { "@type": "Offer", price: "0", priceCurrency: "EUR" },
+      publisher: { "@id": ORGANIZATION_ID },
     },
   ],
 };

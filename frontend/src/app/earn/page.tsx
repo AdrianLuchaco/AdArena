@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   ...pageMetadata({
     title: "Earn points by discovering startups",
     description:
-      "Discover new startups and side projects and earn Crown Points for every minute you watch. Then bid them to put your own project on the homepage.",
+      "Discover new startups and side projects and earn Crown Points for every 10 seconds you watch. Then bid them to put your own project on the homepage.",
     path: "/earn",
   }),
   // El layout añade "· Earn points · LaunchCrown" al título: aquí va entero

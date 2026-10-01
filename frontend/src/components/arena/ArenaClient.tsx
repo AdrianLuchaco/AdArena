@@ -47,7 +47,12 @@ export function ArenaClient() {
         </div>
       );
     }
-    return <PageSpinner label="Loading the Race…" />;
+    // Ocupa al menos la pantalla mientras carga: así las reglas de debajo no "saltan" al llegar los datos
+    return (
+      <div className="flex min-h-[calc(100svh-4rem)] flex-col">
+        <PageSpinner label="Loading the Race…" />
+      </div>
+    );
   }
 
   return (
@@ -57,6 +62,8 @@ export function ArenaClient() {
         clockOffset={clockOffset}
         live={live}
         showLeader={false}
+        // El h1 de la página ya va escrito en el HTML (app/race/page.tsx)
+        heading="h2"
         title="Today’s Race"
         intro={<p>The highest bid when the clock hits zero wins tomorrow’s homepage for 24 hours.</p>}
       />

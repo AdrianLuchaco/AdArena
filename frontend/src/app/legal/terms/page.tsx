@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { pageMetadata } from "@/lib/site";
+import { pageJsonLd, pageMetadata } from "@/lib/site";
+import { JsonLd } from "@/components/seo/JsonLd";
 import Link from "next/link";
 import { LegalPage } from "@/components/legal/LegalPage";
 import { CONTACT_EMAIL, LEGAL_UPDATED } from "@/lib/legal";
@@ -14,6 +15,7 @@ export const metadata: Metadata = pageMetadata({
 export default function TermsPage() {
   return (
     <LegalPage title="Terms and conditions" updated={`${LEGAL_UPDATED} (version 2026-09-29-en)`}>
+      <JsonLd data={pageJsonLd({ path: "/legal/terms", name: "Terms and conditions", description: String(metadata.description), breadcrumb: [["Terms and conditions", "/legal/terms"]] })} />
       <p>
         On LaunchCrown, projects compete every day by bidding <strong>Crown Points</strong> to take over the website’s
         homepage for 24 hours (the “Race”). By creating an account you accept these terms. Please read them carefully,

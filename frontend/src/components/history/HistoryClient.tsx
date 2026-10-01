@@ -6,7 +6,7 @@ import { ApiError, getHistory } from "@/lib/api";
 import { apiUrl } from "@/lib/config";
 import { cn } from "@/lib/cn";
 import { formatPoints, formatLongDate, prettyUrl } from "@/lib/format";
-import type { PastOutcome, PastProject, PastRound } from "@/lib/types";
+import type { HistoryPage, PastOutcome, PastProject, PastRound } from "@/lib/types";
 import { medalClasses } from "../arena/medals";
 import { ProjectDetail, ProjectDialog } from "../arena/ProjectDialog";
 import { Alert } from "../ui/Alert";
@@ -15,21 +15,26 @@ import { CrownIcon, TrophyIcon } from "../icons";
 
 const OUTCOME_TEXT: Record<Exclude<PastOutcome, "WINNER">, string> = {
   PENDING_REVIEW: "The winning ad for this day is being reviewed.",
-  NO_BIDS: "Nobody took part that day, so the homepage stayed free.",
+  NO_BIDS: "No bids that day, so the homepage stayed free.",
   NO_WINNER: "No ad was published that day.",
 };
 
-/** Ganadores y proyectos de días anteriores, del más reciente al más antiguo. */
-export function HistoryClient() {
-  const [rounds, setRounds] = useState<PastRound[]>([]);
-  const [page, setPage] = useState(0);
-  const [totalPages, setTotalPages] = useState(0);
-  const [loading, setLoading] = useState(true);
+/**
+ * Ganadores y proyectos de días anteriores, del más reciente al más antiguo.
+ * `initial`: la primera página, si el servidor ya la trajo (así llega escrita en el HTML para Google).
+ * Si no la trajo (null), se pide al cargar, como siempre.
+ */
+export function HistoryClient({ initial = null }: { initial?: HistoryPage | null }) {
+  const [rounds, setRounds] = useState<PastRound[]>(initial?.items ?? []);
+  const [page, setPage] = useState(initial?.page ?? 0);
+  const [totalPages, setTotalPages] = useState(initial?.totalPages ?? 0);
+  const [loading, setLoading] = useState(!initial);
   const [error, setError] = useState<string | null>(null);
   const [selected, setSelected] = useState<ProjectDetail | null>(null);
 
-  const load = useCallback(async (pageToLoad: number) => {
-    setLoading(true);
+  // silent: refresco de unos datos que ya se ven (sin esqueleto de carga y sin mensaje si falla)
+  const load = useCallback(async (pageToLoad: number, silent = false) => {
+    if (!silent) setLoading(true);
     try {
       const result = await getHistory(pageToLoad);
       setRounds((current) => (pageToLoad === 0 ? result.items : [...current, ...result.items]));
@@ -37,16 +42,18 @@ export function HistoryClient() {
       setTotalPages(result.totalPages);
       setError(null);
     } catch (e) {
-      setError(e instanceof ApiError ? e.message : "We couldn’t load the history.");
+      if (!silent) setError(e instanceof ApiError ? e.message : "We couldn’t load the history.");
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
   }, []);
 
+  // Siempre se piden los datos al cargar; si ya venían del servidor, se refrescan sin que se note
+  const hasInitial = initial !== null;
   useEffect(() => {
-    const timer = setTimeout(() => void load(0), 0);
+    const timer = setTimeout(() => void load(0, hasInitial), 0);
     return () => clearTimeout(timer);
-  }, [load]);
+  }, [load, hasInitial]);
 
   const open = (round: PastRound, project: PastProject) =>
     setSelected({

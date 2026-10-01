@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
-import { pageMetadata } from "@/lib/site";
+import { pageJsonLd, pageMetadata } from "@/lib/site";
 import Link from "next/link";
 import { ArenaClient } from "@/components/arena/ArenaClient";
+import { JsonLd } from "@/components/seo/JsonLd";
 
-export const metadata: Metadata = pageMetadata({
-  title: "Today’s Race: bid for tomorrow’s homepage",
-  description:
-    "Live standings and countdown. Startups and side projects bid Crown Points to take over the LaunchCrown homepage for 24 hours. Free to join.",
-  path: "/race",
-});
+const TITLE = "Today’s Race: bid for tomorrow’s homepage";
+const DESCRIPTION =
+  "Live standings and countdown. Startups and side projects bid Crown Points to take over the LaunchCrown homepage for 24 hours. Free to join.";
+
+export const metadata: Metadata = pageMetadata({ title: TITLE, description: DESCRIPTION, path: "/race" });
 
 const RULES: [string, string][] = [
   ["One homepage a day", "The Race closes every night at 00:00 (Madrid time). The highest total bid wins tomorrow’s homepage for 24 hours."],
@@ -24,6 +24,9 @@ const RULES: [string, string][] = [
 export default function ArenaPage() {
   return (
     <>
+      <JsonLd data={pageJsonLd({ path: "/race", name: TITLE, description: DESCRIPTION, breadcrumb: [["The Race", "/race"]] })} />
+      {/* El h1, ya en el HTML para Google; el titular grande ("Today’s Race") llega con los datos */}
+      <h1 className="sr-only">Today’s Race: bid Crown Points for tomorrow’s LaunchCrown homepage</h1>
       <ArenaClient />
       <section className="mx-auto w-full max-w-5xl px-4 pb-14 sm:px-6">
         <h2 className="text-3xl sm:text-4xl">How the daily Race works</h2>

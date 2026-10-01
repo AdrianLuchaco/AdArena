@@ -1,14 +1,19 @@
 import type { Metadata } from "next";
-import { jsonLd, pageMetadata } from "@/lib/site";
+import { jsonLd, pageJsonLd, pageMetadata } from "@/lib/site";
 import Link from "next/link";
 import { ArrowRightIcon } from "@/components/icons";
 
+const DESCRIPTION =
+  "The complete LaunchCrown guide: how to promote your startup for free, bid Crown Points for the homepage, what the winner gets and how to earn points.";
+
 export const metadata: Metadata = pageMetadata({
-  title: "How it works",
-  description:
-    "The complete LaunchCrown guide: how to promote your startup for free, bid Crown Points for the homepage, what the winner gets and how to earn points.",
+  title: "How it works: free startup promotion, explained",
+  description: DESCRIPTION,
   path: "/how-it-works",
 });
+
+/** Cuándo cambió el contenido de la guía por última vez (actualízalo al cambiar el texto; también en sitemap.ts). */
+const UPDATED = "2026-10-01";
 
 const SECTIONS = [
   { id: "first-day", label: "Your first day" },
@@ -25,6 +30,21 @@ const SECTIONS = [
 export default function HowItWorksPage() {
   return (
     <div className="flex-1">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: jsonLd(
+            pageJsonLd({
+              path: "/how-it-works",
+              name: "How LaunchCrown works",
+              description: DESCRIPTION,
+              type: "AboutPage",
+              breadcrumb: [["How it works", "/how-it-works"]],
+              dateModified: UPDATED,
+            }),
+          ),
+        }}
+      />
       <header className="track relative isolate border-b-2 border-ink text-white">
         <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-20">
           <h1 className="max-w-[16ch] text-6xl text-balance sm:text-8xl">How LaunchCrown works</h1>
@@ -233,7 +253,7 @@ function IfYouWin() {
 function Points() {
   const rows = [
     ["Signing up", "200", "Once"],
-    ["Watching an Race project’s website", "10 every 10 s, plus 40 at 60 s", "Up to 100 per website per day"],
+    ["Watching a Race project’s website", "10 every 10 s, plus 40 at 60 s", "Up to 100 per website per day"],
     ["Bonus links (watching a community link)", "20 per link, 100 for featured links", "10 links a day"],
     ["Winning the Race (when your ad goes live)", "500", "So you can bid again"],
   ];

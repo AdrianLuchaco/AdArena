@@ -82,8 +82,10 @@ export function ArenaScoreboard({
               <p className="mb-2 text-sm font-semibold text-white/85">Bidding closes in</p>
               <Countdown endsAt={round.endsAt} clockOffset={clockOffset} />
               <p className="mt-3 text-sm text-white/75">
-                At {formatMadridTime(round.endsAt)} Madrid time. {round.participants}{" "}
-                {round.participants === 1 ? "project is" : "projects are"} bidding.
+                At {formatMadridTime(round.endsAt)} Madrid time.{" "}
+                {round.participants === 0
+                  ? "Be the first to bid."
+                  : `${round.participants} ${round.participants === 1 ? "project is" : "projects are"} bidding.`}
               </p>
               {showLeader && (
                 <div className="mt-5 flex items-center gap-3 rounded-lg bg-gold p-3 text-ink ring-2 ring-ink">
