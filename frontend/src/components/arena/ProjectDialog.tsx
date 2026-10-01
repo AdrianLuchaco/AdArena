@@ -82,7 +82,7 @@ export function ProjectDialog({
           <div className="relative aspect-[16/10] w-full overflow-hidden bg-canvas sm:aspect-[2/1]">
             <Image
               src={apiUrl(project.imageUrl)}
-              alt={`Image of ${project.companyName}`}
+              alt={project.companyName}
               fill
               sizes="(min-width: 640px) 42rem, 100vw"
               className="object-cover"

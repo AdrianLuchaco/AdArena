@@ -8,8 +8,8 @@ import { getHistoryOnServer } from "@/lib/server-data";
  */
 const UPDATED = {
   howItWorks: "2026-10-01",
-  promote: "2026-09-29",
-  earn: "2026-09-29",
+  promote: "2026-10-01",
+  earn: "2026-10-01",
   about: "2026-10-01",
   launchGuide: "2026-10-01",
   productHuntAlternative: "2026-10-01",

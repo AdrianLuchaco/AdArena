@@ -203,7 +203,7 @@ function WinnerPlate({ winner, onOpen }: { winner: PastProject; onOpen: () => vo
       <div className="relative aspect-[16/10] overflow-hidden border-b-2 border-ink bg-canvas md:aspect-auto md:min-h-64 md:border-b-0 md:border-r-2">
         <Image
           src={apiUrl(winner.imageUrl)}
-          alt={`Image of ${winner.companyName}`}
+          alt={winner.companyName}
           fill
           sizes="(min-width: 768px) 28rem, 100vw"
           className="object-cover transition duration-500 group-hover:scale-[1.03]"

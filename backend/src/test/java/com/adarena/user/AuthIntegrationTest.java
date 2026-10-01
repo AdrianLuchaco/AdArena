@@ -23,6 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -216,9 +217,11 @@ class AuthIntegrationTest extends ApiTestSupport {
 
     @Test
     void refreshWithoutCookieOrWithUnknownToken() throws Exception {
+        // Sin cookie es un visitante, no un error: 204 sin cuerpo y sin tocar cookies
         mockMvc.perform(post("/api/auth/refresh").with(randomIp()))
-                .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.code").value("NO_REFRESH_TOKEN"));
+                .andExpect(status().isNoContent())
+                .andExpect(content().string(""))
+                .andExpect(header().doesNotExist(HttpHeaders.SET_COOKIE));
 
         mockMvc.perform(post("/api/auth/refresh").with(randomIp()).cookie(new Cookie(REFRESH_COOKIE, "inventado")))
                 .andExpect(status().isUnauthorized())

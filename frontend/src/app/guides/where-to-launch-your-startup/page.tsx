@@ -15,9 +15,9 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { ORGANIZATION_ID, SITE_URL, pageJsonLd, pageMetadata } from "@/lib/site";
 
 const PATH = "/guides/where-to-launch-your-startup";
-const TITLE = "Where to launch your startup: 13 free places (2026)";
+const TITLE = "Where to launch a startup: 13 free places (2026)";
 const DESCRIPTION =
-  "The best places to launch a startup or side project for free in 2026: launch platforms, communities and directories, what each one is good for, and a 4-week plan.";
+  "The best free places to launch a startup or side project in 2026: launch platforms, communities and directories, what each is good for, and a 4-week plan.";
 const PUBLISHED = "2026-10-01";
 const UPDATED = "2026-10-01";
 const UPDATED_LABEL = "1 October 2026";
