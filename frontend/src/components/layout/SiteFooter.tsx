@@ -3,6 +3,9 @@ import { LogoMark } from "../Logo";
 
 const LINKS = [
   { href: "/how-it-works", label: "How it works" },
+  { href: "/guides/where-to-launch-your-startup", label: "Where to launch" },
+  { href: "/alternatives/product-hunt", label: "vs Product Hunt" },
+  { href: "/about", label: "About" },
   { href: "/legal/terms", label: "Terms" },
   { href: "/legal/privacy", label: "Privacy" },
 ];

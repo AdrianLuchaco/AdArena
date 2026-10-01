@@ -89,7 +89,8 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-40 border-b-2 border-ink bg-canvas/95 backdrop-blur">
-      <div className="mx-auto flex h-16 max-w-6xl items-center gap-4 px-4 sm:px-6">
+      {/* En el móvil, menos separación: así caben el logo, la Race y el menú sin salirse de la pantalla */}
+      <div className="mx-auto flex h-16 max-w-6xl items-center gap-1.5 px-4 min-[400px]:gap-2 sm:gap-4 sm:px-6">
         <Logo />
 
         <ArenaTicker active={pathname.startsWith("/race")} onClick={close} />
@@ -168,7 +169,7 @@ function ArenaTicker({ active, onClick }: { active: boolean; onClick: () => void
       href="/race"
       onClick={onClick}
       className={cn(
-        "group flex h-10 shrink-0 items-center gap-2 rounded-md bg-night pl-2.5 pr-3 text-white transition",
+        "group flex h-10 shrink-0 items-center gap-1.5 rounded-md bg-night pl-2.5 pr-3 text-white transition min-[400px]:gap-2",
         active ? "ring-2 ring-brand ring-offset-2 ring-offset-canvas" : "hover:bg-ink-soft",
       )}
       aria-label={data?.round ? `The Race closes in ${formatClock(remaining)}` : "The Race"}

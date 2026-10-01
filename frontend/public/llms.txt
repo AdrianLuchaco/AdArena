@@ -1,0 +1,31 @@
+# LaunchCrown
+
+> LaunchCrown is a free daily race for one homepage. Startups, side projects and creators bid Crown Points, and the highest total bid at midnight (Madrid time) takes over the whole LaunchCrown homepage, full screen, for 24 hours. Crown Points can't be bought: they are earned by watching other people's projects.
+
+Key facts:
+
+- New accounts get 200 Crown Points. Watching a Race project's website earns 10 points every 10 seconds, plus 40 at 60 seconds (up to 100 per website per day).
+- Bids are at least 100 points and add up during the day. A bid in the last 2 minutes pushes the close back 2 more minutes.
+- If you don't win, you keep 50% of your bid for the next day's Race. The winner spends the whole bid and gets 500 points when the ad goes live.
+- Every winning ad is reviewed before it goes live. If it is rejected, the points are returned and the runner-up takes the spot.
+- Creators can also promote a link (YouTube channel, X profile, website) for free in Bonus links.
+- LaunchCrown is an independent project run from Spain. The first Race closed on 28 September 2026.
+
+## Core pages
+
+- [How LaunchCrown works](https://www.launchcrown.com/how-it-works): full rules, points table and FAQ
+- [About LaunchCrown](https://www.launchcrown.com/about): what it is, why it exists, who runs it
+- [Today's Race](https://www.launchcrown.com/race): live bids for tomorrow's homepage
+- [Winners](https://www.launchcrown.com/winners): every past winner, day by day
+- [Promote your startup for free](https://www.launchcrown.com/promote): free promotion in Bonus links
+- [Earn points](https://www.launchcrown.com/earn): discover projects and earn Crown Points
+
+## Guides
+
+- [Where to launch your startup](https://www.launchcrown.com/guides/where-to-launch-your-startup): 13 free places to launch, and a 4-week plan
+- [LaunchCrown vs Product Hunt](https://www.launchcrown.com/alternatives/product-hunt): an honest comparison
+
+## Optional
+
+- [Terms and conditions](https://www.launchcrown.com/legal/terms)
+- [Privacy policy](https://www.launchcrown.com/legal/privacy)

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { pageMetadata } from "@/lib/site";
+import { pageJsonLd, pageMetadata } from "@/lib/site";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { LegalPage } from "@/components/legal/LegalPage";
 import { CONTACT_EMAIL, LEGAL_UPDATED } from "@/lib/legal";
 
@@ -13,6 +14,7 @@ export const metadata: Metadata = pageMetadata({
 export default function PrivacyPage() {
   return (
     <LegalPage title="Privacy policy" updated={LEGAL_UPDATED}>
+      <JsonLd data={pageJsonLd({ path: "/legal/privacy", name: "Privacy policy", description: String(metadata.description), breadcrumb: [["Privacy policy", "/legal/privacy"]] })} />
       <p>
         We handle your data carefully and only for what’s necessary to run LaunchCrown. This page explains what we keep,
         why, who helps us process it and what rights you have under the EU General Data Protection Regulation (GDPR) and

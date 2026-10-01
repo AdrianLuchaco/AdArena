@@ -12,9 +12,82 @@ export const SITE_NAME = "LaunchCrown";
 
 /** Lo que sale bajo el título en Google (unos 155 caracteres como mucho). */
 export const SITE_DESCRIPTION =
-  "Promote your startup for free. Every day, projects bid Crown Points to take over the LaunchCrown homepage for 24 hours. Earn points by discovering other startups.";
+  "Promote your startup for free. Every day, projects bid Crown Points to take over the LaunchCrown homepage for 24 hours. Earn points by discovering startups.";
 
 export const SITE_TAGLINE = "Win the homepage for your startup, every day";
+
+/**
+ * Perfiles oficiales de LaunchCrown en otras webs (X, LinkedIn, YouTube, Product Hunt…). Google los usa
+ * para saber que son la misma marca ("sameAs"). Añádelos aquí cuando existan, con la dirección completa.
+ */
+export const SOCIAL_PROFILES: string[] = [];
+
+/** Quiénes somos, para Google: el mismo @id en todas las páginas para que sepa que es una sola organización. */
+export const ORGANIZATION_ID = `${SITE_URL}/#organization`;
+export const WEBSITE_ID = `${SITE_URL}/#website`;
+
+export const ORGANIZATION_JSON_LD = {
+  "@type": "Organization",
+  "@id": ORGANIZATION_ID,
+  name: SITE_NAME,
+  url: SITE_URL,
+  // Google pide un logo en imagen normal (PNG, cuadrado, de 112 px como mínimo), no SVG
+  logo: { "@type": "ImageObject", url: `${SITE_URL}/logo.png`, width: 512, height: 512 },
+  image: `${SITE_URL}/opengraph-image`,
+  description: SITE_DESCRIPTION,
+  slogan: SITE_TAGLINE,
+  ...(SOCIAL_PROFILES.length > 0 ? { sameAs: SOCIAL_PROFILES } : {}),
+};
+
+/**
+ * Datos estructurados de una página: qué tipo de página es y dónde está dentro de la web (las "migas de
+ * pan": Inicio › Ganadores). Google lo usa para entender la web y para mostrar la ruta en los resultados.
+ * `extra` añade más cosas a la misma página (p. ej. la lista de ganadores).
+ */
+export function pageJsonLd({
+  path,
+  name,
+  description,
+  type = "WebPage",
+  breadcrumb,
+  dateModified,
+  extra = [],
+}: {
+  path: string;
+  name: string;
+  description: string;
+  type?: "WebPage" | "AboutPage" | "CollectionPage" | "FAQPage";
+  /** Los pasos desde la portada, sin incluirla: [["Winners", "/winners"]] */
+  breadcrumb?: [string, string][];
+  /** "2026-10-01": cuándo cambió el contenido de verdad por última vez */
+  dateModified?: string;
+  extra?: object[];
+}): object {
+  const url = path === "/" ? SITE_URL : `${SITE_URL}${path}`;
+  const page = {
+    "@type": type,
+    "@id": `${url}#webpage`,
+    url,
+    name,
+    description,
+    inLanguage: "en",
+    isPartOf: { "@id": WEBSITE_ID },
+    publisher: { "@id": ORGANIZATION_ID },
+    ...(dateModified ? { dateModified } : {}),
+    ...(breadcrumb ? { breadcrumb: { "@id": `${url}#breadcrumb` } } : {}),
+  };
+  const crumbs = breadcrumb && {
+    "@type": "BreadcrumbList",
+    "@id": `${url}#breadcrumb`,
+    itemListElement: [["Home", "/"] as [string, string], ...breadcrumb].map(([label, href], index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: label,
+      item: href === "/" ? SITE_URL : `${SITE_URL}${href}`,
+    })),
+  };
+  return { "@context": "https://schema.org", "@graph": [page, ...(crumbs ? [crumbs] : []), ...extra] };
+}
 
 /**
  * Datos estructurados (JSON-LD) listos para meter en un <script type="application/ld+json">.

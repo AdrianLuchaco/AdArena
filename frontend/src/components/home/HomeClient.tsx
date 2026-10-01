@@ -16,7 +16,7 @@ import { ArrowRightIcon } from "../icons";
 const NOTICES = {
   NO_BIDS: {
     title: "The homepage is free today",
-    text: "Nobody bid yesterday. Today’s Race is already open, so tomorrow could be yours.",
+    text: "Today’s Race is already open. Be the first to bid and tomorrow’s homepage could be yours.",
   },
   PENDING_REVIEW: {
     title: "The winning ad is being reviewed",
@@ -81,7 +81,8 @@ export function HomeClient() {
         round={data.round}
         clockOffset={clockOffset}
         live={live}
-        heading={ad ? "h2" : "h1"}
+        // El h1 de la portada ya va escrito en el HTML (app/page.tsx): este titular es el segundo nivel
+        heading="h2"
         title={ad ? "This spot is up for grabs" : "Win tomorrow’s homepage"}
         notice={notice}
         intro={

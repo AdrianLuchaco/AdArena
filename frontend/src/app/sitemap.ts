@@ -1,27 +1,52 @@
 import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/lib/site";
+import { getHistoryOnServer } from "@/lib/server-data";
 
 /**
- * /sitemap.xml: la lista de páginas públicas para que Google las encuentre todas. La portada, la Race
- * y los ganadores cambian cada día; las guías y los textos legales, casi nunca.
+ * Cuándo cambió por última vez el contenido de cada página fija. Google solo se fía de esta fecha si es
+ * verdad, así que hay que actualizarla A MANO cuando se cambie el texto de la página (no en cada despliegue).
  */
-export default function sitemap(): MetadataRoute.Sitemap {
-  const now = new Date();
-  const page = (
-    path: string,
-    changeFrequency: MetadataRoute.Sitemap[number]["changeFrequency"],
-    priority: number,
-  ): MetadataRoute.Sitemap[number] => ({ url: `${SITE_URL}${path}`, lastModified: now, changeFrequency, priority });
+const UPDATED = {
+  howItWorks: "2026-10-01",
+  promote: "2026-09-29",
+  earn: "2026-09-29",
+  about: "2026-10-01",
+  launchGuide: "2026-10-01",
+  productHuntAlternative: "2026-10-01",
+  terms: "2026-09-29",
+  privacy: "2026-09-29",
+};
+
+// Se regenera como mucho cada hora (la fecha de la Race y de los ganadores cambia una vez al día)
+export const revalidate = 3600;
+
+/**
+ * /sitemap.xml: la lista de páginas públicas para que Google las encuentre todas. Solo lleva la fecha de
+ * último cambio (Google ignora "changefreq" y "priority"). La portada, la Race y los ganadores cambian con
+ * cada Race que se cierra; si no se puede leer, se usa la de hoy (esas páginas sí cambian a diario).
+ * /signup no va: es un formulario, no tiene contenido que buscar.
+ */
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const history = await getHistoryOnServer();
+  const lastRace = history?.items[0]?.closedAt ?? new Date().toISOString();
+
+  const page = (path: string, lastModified: string): MetadataRoute.Sitemap[number] => ({
+    // La portada, sin barra final: igual que su dirección canónica
+    url: path === "/" ? SITE_URL : `${SITE_URL}${path}`,
+    lastModified,
+  });
 
   return [
-    page("/", "daily", 1),
-    page("/race", "daily", 0.9),
-    page("/how-it-works", "monthly", 0.8),
-    page("/earn", "daily", 0.7),
-    page("/promote", "weekly", 0.7),
-    page("/winners", "daily", 0.6),
-    page("/signup", "yearly", 0.5),
-    page("/legal/terms", "yearly", 0.2),
-    page("/legal/privacy", "yearly", 0.2),
+    page("/", lastRace),
+    page("/race", lastRace),
+    page("/how-it-works", UPDATED.howItWorks),
+    page("/promote", UPDATED.promote),
+    page("/earn", UPDATED.earn),
+    page("/winners", lastRace),
+    page("/about", UPDATED.about),
+    page("/guides/where-to-launch-your-startup", UPDATED.launchGuide),
+    page("/alternatives/product-hunt", UPDATED.productHuntAlternative),
+    page("/legal/terms", UPDATED.terms),
+    page("/legal/privacy", UPDATED.privacy),
   ];
 }

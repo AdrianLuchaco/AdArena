@@ -1,4 +1,9 @@
+import type { Metadata } from "next";
 import { ButtonLink } from "@/components/ui/Button";
+import { NO_INDEX } from "@/lib/site";
+
+// Título propio (antes heredaba el de la portada) y fuera de Google
+export const metadata: Metadata = { title: "Page not found", ...NO_INDEX };
 
 export default function NotFound() {
   return (

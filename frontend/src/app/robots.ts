@@ -15,6 +15,5 @@ export default function robots(): MetadataRoute.Robots {
       disallow: ["/account", "/admin", "/watch/", "/forgot-password", "/reset-password", "/api/"],
     },
     sitemap: `${SITE_URL}/sitemap.xml`,
-    host: SITE_URL,
   };
 }
