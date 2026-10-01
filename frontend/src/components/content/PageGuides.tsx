@@ -1,5 +1,11 @@
 import Link from "next/link";
+import { pageJsonLd } from "@/lib/site";
+import { JsonLd } from "../seo/JsonLd";
 import { ContentSection, DefinitionRows, RelatedPages, contentLinkClass } from "./ContentPage";
+
+export const EARN_TITLE = "Earn points by discovering startups";
+export const EARN_DESCRIPTION =
+  "Discover new startups and side projects and earn Crown Points for every 10 seconds you watch. Then bid them to put your own project on the homepage.";
 
 /**
  * Texto fijo al pie de Promote y Earn points. Va en el HTML del servidor (Google lo lee sin
@@ -109,6 +115,15 @@ export function PromoteGuide() {
 export function EarnGuide() {
   return (
     <GuideBand>
+      {/* El schema de /earn va aquí y no en page.tsx: la página solo se pinta con sesión, esto siempre */}
+      <JsonLd
+        data={pageJsonLd({
+          path: "/earn",
+          name: EARN_TITLE,
+          description: EARN_DESCRIPTION,
+          breadcrumb: [["Earn points", "/earn"]],
+        })}
+      />
       <ContentSection
         title="How to earn Crown Points"
         intro="Crown Points are LaunchCrown’s currency for the daily Race. They can’t be bought: you earn them by discovering other people’s projects."
