@@ -33,7 +33,7 @@ export function useEarnData(): EarnData {
  * Estructura de "Earn points": tu marcador del día (tus puntos y lo ganado frente a lo que aún
  * puedes ganar) y dos pestañas, una por cada forma de ganar. Sin sesión, invita a crear cuenta.
  */
-export function EarnShell({ children }: { children: React.ReactNode }) {
+export function EarnShell({ children, guide }: { children: React.ReactNode; guide?: React.ReactNode }) {
   const { status } = useAuth();
   const pathname = usePathname();
   const [overview, setOverview] = useState<EarnOverview | null>(null);
@@ -58,37 +58,41 @@ export function EarnShell({ children }: { children: React.ReactNode }) {
   }, [status, reload]);
 
   return (
-    <div className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 sm:px-6 sm:py-10">
-      <div className="max-w-2xl">
-        <h1 className="text-6xl sm:text-7xl">Earn points</h1>
-        <p className="mt-3 text-lg leading-relaxed text-ink-soft">
-          Watch the websites of today’s projects and the links other people promote. Every second you watch counts.
-          Then{" "}
-          <Link href="/race" className="font-semibold text-ink underline decoration-brand decoration-2 underline-offset-4">
-            bid your points for the homepage
-          </Link>
-          . Free, no real money.
-        </p>
-      </div>
+    <>
+      <div className="mx-auto w-full max-w-6xl flex-1 px-4 py-8 sm:px-6 sm:py-10">
+        <div className="max-w-2xl">
+          <h1 className="text-6xl sm:text-7xl">Earn points</h1>
+          <p className="mt-3 text-lg leading-relaxed text-ink-soft">
+            Watch the websites of today’s projects and the links other people promote. Every second you watch counts.
+            Then{" "}
+            <Link href="/race" className="font-semibold text-ink underline decoration-brand decoration-2 underline-offset-4">
+              bid your points for the homepage
+            </Link>
+            . Free, no real money.
+          </p>
+        </div>
 
-      {status === "loading" ? (
-        <PageSpinner />
-      ) : status === "anonymous" ? (
-        <AnonymousInvite pathname={pathname} />
-      ) : error ? (
-        <Alert tone="danger" className="mt-8">
-          {error}
-        </Alert>
-      ) : !overview || !tasks ? (
-        <PageSpinner label="Loading your points…" />
-      ) : (
-        <EarnDataContext.Provider value={{ overview, tasks, reload }}>
-          <DayMeter overview={overview} tasks={tasks} />
-          <Tabs pathname={pathname} overview={overview} tasks={tasks} />
-          <div className="mt-8">{children}</div>
-        </EarnDataContext.Provider>
-      )}
-    </div>
+        {status === "loading" ? (
+          <PageSpinner />
+        ) : status === "anonymous" ? (
+          <AnonymousInvite pathname={pathname} />
+        ) : error ? (
+          <Alert tone="danger" className="mt-8">
+            {error}
+          </Alert>
+        ) : !overview || !tasks ? (
+          <PageSpinner label="Loading your points…" />
+        ) : (
+          <EarnDataContext.Provider value={{ overview, tasks, reload }}>
+            <DayMeter overview={overview} tasks={tasks} />
+            <Tabs pathname={pathname} overview={overview} tasks={tasks} />
+            <div className="mt-8">{children}</div>
+          </EarnDataContext.Provider>
+        )}
+      </div>
+      {/* Texto fijo de la página (en el HTML del servidor, con o sin sesión). Solo en /earn, no en Bonus links */}
+      {pathname === "/earn" && guide}
+    </>
   );
 }
 

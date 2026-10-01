@@ -71,14 +71,16 @@ public class AuthController {
     }
 
     @Operation(summary = "Renovar la sesión",
-            description = "Usa la cookie del refresh token (la envía el navegador solo). Devuelve un access token nuevo y rota la cookie.")
+            description = "Usa la cookie del refresh token (la envía el navegador solo). Devuelve un access token nuevo y rota la cookie. "
+                    + "Sin cookie (visitante sin sesión) responde 204 sin cuerpo.")
     @PostMapping("/refresh")
     public ResponseEntity<AuthResponse> refresh(
             @Parameter(hidden = true) @CookieValue(name = "${app.refresh-cookie.name}", required = false) String refreshToken,
             @RequestHeader(value = HttpHeaders.USER_AGENT, required = false) String userAgent,
             HttpServletResponse servletResponse) {
         if (refreshToken == null || refreshToken.isBlank()) {
-            throw ApiException.unauthorized("NO_REFRESH_TOKEN", "You are not logged in.");
+            // Visitante sin sesión: no es un error. La web lo pregunta en cada carga y un 401 ensuciaría la consola
+            return ResponseEntity.noContent().build();
         }
         try {
             return respond(HttpStatus.OK, authService.refresh(refreshToken, userAgent));

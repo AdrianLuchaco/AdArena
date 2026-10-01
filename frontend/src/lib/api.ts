@@ -122,6 +122,11 @@ export function refreshSession(): Promise<AuthResponse | null> {
 
 async function doRefresh(retryOnRace = true): Promise<AuthResponse | null> {
   const response = await send("/api/auth/refresh", { method: "POST", credentials: "include" });
+  if (response.status === 204) {
+    // Sin cookie de sesión: es un visitante (204 en vez de 401, para no ensuciar la consola)
+    setSession(null);
+    return null;
+  }
   if (response.ok) {
     const auth = (await response.json()) as AuthResponse;
     setSession(auth);

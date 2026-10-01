@@ -82,7 +82,7 @@ export function AdView({
           {image ? (
             <Image
               src={image}
-              alt={`Image of ${ad.companyName}`}
+              alt={ad.companyName}
               fill
               sizes={full ? "(min-width: 768px) 55vw, 100vw" : "(min-width: 640px) 30vw, 100vw"}
               className="object-cover"
