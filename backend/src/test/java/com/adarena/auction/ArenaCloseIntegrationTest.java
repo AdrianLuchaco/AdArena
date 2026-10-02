@@ -110,7 +110,7 @@ class ArenaCloseIntegrationTest {
         assertThat(open).isEqualTo(1);
     }
 
-    /** El ejemplo del §3.6 de ARCHITECTURE.md, céntimo a céntimo. */
+    /** El ejemplo de cierre de referencia (Ana y Luis), punto a punto. */
     @Test
     void theWinnerKeepsItsMoneyOnHoldAndTheOthersKeepHalfForTomorrow() {
         UUID ana = fixtures.bidder("Ana", 50_00);

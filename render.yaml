@@ -2,7 +2,7 @@
 # Render "Blueprint": crea el BACKEND de LaunchCrown en Render con el plan gratuito.
 #
 # En Render: New → Blueprint → elige este repositorio. Render lee este archivo y te pide los
-# valores marcados con "sync: false" (los tienes explicados en docs/DESPLIEGUE.md).
+# valores marcados con "sync: false" (explicados en .env.example).
 #
 # Plan gratuito: 512 MB de memoria y 0,1 CPU. Se "duerme" tras 15 min sin visitas: por eso en la
 # guía se configura UptimeRobot (gratis) para que lo visite cada 5 minutos y el cierre de

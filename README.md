@@ -1,86 +1,165 @@
-# LaunchCrown
+# LaunchCrown 👑
 
-Cada día, los proyectos compiten en **la Race** por la portada de la web, pujando con **Crown Points**: puntos gratuitos que se ganan dentro de la web (no son dinero). Quien más ha pujado a medianoche aparece a pantalla completa durante las siguientes 24 horas.
+**One homepage, one winner, every day.**
 
-La web está **en inglés** (desde la fase 11); el código, los comentarios y la documentación siguen en español.
+LaunchCrown is a free daily race for a single homepage. Startups, side projects and creators bid **Crown Points**, and the highest total bid at midnight (Madrid time) takes over the whole LaunchCrown homepage, full screen, for 24 hours. Points can't be bought: you earn them by discovering other people's projects.
 
-- `frontend/`: **la web** (Next.js + TypeScript + Tailwind)
-- `backend/`: la API (Java 21 + Spring Boot 4, PostgreSQL, Flyway, Spring Security + JWT, WebSocket)
-- `docs/ARCHITECTURE.md`: decisiones, reglas de negocio, modelo de datos y estructura
-- `docs/AUDITORIA-SEGURIDAD.md`: auditoría de seguridad y **qué tienes que hacer tú**
-- `docs/fases/`: explicación completa de cada fase ([1](docs/fases/FASE-01.md) · [2](docs/fases/FASE-02.md) · [3](docs/fases/FASE-03.md) · [4](docs/fases/FASE-04.md) · [5](docs/fases/FASE-05.md) · [6](docs/fases/FASE-06.md) · [7](docs/fases/FASE-07.md) · [8](docs/fases/FASE-08.md) · [9](docs/fases/FASE-09.md) · [10](docs/fases/FASE-10.md) · [11](docs/fases/FASE-11.md) · [12](docs/fases/FASE-12.md))
+🌐 **Live:** [www.launchcrown.com](https://www.launchcrown.com)
 
-## Qué hace
+![LaunchCrown homepage](.github/assets/home.png)
 
-- **La Race:** pujas que se suman, clasificación en directo, cuenta atrás y pujas de última hora que alargan el contador.
-- **Cierre diario automático** a medianoche (Madrid): gana el 1.º; los demás conservan el 50 % para el día siguiente.
-- **Moderación:** el anuncio ganador sale en portada cuando lo apruebas. Si lo rechazas, recupera el 100 % de sus puntos y pasa el siguiente.
-- **Presentación animada del ganador:** su web se lee sola (logo, color, titular, frases y fotos) y la portada se convierte en una "película" de 5 escenas con su color de marca.
-- **Gana puntos mirando webs:** 200 al registrarte y, en un visor a pantalla completa, 10 cada 10 s mirando la web de cada proyecto (dentro de LaunchCrown o en su ventana), bonus a los 60 s y hasta 100 al día por proyecto, con antitrampas. También con los **Bonus links** (mirar enlaces que promocionan otros usuarios). Quien gana la Race recibe 500.
-- **Promote:** cualquiera publica gratis sus redes o su web para que aparezcan en los Bonus links. Anuncios de **Ezoic** (opcionales, se activan con una variable) aquí, en la portada y bajo las clasificaciones; nunca donde se ganan puntos.
-- **Guía «How it works»** con todo explicado paso a paso.
-- **Avisos** en la web, al instante y por email ("te han superado", "has ganado"…).
-- **Panel de administración:** resumen de los puntos, moderación de anuncios y de promociones, ajustes y registro de acciones.
+---
 
-## Requisitos
+## How it works
 
-- Docker Desktop (abierto)
+1. **Sign up** and get 200 Crown Points.
+2. **Earn more** by watching the websites of the projects bidding today (10 points every 10 seconds, +40 at 60 seconds, up to 100 per website per day) or by visiting the links other members promote.
+3. **Bid** in today's Race. Bids add up during the day, and a bid in the last 2 minutes pushes the close back 2 more minutes.
+4. **At midnight** the top bid wins tomorrow's homepage. Everyone else keeps 50% of their bid for the next Race.
+5. **The winner's ad is reviewed** before going live. The homepage turns into an animated presentation built from the winner's own website (logo, brand colour, headline and images), and the winner gets 500 points to bid again.
+
+![Today's Race](.github/assets/race.png)
+
+## Features
+
+- **Live Race:** cumulative bids, real-time standings over WebSocket, countdown and anti-sniping extension.
+- **Automatic daily close** at midnight, with ties broken by who reached the total first and the 50% carry-over rule.
+- **Earn points by watching:** a full-screen viewer shows each project's real website in an isolated iframe (or in its own window when the site doesn't allow framing). The server keeps one clock per person, so ten tabs earn the same as one, and it never pays for more time than has really passed.
+- **Bonus links and Promote:** anyone can post their website, YouTube channel or social profile for free; other members earn points for visiting it. Three reports hide a link for review.
+- **Winner presentation:** the backend reads the winner's public website (with SSRF protection) and the homepage becomes a five-scene "film" in their brand colour. It is frozen at approval, so what goes live is exactly what was reviewed.
+- **Notifications** in the app and by email ("you've been outbid", "you won").
+- **Admin panel:** points overview, ad and promotion moderation, settings and an audit log.
+- **SEO-ready:** server-rendered pages, structured data (JSON-LD), sitemap, Open Graph images and `llms.txt`.
+
+## Tech stack
+
+| Layer | Technology |
+|---|---|
+| Frontend | Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS 4, STOMP over WebSocket |
+| Backend | Java 21, Spring Boot 4.1 (Web MVC, Security, Data JPA, WebSocket, Validation, Actuator) |
+| Database | PostgreSQL 17, schema managed by Flyway migrations |
+| Auth | Short-lived JWT access tokens plus rotating refresh tokens in an HttpOnly cookie, with reuse detection |
+| Testing | JUnit 5, Spring Boot Test and Testcontainers (a real PostgreSQL in Docker) |
+| Hosting | Vercel (web), Render (API, Docker), Supabase (PostgreSQL), Brevo (email). All on free plans |
+| CI | GitHub Actions: backend tests, plus lint and build for the web |
+
+## Architecture
+
+```
+  Browser ──HTTPS──▶  Next.js (Vercel)  ──REST /api/* (proxied)──▶  Spring Boot API (Render)  ──JDBC──▶  PostgreSQL
+     │                                                                   │
+     └──────────── WebSocket (STOMP): live standings, notifications ─────┘
+                                                                         ├──▶ Brevo (transactional email)
+                                                                         └──▶ Public websites (site reader, SSRF-protected)
+```
+
+**Golden rule:** all the logic for points, bids, rewards and the daily close lives in the backend. The web only displays data and sends intentions ("bid 500 points", "I've been watching this project for 10 seconds"); the server validates and decides.
+
+A few design decisions worth knowing:
+
+- **Points are a double-entry ledger.** Every movement (signup bonus, view reward, bid, carry-over, refund) is a ledger transaction, so balances can always be audited and points never appear out of nowhere. Amounts are integers: no rounding errors.
+- **The daily close is idempotent** and runs on a schedule. Configuration changes only apply from the next Race, so nobody changes the rules mid-game.
+- **Emails go through an outbox table:** an email is never lost and never sent for something that was rolled back.
+- **Security:** per-IP rate limiting (Bucket4j) behind a shared proxy secret, a strict Content Security Policy, uploaded images re-encoded by the server, `https`-only advertiser URLs and a site reader that refuses private and internal addresses.
+- **SEO without giving up interactivity:** public pages are rendered on the server (ISR), and live data is layered on top in the browser.
+
+## Run it locally
+
+### Requirements
+
+- Docker Desktop (running)
 - Java 21
-- Node.js 20 o superior
+- Node.js 20 or later
 
-No hace falta instalar Maven: el backend incluye el Maven Wrapper (`./mvnw`).
+No need to install Maven: the backend ships with the Maven Wrapper (`./mvnw`).
 
-## Arrancarlo todo con un comando
+### One command
 
 ```bash
+git clone https://github.com/AdrianLuchaco/AdArena.git
+cd AdArena
 ./dev.sh
 ```
 
-Se abre la web en **http://localhost:3000**. Para pararlo todo: `Ctrl + C`.
+This starts PostgreSQL in Docker, the API and the web, and fills the database with sample data (four demo projects, a Race in progress and a past winner). Stop everything with `Ctrl + C`. If a port is still busy from a previous run, free it with `./dev.sh stop`.
 
-Si al arrancar te dice que el puerto 8081 o el 3000 **está ocupado** (normalmente porque LaunchCrown se quedó abierto en otra terminal), libéralos con:
-
-```bash
-./dev.sh stop
-```
-
-| Qué | Dirección |
+| What | URL |
 |---|---|
-| 🌐 **La web** | http://localhost:3000 |
-| 🛠️ Administración | http://localhost:3000/admin (con la cuenta de admin) |
-| ⚙️ API (backend) | http://localhost:8081 (Swagger: `/swagger-ui.html`) |
+| 🌐 Web | http://localhost:3000 |
+| 🛠️ Admin panel | http://localhost:3000/admin |
+| ⚙️ API and Swagger UI | http://localhost:8081/swagger-ui.html |
 
-Cuentas de prueba (solo en local):
+Local demo accounts (they only exist on your machine, created by the `dev` profile):
 
-| Cuenta | Email | Contraseña |
+| Account | Email | Password |
 |---|---|---|
 | Admin | `admin@adarena.local` | `AdminAdArena2026!` |
-| Anunciantes de ejemplo | `demo-cafe@adarena.local`, `demo-bicis@…`, `demo-lumen@…`, `demo-huerta@…` | `DemoAdArena2026!` |
+| Demo projects | `demo-cafe@adarena.local`, `demo-bicis@adarena.local`, `demo-lumen@adarena.local`, `demo-huerta@adarena.local` | `DemoAdArena2026!` |
 
-**En local:**
-- Los emails no se envían: se escriben en la consola del backend (busca `[EMAIL NOT SENT`).
-- Los datos de ejemplo (4 anunciantes, una Race en marcha y un ganador) solo existen en tu ordenador.
-- Los anunciantes de ejemplo tienen "webs de ejemplo" (logo, fotos y frases) para ver la presentación animada. Con tu propio anuncio, LaunchCrown lee tu web de verdad.
+Locally, emails are not sent: they are printed in the backend console (look for `[EMAIL NOT SENT`).
 
-## Tests
+Different ports: `BACKEND_PORT=8082 FRONTEND_PORT=3001 ./dev.sh`.
 
-```bash
-cd backend && ./mvnw test                            # 264 tests del backend (PostgreSQL real en Docker)
-cd frontend && npm run lint && npm run build         # comprobaciones de la web
-```
-
-## Base de datos local
+### Tests
 
 ```bash
-docker compose down      # parar (los datos se conservan)
-docker compose down -v   # parar y BORRAR la base de datos local; al volver a arrancar se regeneran los datos de ejemplo
+cd backend && ./mvnw test                      # 268 backend tests against a real PostgreSQL (Docker)
+cd frontend && npm run lint && npm run build   # web checks
 ```
 
-La base de datos local solo escucha en tu ordenador (`127.0.0.1`), no en tu red.
+### Local database
 
-## Subirlo a internet (gratis)
+```bash
+docker compose down      # stop (data is kept)
+docker compose down -v   # stop and DELETE the local database; sample data is recreated on the next start
+```
 
-La guía paso a paso está en **[docs/DESPLIEGUE.md](docs/DESPLIEGUE.md)**: GitHub, base de datos (Supabase), backend (Render), web (Vercel), emails (Brevo) y aviso si se cae (UptimeRobot). Todo con planes gratuitos, más un dominio en Cloudflare (≈ 10 $/año) y email con tu dominio (gratis).
+The local database only listens on `127.0.0.1`, never on your network.
 
+## Project structure
 
-Las variables de entorno del backend están explicadas en [`.env.example`](.env.example), y las de la web en [`frontend/.env.example`](frontend/.env.example). El despliegue paso a paso está en [docs/DESPLIEGUE.md](docs/DESPLIEGUE.md). Para activar los anuncios, mira [FASE-09 §15](docs/fases/FASE-09.md#15-lo-que-tienes-que-hacer-tú).
+```
+backend/                Spring Boot API
+  src/main/java/com/adarena/
+    auction/            the Race: bids, standings, daily close
+    wallet/             Crown Points ledger
+    earn/               rewards for watching websites and bonus links
+    site/               site reader for the winner presentation (SSRF-protected)
+    adprofile/ adslot/  advertiser profiles and the homepage slot
+    notification/       in-app notifications and the email outbox
+    realtime/           WebSocket (STOMP) broadcasting
+    security/           JWT, CORS, rate limiting
+    admin/ settings/    admin panel, moderation and audit log
+    demo/               sample data for local development
+  src/main/resources/db/migration/   Flyway migrations
+frontend/               Next.js web
+  src/app/              routes (home, race, earn, promote, winners, admin…)
+  src/components/       UI components
+  src/lib/              API client, auth, SEO helpers
+brand/                  logo and banner sources
+docker-compose.yml      local PostgreSQL
+render.yaml             Render blueprint for the API
+dev.sh                  starts everything locally
+```
+
+Code comments are written in Spanish; the product and this README are in English.
+
+## Deploy your own instance
+
+Everything runs on free plans:
+
+1. **Database:** create a Supabase project and copy the *Session pooler* connection details.
+2. **API:** in Render, choose *New → Blueprint* and select this repository. Render reads [`render.yaml`](render.yaml) and asks for the variables documented in [`.env.example`](.env.example).
+3. **Web:** import the `frontend/` folder into Vercel and set the variables from [`frontend/.env.example`](frontend/.env.example). `PROXY_SECRET` must be the same value in Render and Vercel.
+4. **Email (optional):** create a Brevo API key and set `BREVO_API_KEY` and `MAIL_FROM`.
+5. **Keep it awake (optional):** Render's free plan sleeps after 15 minutes. A free UptimeRobot monitor on `/actuator/health` every 5 minutes keeps it awake, so the midnight close always runs on time.
+
+Never set `SPRING_PROFILES_ACTIVE=dev` in production: it creates the demo data and the demo admin account.
+
+## Contributing
+
+Issues and pull requests are welcome. Before opening a pull request, run the backend tests and the frontend lint and build (see [Tests](#tests)). CI runs the same checks on every push.
+
+## Author
+
+Built by **Adrian** ([@AdrianLuchaco](https://github.com/AdrianLuchaco)) · [www.launchcrown.com](https://www.launchcrown.com)

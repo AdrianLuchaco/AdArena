@@ -33,3 +33,8 @@ frontend/.vercel
 claude-seo/
 video/
 docs/
+# Documentación personal y notas de herramientas de IA (solo en local, no se publican)
+PROMO-TWEETS.md
+frontend/AGENTS.md
+frontend/CLAUDE.md
+CLAUDE.md

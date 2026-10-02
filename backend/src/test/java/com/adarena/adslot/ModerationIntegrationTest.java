@@ -48,7 +48,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
  * Moderación del ganador con los puntos en el ledger: aprobar (con su premio de 500 puntos y su
  * presentación congelada), rechazar (100 % de vuelta y pasa el siguiente), caducar sin moderar y
  * todos los casos que no se deben poder hacer.
- * Los importes siguen el ejemplo del §3.6 de ARCHITECTURE.md: Ana 1.600 puntos y Luis 1.200 puntos.
+ * Importes del ejemplo de cierre de referencia: Ana 1.600 puntos y Luis 1.200 puntos.
  */
 @IsolatedArenaTest
 class ModerationIntegrationTest {
